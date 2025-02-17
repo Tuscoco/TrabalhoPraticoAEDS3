@@ -12,7 +12,6 @@ public class Main {
         try{
 
             RandomAccessFile file = new RandomAccessFile(arquivo, "r");
-            //Charset charset = Charset.forName("UTF-8");
 
             file.readLine();
 
@@ -47,6 +46,7 @@ public class Main {
 
     public static void menu(){
 
+        System.out.println();
         System.out.println("===============================================================================");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
@@ -55,6 +55,17 @@ public class Main {
         System.out.println("4 -> Deletar registro");
         System.out.println("0 -> Encerrar");
         System.out.println("===============================================================================");
+        System.out.println();
+
+    }
+
+    public static void clear(){
+
+        for(int i = 0;i < 15;i++){
+
+            System.out.println();
+
+        }
 
     }
 
@@ -79,7 +90,23 @@ public class Main {
                 
                 case 2:
 
-                    CRUD.listarMusicas();
+                    System.out.print("Informe o index da música procurada: ");
+                    int id = scan.nextInt();
+
+                    Musica musica = CRUD.buscarMusica(id);
+
+                    clear();
+
+                    if(musica == null){
+
+                        System.out.println("Registro não encontrado!");
+
+                    }else{
+
+                        System.out.println(musica);
+
+                    }
+
                     break;
 
                 case 3:

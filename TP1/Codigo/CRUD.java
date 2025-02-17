@@ -57,4 +57,35 @@ public final class CRUD {
 
     }
 
+    public static Musica buscarMusica(int id) throws IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+
+            while(file.getFilePointer() < file.length()){
+
+                int tamanho = file.readInt();
+                byte[] array = new byte[tamanho];
+                file.readFully(array);
+
+                Musica nova = new Musica();
+                nova.fromByteArray(array);
+
+                if(nova.getIndex() == id){
+
+                    return nova;
+
+                }
+
+            }
+
+        }catch(IOException e){
+
+            System.out.println("Erro: " + e.getMessage());
+
+        }
+
+        return null;
+
+    }
+
 }
