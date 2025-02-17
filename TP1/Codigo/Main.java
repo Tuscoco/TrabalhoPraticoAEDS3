@@ -48,8 +48,6 @@ public class Main {
 
     public static void menu(){
 
-        Scanner scan = new Scanner(System.in);
-
         System.out.println("===============================================================================");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
