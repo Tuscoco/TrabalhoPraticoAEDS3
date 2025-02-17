@@ -46,7 +46,7 @@ public class Main {
 
     }
 
-    public static int menu(){
+    public static void menu(){
 
         Scanner scan = new Scanner(System.in);
 
@@ -58,19 +58,20 @@ public class Main {
         System.out.println("4 -> Deletar registro");
         System.out.println("0 -> Encerrar");
         System.out.println("===============================================================================");
-        int op = scan.nextInt();
-
-        scan.close();
-
-        return op;
 
     }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
-        int op;
+        Scanner scan = new Scanner(System.in);
 
-        while((op = menu()) != 0){
+        int op = 1;
+
+        while(op != 0){
+
+            menu();
+
+            op = scan.nextInt();
 
             switch(op){
 
@@ -102,6 +103,8 @@ public class Main {
             }
 
         }
+
+        scan.close();
 
     }
     
