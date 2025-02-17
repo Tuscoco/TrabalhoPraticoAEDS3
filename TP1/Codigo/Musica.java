@@ -6,7 +6,7 @@ public class Musica {
     private String name;
     private String artist;
     private String date;
-    private float length;
+    private double length;
     private String fArtists;
 
     private boolean removido;
@@ -15,7 +15,7 @@ public class Musica {
     public Musica(){}
 
 
-    public Musica(int index, String name, String artist, String date, float length, String fArtists){
+    public Musica(int index, String name, String artist, String date, double length, String fArtists){
 
         this.index = index;
         this.name = name;
@@ -48,7 +48,7 @@ public class Musica {
     @Override
     public String toString(){
 
-        return "index: " + index + ", name: " + name + ", artist: " + artist + ", date: " + date + ", length: " + length + "fArtists: " + fArtists;
+        return "index: " + index + ", name: " + name + ", artist: " + artist + ", date: " + date + ", length: " + length + ", fArtists: " + fArtists;
 
     }
 
@@ -61,7 +61,7 @@ public class Musica {
         dos.writeUTF(name);
         dos.writeUTF(artist);
         dos.writeUTF(date);
-        dos.writeFloat(length);
+        dos.writeDouble(length);
         dos.writeUTF(fArtists);
         dos.writeBoolean(removido);
 
@@ -78,7 +78,7 @@ public class Musica {
         this.name = dis.readUTF();
         this.artist = dis.readUTF();
         this.date = dis.readUTF();
-        this.length = dis.readFloat();
+        this.length = dis.readDouble();
         this.fArtists = dis.readUTF();
         this.removido = dis.readBoolean();
 

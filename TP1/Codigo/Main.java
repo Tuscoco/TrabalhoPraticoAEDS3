@@ -7,7 +7,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "rock.csv";
+        String arquivo = "rock5.csv";
 
         try{
 
@@ -16,7 +16,7 @@ public class Main {
 
             file.readLine();
 
-            String linha = "";
+            String linha;
 
             while((linha = file.readLine()) != null){
 
@@ -26,8 +26,7 @@ public class Main {
                 String name = dados[1];
                 String artist = dados[2];
                 String date = dados[3];
-                //float length = Float.parseFloat(dados[4]);
-                float length = 2.00f;
+                double length = Double.parseDouble(dados[4]);
                 String fArtist = "TESTE";
 
                 Musica musica = new Musica(index, name, artist, date, length, fArtist);
@@ -80,7 +79,7 @@ public class Main {
                 
                 case 2:
 
-                    //Ler registro
+                    CRUD.listarMusicas();
                     break;
 
                 case 3:
