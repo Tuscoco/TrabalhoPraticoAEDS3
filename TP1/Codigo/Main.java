@@ -7,7 +7,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "rock5.csv";
+        String arquivo = "CSV/rock5.csv";
 
         try{
 
@@ -28,17 +28,21 @@ public class Main {
                 double length = Double.parseDouble(dados[4]);
                 String[] fArtist = new String[0];
 
-                if (dados.length > 5) {
+                if(dados.length > 5){
+
                     String featuredArtists = dados[5];
-                    if (featuredArtists.startsWith("\"")) {
+                    if(featuredArtists.startsWith("\"")){
+
                         featuredArtists = featuredArtists.substring(1, featuredArtists.length() - 1);
+
                     }
+
                    fArtist = featuredArtists.split(",\\s*"); 
 
                 }             
 
                 Musica musica = new Musica(index, name, artist, date, length, fArtist);
-                CRUD.criarMusica(musica);
+                CRUD.create(musica, false);
 
             }
 
@@ -54,7 +58,6 @@ public class Main {
 
     public static void menu(){
 
-        System.out.println();
         System.out.println("===============================================================================");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
@@ -63,17 +66,13 @@ public class Main {
         System.out.println("4 -> Deletar registro");
         System.out.println("0 -> Encerrar");
         System.out.println("===============================================================================");
-        System.out.println();
 
     }
 
     public static void clear(){
 
-        for(int i = 0;i < 15;i++){
-
-            System.out.println();
-
-        }
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
 
     }
 
@@ -101,9 +100,10 @@ public class Main {
                     System.out.print("Informe o index da música procurada: ");
                     int id = scan.nextInt();
     
-                    Musica musica = CRUD.buscarMusica(id);
+                    Musica musica = CRUD.read(id);
     
                     clear();
+
     
                     if(musica == null){
     

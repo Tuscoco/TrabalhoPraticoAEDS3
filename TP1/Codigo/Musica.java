@@ -8,7 +8,6 @@ public class Musica {
     private String date;
     private double length;
     private String[] fArtists;
-
     private boolean removido;
 
 
@@ -48,7 +47,7 @@ public class Musica {
     @Override
     public String toString(){
 
-        return "index: " + index + ", name: " + name + ", artist: " + artist + ", date: " + date + ", length: " + length + ", fArtists: " + String.join(", ", fArtists);
+        return "\n|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + date + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
 
     }
 
@@ -62,16 +61,14 @@ public class Musica {
         dos.writeUTF(artist);
         dos.writeUTF(date);
         dos.writeDouble(length);
-
         dos.writeInt(fArtists.length);
 
-        for (String artist : fArtists) {
+        for(String artist : fArtists){
+            
             byte[] artistBytes = artist.getBytes("UTF-8");
             dos.writeInt(artistBytes.length); 
             dos.write(artistBytes);
         }
-
-        dos.writeBoolean(removido);
 
         return baos.toByteArray();
 
@@ -91,12 +88,14 @@ public class Musica {
         int fArtistsLength = dis.readInt();
         this.fArtists = new String[fArtistsLength];
 
-        for (int i = 0; i < fArtistsLength; i++) {
-        int artistSize = dis.readInt(); 
-        byte[] artistBytes = new byte[artistSize];
-        dis.readFully(artistBytes);
-        this.fArtists[i] = new String(artistBytes, "UTF-8");
-    }
+        for(int i = 0; i < fArtistsLength; i++){
+
+            int artistSize = dis.readInt(); 
+            byte[] artistBytes = new byte[artistSize];
+            dis.readFully(artistBytes);
+            this.fArtists[i] = new String(artistBytes, "UTF-8");
+
+        }
 
         this.removido = dis.readBoolean();
 

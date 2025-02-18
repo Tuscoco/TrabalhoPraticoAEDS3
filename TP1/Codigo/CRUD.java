@@ -2,12 +2,14 @@ import java.io.*;
 
 public final class CRUD {
     
-    private static String arquivo = "rock.db";
+    private static String arquivo = "DataBase/rock.db";
 
     private CRUD(){}
 
 
-    public static void criarMusica(Musica musica) throws FileNotFoundException, IOException{
+/////////////////////////////////////////////////CREATE//////////////////////////////////////////////////////
+
+    public static void create(Musica musica, boolean conf) throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
@@ -15,10 +17,15 @@ public final class CRUD {
 
             byte[] array = musica.toByteArray();
 
+            file.writeBoolean(musica.isRemovido());
             file.writeInt(array.length);
             file.write(array);
 
-            //System.out.println("Música adicionada com sucesso!");
+            if(conf){
+
+                System.out.println("Música adicionada com sucesso!");
+
+            }
 
         }catch(IOException e){
 
@@ -28,12 +35,15 @@ public final class CRUD {
 
     }
 
-    public static void listarMusicas() throws FileNotFoundException, IOException{
+/////////////////////////////////////////////////READ//////////////////////////////////////////////////////
+
+    public static void read() throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
 
             while(file.getFilePointer() < file.length()){
 
+                boolean lapide = file.readBoolean();
                 int tamanho = file.readInt();
                 byte[] array = new byte[tamanho];
                 file.readFully(array);
@@ -57,13 +67,14 @@ public final class CRUD {
 
     }
 
-    public static Musica buscarMusica(int id) throws IOException{
+    public static Musica read(int id) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
             System.out.println("Entrei na função");
 
             while(file.getFilePointer() < file.length()){
 
+                boolean lapide = file.readBoolean();
                 int tamanho = file.readInt();
                 byte[] array = new byte[tamanho];
                 file.readFully(array);
@@ -88,5 +99,13 @@ public final class CRUD {
         return null;
 
     }
+
+/////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
+
+    public static void update(){}
+ 
+/////////////////////////////////////////////////DELETE//////////////////////////////////////////////////////
+
+    public static void delete(){}
 
 }
