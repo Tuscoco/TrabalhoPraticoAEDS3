@@ -60,6 +60,7 @@ public final class CRUD {
     public static Musica buscarMusica(int id) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+            System.out.println("Entrei na função");
 
             while(file.getFilePointer() < file.length()){
 

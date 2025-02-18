@@ -7,7 +7,7 @@ public class Musica {
     private String artist;
     private String date;
     private double length;
-    private String fArtists;
+    private String[] fArtists;
 
     private boolean removido;
 
@@ -15,7 +15,7 @@ public class Musica {
     public Musica(){}
 
 
-    public Musica(int index, String name, String artist, String date, double length, String fArtists){
+    public Musica(int index, String name, String artist, String date, double length, String[] fArtists){
 
         this.index = index;
         this.name = name;
@@ -48,7 +48,7 @@ public class Musica {
     @Override
     public String toString(){
 
-        return "index: " + index + ", name: " + name + ", artist: " + artist + ", date: " + date + ", length: " + length + ", fArtists: " + fArtists;
+        return "index: " + index + ", name: " + name + ", artist: " + artist + ", date: " + date + ", length: " + length + ", fArtists: " + String.join(", ", fArtists);
 
     }
 
@@ -62,7 +62,15 @@ public class Musica {
         dos.writeUTF(artist);
         dos.writeUTF(date);
         dos.writeDouble(length);
-        dos.writeUTF(fArtists);
+
+        dos.writeInt(fArtists.length);
+
+        for (String artist : fArtists) {
+            byte[] artistBytes = artist.getBytes("UTF-8");
+            dos.writeInt(artistBytes.length); 
+            dos.write(artistBytes);
+        }
+
         dos.writeBoolean(removido);
 
         return baos.toByteArray();
@@ -79,7 +87,17 @@ public class Musica {
         this.artist = dis.readUTF();
         this.date = dis.readUTF();
         this.length = dis.readDouble();
-        this.fArtists = dis.readUTF();
+
+        int fArtistsLength = dis.readInt();
+        this.fArtists = new String[fArtistsLength];
+
+        for (int i = 0; i < fArtistsLength; i++) {
+        int artistSize = dis.readInt(); 
+        byte[] artistBytes = new byte[artistSize];
+        dis.readFully(artistBytes);
+        this.fArtists[i] = new String(artistBytes, "UTF-8");
+    }
+
         this.removido = dis.readBoolean();
 
     }
