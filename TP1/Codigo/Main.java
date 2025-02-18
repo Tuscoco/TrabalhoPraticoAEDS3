@@ -10,7 +10,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "./TP1/Codigo/rock5.csv";
+        String arquivo = "rock5.csv";
 
         try{
 
