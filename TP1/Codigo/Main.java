@@ -80,7 +80,8 @@ public class Main {
     
         Scanner scan = new Scanner(System.in);
     
-        int op = 1;
+        int op = -1;
+        int id = -1;
     
         while(op != 0){
     
@@ -98,7 +99,7 @@ public class Main {
                 case 2:
     
                     System.out.print("Informe o index da música procurada: ");
-                    int id = scan.nextInt();
+                    id = scan.nextInt();
     
                     Musica musica = CRUD.read(id);
     
@@ -108,6 +109,7 @@ public class Main {
                     if(musica == null){
     
                         System.out.println("Registro não encontrado!");
+                        System.out.println();
     
                     }else{
     
@@ -124,7 +126,23 @@ public class Main {
     
                 case 4:
     
-                    //Deletar registro
+                    System.out.print("Informe o index da música que deseja remover: ");
+                    id = scan.nextInt();
+
+                    clear();
+                    
+                    if(CRUD.delete(id)){
+
+                        System.out.println("Música removida com sucesso!");
+
+                    }else{
+
+                        System.out.println("Erro ao remover a música!");
+
+                    }
+
+                    System.out.println();
+
                     break;
     
                 default:

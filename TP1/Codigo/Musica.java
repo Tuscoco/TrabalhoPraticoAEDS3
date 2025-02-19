@@ -8,7 +8,6 @@ public class Musica {
     private String date;
     private double length;
     private String[] fArtists;
-    private boolean removido;
 
 
     public Musica(){}
@@ -22,25 +21,12 @@ public class Musica {
         this.date = date;
         this.length = length;
         this.fArtists = fArtists;
-        this.removido = false;
 
     }
 
     public int getIndex(){
 
         return index;
-
-    }
-
-    public boolean isRemovido(){
-
-        return removido;
-
-    }
-
-    public void setRemovido(boolean removido){
-
-        this.removido = removido;
 
     }
 
@@ -96,8 +82,6 @@ public class Musica {
             this.fArtists[i] = new String(artistBytes, "UTF-8");
 
         }
-
-        this.removido = dis.readBoolean();
 
     }
 

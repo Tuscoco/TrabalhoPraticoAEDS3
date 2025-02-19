@@ -17,7 +17,7 @@ public final class CRUD {
 
             byte[] array = musica.toByteArray();
 
-            file.writeBoolean(musica.isRemovido());
+            file.writeBoolean(false);
             file.writeInt(array.length);
             file.write(array);
 
@@ -29,7 +29,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro: CRUD.create - " + e.getMessage());
 
         }
 
@@ -51,7 +51,7 @@ public final class CRUD {
                 Musica nova = new Musica();
                 nova.fromByteArray(array);
 
-                if(!nova.isRemovido()){
+                if(!lapide){
 
                     System.out.println(nova);
 
@@ -61,7 +61,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro: CRUD.readAll - " + e.getMessage());
 
         }
 
@@ -84,7 +84,15 @@ public final class CRUD {
 
                 if(nova.getIndex() == id){
 
-                    return nova;
+                    if(lapide){
+
+                        return null;
+
+                    }else{
+
+                        return nova;
+
+                    }
 
                 }
 
@@ -92,7 +100,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro: CRUD.read - " + e.getMessage());
 
         }
 
@@ -106,6 +114,40 @@ public final class CRUD {
  
 /////////////////////////////////////////////////DELETE//////////////////////////////////////////////////////
 
-    public static void delete(){}
+    public static boolean delete(int id) throws FileNotFoundException, IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
+            while(file.getFilePointer() < file.length()){
+
+                long posicao = file.getFilePointer();
+                boolean lapide = file.readBoolean();
+                int tamanho = file.readInt();
+                byte[] array = new byte[tamanho];
+                file.readFully(array);
+
+                Musica nova = new Musica();
+                nova.fromByteArray(array);
+
+                if(nova.getIndex() == id && !lapide){                          //Precisa de mais testes
+
+                    file.seek(posicao);
+                    file.writeBoolean(true);
+
+                    return true;
+
+                }
+
+            }
+
+        }catch(IOException e){
+
+            System.out.println("Erro: CRUD.delete - " + e.getMessage());
+
+        }
+
+        return false;
+
+    }
 
 }
