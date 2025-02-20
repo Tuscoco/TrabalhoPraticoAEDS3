@@ -23,7 +23,7 @@ public class Main {
 
                 int index = Integer.parseInt(dados[0]);
                 String name = dados[1];
-                String artist = dados[2];
+                String artist = String.format("%-" + 15 + "s", dados[2]);
                 String date = dados[3];
                 double length = Double.parseDouble(dados[4]);
                 String[] fArtist = new String[0];

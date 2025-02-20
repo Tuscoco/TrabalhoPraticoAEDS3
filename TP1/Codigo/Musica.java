@@ -17,7 +17,7 @@ public class Musica {
 
         this.index = index;
         this.name = name;
-        this.artist = artist;
+        this.artist = tratarTamanho(artist, 15);
         this.date = date;
         this.length = length;
         this.fArtists = fArtists;
@@ -34,6 +34,18 @@ public class Musica {
     public String toString(){
 
         return "\n|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + date + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
+
+    }
+
+    public String tratarTamanho(String str, int tamanho){
+
+        if(str.length() > tamanho){
+
+            return str.substring(0, tamanho);
+
+        }
+
+        return String.format("%-" + tamanho + "s", str);
 
     }
 
