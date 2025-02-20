@@ -91,6 +91,10 @@ public class Main {
     
             switch(op){
     
+                case 0:
+
+                    break;
+                
                 case 1:
     
                     preencherCatalogo();

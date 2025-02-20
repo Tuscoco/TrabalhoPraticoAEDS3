@@ -13,8 +13,10 @@ public final class CRUD {
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
+            file.seek(0);
+            file.writeInt(musica.getIndex());
+            
             file.seek(file.length());
-
             byte[] array = musica.toByteArray();
 
             file.writeBoolean(false);
@@ -26,6 +28,8 @@ public final class CRUD {
                 System.out.println("Música adicionada com sucesso!");
 
             }
+
+            file.close();
 
         }catch(IOException e){
 
@@ -40,6 +44,8 @@ public final class CRUD {
     public static void read() throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+
+            file.readInt();
 
             while(file.getFilePointer() < file.length()){
 
@@ -59,6 +65,8 @@ public final class CRUD {
 
             }
 
+            file.close();
+
         }catch(IOException e){
 
             System.out.println("Erro: CRUD.readAll - " + e.getMessage());
@@ -70,7 +78,8 @@ public final class CRUD {
     public static Musica read(int id) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
-            System.out.println("Entrei na função");
+
+            file.readInt();
 
             while(file.getFilePointer() < file.length()){
 
@@ -98,6 +107,8 @@ public final class CRUD {
 
             }
 
+            file.close();
+
         }catch(IOException e){
 
             System.out.println("Erro: CRUD.read - " + e.getMessage());
@@ -111,12 +122,27 @@ public final class CRUD {
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
     public static void update(){}
+
+    public static int ultimoId() throws IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+
+            file.seek(0);
+            int id = file.readInt();
+
+            return id;
+
+        }
+
+    }
  
 /////////////////////////////////////////////////DELETE//////////////////////////////////////////////////////
 
     public static boolean delete(int id) throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
+            file.readInt();
 
             while(file.getFilePointer() < file.length()){
 
@@ -139,6 +165,8 @@ public final class CRUD {
                 }
 
             }
+
+            file.close();
 
         }catch(IOException e){
 
