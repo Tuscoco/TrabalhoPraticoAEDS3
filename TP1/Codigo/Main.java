@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class Main {
 
+//////////////////////////////////////////////////////AUXILIARES//////////////////////////////////////////////////////
+
     public static void preencherCatalogo(){
 
         String arquivo = "CSV/rock5.csv";
@@ -75,6 +77,8 @@ public class Main {
         System.out.flush();
 
     }
+
+//////////////////////////////////////////////////////MAIN//////////////////////////////////////////////////////
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
     
