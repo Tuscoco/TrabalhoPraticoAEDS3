@@ -5,10 +5,19 @@ public final class CRUD {
     
     private static String arquivo = "DataBase/rock.db";
 
-    private CRUD(){}
-
+    private CRUD(){} 
 
 /////////////////////////////////////////////////CREATE//////////////////////////////////////////////////////
+
+    /*
+     * Método para adicionar um registro do arquivo. 
+     * 
+     * Funcionamento: 
+     * -Recebe um objeto "Musica" e organiza o registro.
+     * -O arquivo é aberto, o ponteiro é movido para o início, onde escreve o ultimo índice incerido.
+     * -O ponteiro é movido para o final do arquivo e escreve o registro, que é organizado em: lápide, tamanho do registro e dados.
+     * -O arquivo é fechado.
+     */
 
     public static void create(Musica musica, boolean conf) throws FileNotFoundException, IOException{
 
@@ -41,6 +50,16 @@ public final class CRUD {
     }
 
 /////////////////////////////////////////////////READ//////////////////////////////////////////////////////
+
+    /*
+     * Método para ler todos os registros do arquivo. 
+     * 
+     * Funcionamento: 
+     * -O arquivo é aberto e o ponteiro lê registro por registro.
+     * -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e imprimidos na tela.
+     * -Se a lápide estiver verdadeira(registro "removido"), os dados não são imprimidos na tela.
+     * -O arquivo é fechado.
+     */
 
     public static void read() throws FileNotFoundException, IOException{
 
@@ -75,6 +94,19 @@ public final class CRUD {
         }
 
     }
+
+    /*
+     * Método para ler um registro do arquivo. 
+     * 
+     * Funcionamento: 
+     * -Recebe o índice do registro desejado.
+     * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
+     *     -Se o índice for encontrado.
+     *         -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e retornado.
+     *         -Se a lápide estiver verdadeira(registro "removido"), o método retorna null(registro não encontrado).
+     *     -Se o índice não for encontrado, o método retorna null(registro não encontrado).
+     * -O arquivo é fechado.
+     */
 
     public static Musica read(int id) throws IOException{
 
@@ -122,39 +154,57 @@ public final class CRUD {
 
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
-public static int obterProximoId() throws IOException{
+    /*
+     * Método para obter o próximo índice. 
+     * 
+     * Funcionamento: 
+     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
+     * -O ponteiro lê o ultimo índice inserido, soma 1 e retorna.
+     * -O arquivo é fechado.
+     */
 
-    try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+    public static int obterProximoId() throws IOException{
 
-        file.seek(0);
-        int ultimoId = file.readInt();
-        return ultimoId + 1;
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
+            file.seek(0);
+            int ultimoId = file.readInt();
+            return ultimoId + 1;
+
+        }
 
     }
 
-}
+    /*
+     * Método para atualizar o último índice. 
+     * 
+     * Funcionamento: 
+     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
+     * -O ponteiro escreve o ultimo índice inserido.
+     * -O arquivo é fechado.
+     */
 
-public static void atualizarUltimoId(int novoId) throws IOException{
+    public static void atualizarUltimoId(int novoId) throws IOException{
 
-    try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
-        file.seek(0);
-        file.writeInt(novoId);
+            file.seek(0);
+            file.writeInt(novoId);
+
+        }
 
     }
 
-}
+    public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
 
-public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
+        byte[] novoArray = array.clone(); 
+        byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
 
-    byte[] novoArray = array.clone(); 
-    byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
+        System.arraycopy(idBytes, 0, novoArray, 0, 4);
 
-    System.arraycopy(idBytes, 0, novoArray, 0, 4);
+        return novoArray;
 
-    return novoArray;
-
-}
+    }
 
     public static boolean update(int id, Musica novaMusica) throws IOException{
 
@@ -224,22 +274,21 @@ public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
         return false;
 
     }
-
-
-    public static int ultimoId() throws IOException{
-
-        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
-
-            file.seek(0);
-            int id = file.readInt();
-
-            return id;
-
-        }
-
-    }
  
 /////////////////////////////////////////////////DELETE//////////////////////////////////////////////////////
+
+    /*
+     * Método para "deletar" um registro do arquivo. 
+     * 
+     * Funcionamento: 
+     * -Recebe o índice do registro que se deseja "deletar".
+     * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
+     *     -Se o índice for encontrado, o ponteiro retorna até a lápide do registro .
+     *         -Se a lápide estiver falsa(registro não removido) ela é marcada como verdadeira e o método retorna true(registro "removido").
+     *         -Se a lápide estiver verdadeira(registro removido) o método retorna false(registro já "removido").
+     *     -Se o índice não for encontrado, o método retorna false(registro não encontrado).
+     * -O arquivo é fechado.
+     */
 
     public static boolean delete(int id) throws FileNotFoundException, IOException{
 
