@@ -9,7 +9,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "CSV/rock5.csv";
+        String arquivo = "./TP1/Codigo/CSV/rock5.csv";
 
         try{
 
@@ -129,7 +129,29 @@ public class Main {
     
                 case 3:
     
-                    //Atualizar registro
+                    System.out.print("Informe o index da música a ser atualizada: ");
+                    id = scan.nextInt();
+                    scan.nextLine();
+
+                    System.out.print("Novo nome: ");
+                    String name = scan.nextLine();
+                    System.out.print("Novo artista: ");
+                    String artist = scan.nextLine();
+                    System.out.print("Nova data: ");
+                    String date = scan.nextLine();
+                    System.out.print("Nova duração: ");
+                    double length = scan.nextDouble();
+                    scan.nextLine();
+                    
+                    System.out.print("Novos artistas relacionados (separados por vírgula): ");
+                    String[] fArtists = scan.nextLine().split(",\s*");
+
+                    Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
+                    if (CRUD.update(id, novaMusica)) {
+                        System.out.println("Registro atualizado com sucesso!");
+                    } else {
+                        System.out.println("Erro ao atualizar o registro!");
+                    }
                     break;
     
                 case 4:
