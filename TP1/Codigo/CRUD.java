@@ -3,7 +3,7 @@ import java.nio.ByteBuffer;
 
 public final class CRUD {
     
-    private static String arquivo = "./TP1/Codigo/DataBase/rock.db";
+    private static String arquivo = "DataBase/rock.db";
 
     private CRUD(){}
 
@@ -121,35 +121,49 @@ public final class CRUD {
     }
 
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
-public static int obterProximoId() throws IOException {
-    try (RandomAccessFile file = new RandomAccessFile(arquivo, "rw")) {
+
+public static int obterProximoId() throws IOException{
+
+    try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
         file.seek(0);
         int ultimoId = file.readInt();
         return ultimoId + 1;
+
     }
+
 }
 
-public static void atualizarUltimoId(int novoId) throws IOException {
-    try (RandomAccessFile file = new RandomAccessFile(arquivo, "rw")) {
+public static void atualizarUltimoId(int novoId) throws IOException{
+
+    try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
         file.seek(0);
         file.writeInt(novoId);
+
     }
+
 }
 
-public static byte[] modificarIdNoByteArray(byte[] array, int novoId) {
+public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
+
     byte[] novoArray = array.clone(); 
     byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
 
     System.arraycopy(idBytes, 0, novoArray, 0, 4);
 
     return novoArray;
+
 }
 
-    public static boolean update(int id, Musica novaMusica) throws IOException {
-        try (RandomAccessFile file = new RandomAccessFile(arquivo, "rw")) {
+    public static boolean update(int id, Musica novaMusica) throws IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
             file.readInt(); 
 
-            while (file.getFilePointer() < file.length()) {
+            while(file.getFilePointer() < file.length()){
+
                 long posicao = file.getFilePointer();
                 boolean lapide = file.readBoolean();
                 int tamanhoAntigo = file.readInt();
@@ -159,17 +173,24 @@ public static byte[] modificarIdNoByteArray(byte[] array, int novoId) {
                 Musica musicaAntiga = new Musica();
                 musicaAntiga.fromByteArray(array);
 
-                if (musicaAntiga.getIndex() == id && !lapide) {
+                if(musicaAntiga.getIndex() == id && !lapide){
+
                     byte[] novoArray = novaMusica.toByteArray();
                     int tamanhoNovo = novoArray.length;
 
-                    if (tamanhoNovo <= tamanhoAntigo) {
+                    if(tamanhoNovo <= tamanhoAntigo){
+
                         file.seek(posicao + 1 + 4); 
                         file.write(novoArray);
-                        if (tamanhoNovo < tamanhoAntigo) {
+
+                        if(tamanhoNovo < tamanhoAntigo){
+
                             file.write(new byte[tamanhoAntigo - tamanhoNovo]);
+
                         }
-                    } else {
+
+                    }else{
+
                         file.seek(posicao);
                         file.writeBoolean(true);
 
@@ -187,13 +208,21 @@ public static byte[] modificarIdNoByteArray(byte[] array, int novoId) {
                         return true;
                         
                     }
+
                     return true;
+
                 }
+
             }
-        } catch (IOException e) {
+
+        }catch(IOException e){
+
             System.out.println("Erro: CRUD.update - " + e.getMessage());
+
         }
+
         return false;
+
     }
 
 
@@ -229,7 +258,7 @@ public static byte[] modificarIdNoByteArray(byte[] array, int novoId) {
                 Musica nova = new Musica();
                 nova.fromByteArray(array);
 
-                if(nova.getIndex() == id && !lapide){                          //Precisa de mais testes
+                if(nova.getIndex() == id && !lapide){
 
                     file.seek(posicao);
                     file.writeBoolean(true);

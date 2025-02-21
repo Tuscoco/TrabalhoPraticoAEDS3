@@ -9,7 +9,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "./TP1/Codigo/CSV/rock5.csv";
+        String arquivo = "CSV/rock5.csv";
 
         try{
 
@@ -147,11 +147,17 @@ public class Main {
                     String[] fArtists = scan.nextLine().split(",\s*");
 
                     Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
-                    if (CRUD.update(id, novaMusica)) {
+
+                    if(CRUD.update(id, novaMusica)){
+
                         System.out.println("Registro atualizado com sucesso!");
-                    } else {
+
+                    }else{
+
                         System.out.println("Erro ao atualizar o registro!");
+
                     }
+                    
                     break;
     
                 case 4:
