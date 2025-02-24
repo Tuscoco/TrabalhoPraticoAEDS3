@@ -23,7 +23,7 @@ public class Main {
 
                 String[] dados = linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                int index = Integer.parseInt(dados[0]);
+                //int index = Integer.parseInt(dados[0]);
                 String name = dados[1];
                 String artist = String.format("%-" + 15 + "s", dados[2]);
                 String date = dados[3];
@@ -43,7 +43,7 @@ public class Main {
 
                 }             
 
-                Musica musica = new Musica(index, name, artist, date, length, fArtist);
+                Musica musica = new Musica(name, artist, date, length, fArtist);
                 CRUD.create(musica, false);
 
             }
@@ -63,10 +63,11 @@ public class Main {
         System.out.println("===============================================================================");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
-        System.out.println("2 -> Ler um registro");
-        System.out.println("3 -> Atualizar registro");
-        System.out.println("4 -> Deletar registro");
-        System.out.println("5 -> Ler todos os registros");
+        System.out.println("2 -> Criar um registro");
+        System.out.println("3 -> Ler um registro");
+        System.out.println("4 -> Atualizar registro");
+        System.out.println("5 -> Deletar registro");
+        System.out.println("6 -> Ler todos os registros");
         System.out.println("0 -> Encerrar");
         System.out.println("===============================================================================");
 
@@ -105,7 +106,7 @@ public class Main {
                     preencherCatalogo();
                     break;
                 
-                case 2:
+                case 3:
     
                     System.out.print("Informe o index da música procurada: ");
                     id = scan.nextInt();
@@ -128,7 +129,7 @@ public class Main {
     
                     break;
     
-                case 3:
+                case 4:
     
                     System.out.print("Informe o index da música a ser atualizada: ");
                     id = scan.nextInt();
@@ -161,7 +162,7 @@ public class Main {
                     
                     break;
     
-                case 4:
+                case 5:
     
                     System.out.print("Informe o index da música que deseja remover: ");
                     id = scan.nextInt();
@@ -182,7 +183,7 @@ public class Main {
 
                     break;
 
-                case 5:
+                case 6:
 
                     CRUD.read();
                     break;

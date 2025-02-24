@@ -23,6 +23,8 @@ public final class CRUD {
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
+            musica.setIndex(obterProximoId());
+
             file.seek(0);
             file.writeInt(musica.getIndex());
             
@@ -154,58 +156,6 @@ public final class CRUD {
 
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
-    /*
-     * Método para obter o próximo índice. 
-     * 
-     * Funcionamento: 
-     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
-     * -O ponteiro lê o ultimo índice inserido, soma 1 e retorna.
-     * -O arquivo é fechado.
-     */
-
-    public static int obterProximoId() throws IOException{
-
-        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
-
-            file.seek(0);
-            int ultimoId = file.readInt();
-            return ultimoId + 1;
-
-        }
-
-    }
-
-    /*
-     * Método para atualizar o último índice. 
-     * 
-     * Funcionamento: 
-     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
-     * -O ponteiro escreve o ultimo índice inserido.
-     * -O arquivo é fechado.
-     */
-
-    public static void atualizarUltimoId(int novoId) throws IOException{
-
-        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
-
-            file.seek(0);
-            file.writeInt(novoId);
-
-        }
-
-    }
-
-    public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
-
-        byte[] novoArray = array.clone(); 
-        byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
-
-        System.arraycopy(idBytes, 0, novoArray, 0, 4);
-
-        return novoArray;
-
-    }
-
     public static boolean update(int id, Musica novaMusica) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
@@ -327,6 +277,69 @@ public final class CRUD {
         }
 
         return false;
+
+    }
+
+/////////////////////////////////////////////////AUXILIARES//////////////////////////////////////////////////////
+
+
+    /*
+     * Método para obter o próximo índice. 
+     * 
+     * Funcionamento: 
+     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
+     * -O ponteiro lê o ultimo índice inserido, soma 1 e retorna.
+     * -O arquivo é fechado.
+     */
+
+     public static int obterProximoId() throws IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
+            if(file.length() == 0){
+
+                return 0;
+
+            }else{
+
+                file.seek(0);
+                int ultimoId = file.readInt();
+                return ultimoId + 1;
+
+            }
+
+        }
+
+    }
+
+    /*
+     * Método para atualizar o último índice. 
+     * 
+     * Funcionamento: 
+     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
+     * -O ponteiro escreve o ultimo índice inserido.
+     * -O arquivo é fechado.
+     */
+
+    public static void atualizarUltimoId(int novoId) throws IOException{
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
+
+            file.seek(0);
+            file.writeInt(novoId);
+
+        }
+
+    }
+
+    public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
+
+        byte[] novoArray = array.clone(); 
+        byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
+
+        System.arraycopy(idBytes, 0, novoArray, 0, 4);
+
+        return novoArray;
 
     }
 

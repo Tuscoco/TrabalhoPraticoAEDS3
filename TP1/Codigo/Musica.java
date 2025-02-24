@@ -24,9 +24,26 @@ public class Musica {
 
     }
 
+    public Musica(String name, String artist, String date, double length, String[] fArtists){
+
+        this.index = -1;
+        this.name = name;
+        this.artist = tratarTamanho(artist, 15);
+        this.date = date;
+        this.length = length;
+        this.fArtists = fArtists;
+
+    }
+
     public int getIndex(){
 
         return index;
+
+    }
+
+    public void setIndex(int index){
+
+        this.index = index;
 
     }
 
