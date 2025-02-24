@@ -37,6 +37,15 @@ public class Musica {
 
     }
 
+    /*
+     * Método que limita o tamanho da string
+     * 
+     * -Recebe uma String e um tamanho
+     * -Se a String for menor, ela é formatada com espaços até completar o tamanho máximo
+     * -Se a String for maior, ela é "cortada"
+     * -Se a String for igual, ela é mantida
+     * -Retorna a String
+     */
     public String tratarTamanho(String str, int tamanho){
 
         if(str.length() > tamanho){
@@ -49,6 +58,9 @@ public class Musica {
 
     }
 
+    /*
+     * Método que "transforma" o objeto em um array de bytes
+     */
     public byte[] toByteArray() throws IOException{
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -72,6 +84,9 @@ public class Musica {
 
     }
 
+    /*
+     * Método que "transforma" um array de bytes em um objeto
+     */
     public void fromByteArray(byte[] array) throws IOException{
 
         ByteArrayInputStream bais = new ByteArrayInputStream(array);

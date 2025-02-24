@@ -66,6 +66,7 @@ public class Main {
         System.out.println("2 -> Ler um registro");
         System.out.println("3 -> Atualizar registro");
         System.out.println("4 -> Deletar registro");
+        System.out.println("5 -> Ler todos os registros");
         System.out.println("0 -> Encerrar");
         System.out.println("===============================================================================");
 
@@ -179,6 +180,11 @@ public class Main {
 
                     System.out.println();
 
+                    break;
+
+                case 5:
+
+                    CRUD.read();
                     break;
     
                 default:
