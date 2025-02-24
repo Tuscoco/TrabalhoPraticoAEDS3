@@ -194,19 +194,10 @@ public final class CRUD {
                         file.seek(posicao);
                         file.writeBoolean(true);
 
-                        int novoId = obterProximoId();
-                        byte[] novoArrayComId = modificarIdNoByteArray(novoArray, novoId);
-
-
                         file.seek(file.length());
                         file.writeBoolean(false); 
-                        file.writeInt(novoArrayComId.length);
-                        file.write(novoArrayComId);
-
-                        atualizarUltimoId(novoId);
-
-                        return true;
-                        
+                        file.writeInt(novoArray.length);
+                        file.write(novoArray);                        
                     }
 
                     return true;
