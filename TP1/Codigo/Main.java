@@ -12,7 +12,7 @@ public class Main {
 
     public static void preencherCatalogo(){
 
-        String arquivo = "CSV/rock5.csv";
+        String arquivo = "CSV/rock6.csv";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try{
@@ -29,12 +29,12 @@ public class Main {
 
                 String[] dados = linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                String name = dados[1];
-                String artist = String.format("%-" + 15 + "s", dados[2]);
+                String name = dados[0];
+                String artist = String.format("%-" + 15 + "s", dados[1]);
                 long date = 0;
 
                 try{
-                    Date parsedDate = dateFormat.parse(dados[3]);
+                    Date parsedDate = dateFormat.parse(dados[2]);
                     date = parsedDate.getTime();
 
                 } catch (ParseException e){
@@ -42,12 +42,12 @@ public class Main {
                     System.out.println("Erro: " + e.getMessage());
                 }
 
-                double length = Double.parseDouble(dados[4]);
+                double length = Double.parseDouble(dados[3]);
                 String[] fArtist = new String[0];
 
                 if(dados.length > 5){
 
-                    String featuredArtists = dados[5];
+                    String featuredArtists = dados[4];
                     if(featuredArtists.startsWith("\"")){
 
                         featuredArtists = featuredArtists.substring(1, featuredArtists.length() - 1);
