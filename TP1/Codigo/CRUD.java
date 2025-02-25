@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.ByteBuffer;
 
 public final class CRUD {
     
@@ -37,7 +36,9 @@ public final class CRUD {
 
             if(conf){
 
+                System.out.println();
                 System.out.println("Música adicionada com sucesso! ID = " + musica.getIndex());
+                System.out.println();
 
             }
 
@@ -293,8 +294,7 @@ public final class CRUD {
      * -O ponteiro lê o ultimo índice inserido, soma 1 e retorna.
      * -O arquivo é fechado.
      */
-
-     public static int obterProximoId() throws IOException{
+    private static int obterProximoId() throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
@@ -314,34 +314,15 @@ public final class CRUD {
 
     }
 
-    /*
-     * Método para atualizar o último índice. 
-     * 
-     * Funcionamento: 
-     * -O arquivo é aberto e o ponteiro é movido para o início do arquivo.
-     * -O ponteiro escreve o ultimo índice inserido.
-     * -O arquivo é fechado.
-     */
-
-    public static void atualizarUltimoId(int novoId) throws IOException{
+    public static void reiniciarBD() throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
-            file.seek(0);
-            file.writeInt(novoId);
+            file.setLength(0);
+
+            file.close();
 
         }
-
-    }
-
-    public static byte[] modificarIdNoByteArray(byte[] array, int novoId){
-
-        byte[] novoArray = array.clone(); 
-        byte[] idBytes = ByteBuffer.allocate(4).putInt(novoId).array();
-
-        System.arraycopy(idBytes, 0, novoArray, 0, 4);
-
-        return novoArray;
 
     }
 

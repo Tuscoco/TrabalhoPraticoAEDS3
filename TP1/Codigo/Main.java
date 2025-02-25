@@ -17,6 +17,8 @@ public class Main {
 
         try{
 
+            CRUD.reiniciarBD();
+
             RandomAccessFile file = new RandomAccessFile(arquivo, "r");
 
             file.readLine();
@@ -64,6 +66,10 @@ public class Main {
 
             file.close();
 
+            System.out.println();
+            System.out.println("Base de dados carregada no arquivo!");
+            System.out.println();
+
         }catch(IOException e){
 
             System.out.println("Erro: " + e.getMessage());
@@ -74,7 +80,7 @@ public class Main {
 
     public static void menu(){
 
-        System.out.println("==============BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=============");
+        System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
         System.out.println("2 -> Criar um registro");
@@ -83,7 +89,7 @@ public class Main {
         System.out.println("5 -> Deletar registro");
         System.out.println("6 -> Ler todos os registros");
         System.out.println("0 -> Encerrar");
-        System.out.println("===============================================================================");
+        System.out.println("================================================================================");
 
     }
 
@@ -118,12 +124,15 @@ public class Main {
                 
                 case 1:
     
+                    clear();
                     preencherCatalogo();
+
                     break;
 
                 case 2:
                 
                     scan.nextLine();
+                    clear();
     
                     System.out.print("Nome: ");
                     String nome = scan.nextLine();
@@ -134,11 +143,14 @@ public class Main {
                     long data = 0;
 
                     try{
+
                         Date parsedDate = dateFormat.parse(dataStr);
                         data = parsedDate.getTime();
-                    } catch (ParseException e){
+
+                    }catch(ParseException e){
 
                         System.out.println("Erro: " + e.getMessage());
+                        
                     }
 
                     System.out.print("Duração: ");
@@ -150,12 +162,12 @@ public class Main {
 
                     Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
                     CRUD.create(addNovaMusica, true);
-
         
                     break;
                 
                 case 3:
     
+                    clear();
                     System.out.print("Informe o index da música procurada: ");
                     id = scan.nextInt();
 
@@ -166,6 +178,7 @@ public class Main {
     
                     if(musica == null){
     
+                        System.out.println();
                         System.out.println("Registro não encontrado!");
                         System.out.println();
     
@@ -179,6 +192,7 @@ public class Main {
     
                 case 4:
     
+                    clear();
                     System.out.print("Informe o index da música a ser atualizada: ");
                     id = scan.nextInt();
                     scan.nextLine();
@@ -210,11 +224,15 @@ public class Main {
 
                     if(CRUD.update(id, novaMusica)){
 
+                        System.out.println();
                         System.out.println("Registro atualizado com sucesso!");
+                        System.out.println();
 
                     }else{
 
+                        System.out.println();
                         System.out.println("Erro ao atualizar o registro!");
+                        System.out.println();
 
                     }
                     
@@ -222,6 +240,7 @@ public class Main {
     
                 case 5:
     
+                    clear();
                     System.out.print("Informe o index da música que deseja remover: ");
                     id = scan.nextInt();
 
@@ -229,11 +248,15 @@ public class Main {
                     
                     if(CRUD.delete(id)){
 
+                        System.out.println();
                         System.out.println("Música removida com sucesso!");
+                        System.out.println();
 
                     }else{
 
+                        System.out.println();
                         System.out.println("Erro ao remover a música!");
+                        System.out.println();
 
                     }
 
@@ -243,6 +266,7 @@ public class Main {
 
                 case 6:
 
+                    clear();
                     CRUD.read();
                     break;
     
