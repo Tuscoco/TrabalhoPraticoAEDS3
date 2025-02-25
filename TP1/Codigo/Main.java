@@ -2,6 +2,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Scanner;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Main {
 
@@ -10,6 +13,7 @@ public class Main {
     public static void preencherCatalogo(){
 
         String arquivo = "CSV/rock5.csv";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try{
 
@@ -23,10 +27,20 @@ public class Main {
 
                 String[] dados = linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                //int index = Integer.parseInt(dados[0]);
                 String name = dados[1];
                 String artist = String.format("%-" + 15 + "s", dados[2]);
-                String date = dados[3];
+                long date = 0;
+
+                try{
+                    Date parsedDate = dateFormat.parse(dados[3]);
+                    date = parsedDate.getTime();
+                    System.out.println(date);
+
+                } catch (ParseException e){
+
+                    System.out.println("Erro: " + e.getMessage());
+                }
+
                 double length = Double.parseDouble(dados[4]);
                 String[] fArtist = new String[0];
 
@@ -44,6 +58,7 @@ public class Main {
                 }             
 
                 Musica musica = new Musica(name, artist, date, length, fArtist);
+
                 CRUD.create(musica, false);
 
             }
@@ -85,6 +100,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException {
     
         Scanner scan = new Scanner(System.in);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
         int op = -1;
         int id = -1;
@@ -110,7 +126,7 @@ public class Main {
     
                     System.out.print("Informe o index da música procurada: ");
                     id = scan.nextInt();
-    
+
                     Musica musica = CRUD.read(id);
     
                     clear();
@@ -139,8 +155,18 @@ public class Main {
                     String name = scan.nextLine();
                     System.out.print("Novo artista: ");
                     String artist = scan.nextLine();
-                    System.out.print("Nova data: ");
-                    String date = scan.nextLine();
+                    System.out.print("Nova data dd-MM-yyyy: ");
+                    String dateStr = scan.nextLine();
+                    long date = 0;
+
+                    try{
+                        Date parsedDate = dateFormat.parse(dateStr);
+                        date = parsedDate.getTime();
+                    } catch (ParseException e){
+
+                        System.out.println("Erro: " + e.getMessage());
+                    }
+
                     System.out.print("Nova duração: ");
                     double length = scan.nextDouble();
                     scan.nextLine();

@@ -1,19 +1,22 @@
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Musica {
     
     private int index;
     private String name;
     private String artist;
-    private String date;
+    private long date;
     private double length;
     private String[] fArtists;
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public Musica(){}
 
 
-    public Musica(int index, String name, String artist, String date, double length, String[] fArtists){
+    public Musica(int index, String name, String artist, long date, double length, String[] fArtists){
 
         this.index = index;
         this.name = name;
@@ -24,7 +27,7 @@ public class Musica {
 
     }
 
-    public Musica(String name, String artist, String date, double length, String[] fArtists){
+    public Musica(String name, String artist, long date, double length, String[] fArtists){
 
         this.index = -1;
         this.name = name;
@@ -50,7 +53,7 @@ public class Musica {
     @Override
     public String toString(){
 
-        return "\n|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + date + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
+        return "\n|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + dateFormat.format(new Date(date)) + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
 
     }
 
@@ -86,7 +89,7 @@ public class Musica {
         dos.writeInt(index);
         dos.writeUTF(name);
         dos.writeUTF(artist);
-        dos.writeUTF(date);
+        dos.writeLong(date);
         dos.writeDouble(length);
         dos.writeInt(fArtists.length);
 
@@ -94,6 +97,7 @@ public class Musica {
             
             byte[] artistBytes = artist.getBytes("UTF-8");
             dos.writeInt(artistBytes.length); 
+
             dos.write(artistBytes);
         }
 
@@ -112,7 +116,7 @@ public class Musica {
         this.index = dis.readInt();
         this.name = dis.readUTF();
         this.artist = dis.readUTF();
-        this.date = dis.readUTF();
+        this.date = dis.readLong();
         this.length = dis.readDouble();
 
         int fArtistsLength = dis.readInt();
