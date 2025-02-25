@@ -11,7 +11,7 @@ public class Musica {
     private double length;
     private String[] fArtists;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //reconhece o formato que a data será lida e exibida ao usuário para utilizar nas transformações para Timestamp
 
     public Musica(){}
 

@@ -34,7 +34,6 @@ public class Main {
                 try{
                     Date parsedDate = dateFormat.parse(dados[3]);
                     date = parsedDate.getTime();
-                    System.out.println(date);
 
                 } catch (ParseException e){
 
@@ -75,7 +74,7 @@ public class Main {
 
     public static void menu(){
 
-        System.out.println("===============================================================================");
+        System.out.println("==============BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=============");
         System.out.println("Escolha uma opção: ");
         System.out.println("1 -> Carregar base de dados no arquivo");
         System.out.println("2 -> Criar um registro");
@@ -100,7 +99,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException {
     
         Scanner scan = new Scanner(System.in);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //reconhece o formato que a data será lida e exibida ao usuário para utilizar nas transformações para Timestamp
     
         int op = -1;
         int id = -1;
@@ -120,6 +119,39 @@ public class Main {
                 case 1:
     
                     preencherCatalogo();
+                    break;
+
+                case 2:
+                
+                    scan.nextLine();
+    
+                    System.out.print("Nome: ");
+                    String nome = scan.nextLine();
+                    System.out.print("Artista: ");
+                    String artista = scan.nextLine();
+                    System.out.print("Data dd-MM-yyyy: ");
+                    String dataStr = scan.nextLine();
+                    long data = 0;
+
+                    try{
+                        Date parsedDate = dateFormat.parse(dataStr);
+                        data = parsedDate.getTime();
+                    } catch (ParseException e){
+
+                        System.out.println("Erro: " + e.getMessage());
+                    }
+
+                    System.out.print("Duração: ");
+                    double duracao = scan.nextDouble();
+                    scan.nextLine();
+                    
+                    System.out.print("Artistas relacionados (separados por vírgula): ");
+                    String[] artistas = scan.nextLine().split(",\s*");
+
+                    Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
+                    CRUD.create(addNovaMusica, true);
+
+        
                     break;
                 
                 case 3:

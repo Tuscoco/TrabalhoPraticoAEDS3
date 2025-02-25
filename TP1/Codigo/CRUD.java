@@ -37,7 +37,7 @@ public final class CRUD {
 
             if(conf){
 
-                System.out.println("Música adicionada com sucesso!");
+                System.out.println("Música adicionada com sucesso! ID = " + musica.getIndex());
 
             }
 
