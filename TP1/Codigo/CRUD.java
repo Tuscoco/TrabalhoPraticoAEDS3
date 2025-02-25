@@ -156,7 +156,18 @@ public final class CRUD {
 
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
-    public static boolean update(int id, Musica novaMusica) throws IOException{
+        /*
+     * Método para atualizar um registro do arquivo. 
+     * 
+     * Funcionamento: 
+     * -Recebe o id da música a ser atualizada e o novo objeto de música.
+     * -Identifica se a música está "viva" ou "morta" e se o novo tamanho é menor ou igual ao antigo. Se estiver "morta retorna false."
+     * -Se o novo tamanho é menor ou igual ao antigo, o registro é atualizado.
+     * -Se o novo tamanho é maior que o antigo, a lápide é marcada como verdadeira e um novo registro é adicionado no final do arquivo com o mesmo índice da música a ser atualizada.
+     */
+    
+    
+     public static boolean update(int id, Musica novaMusica) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
