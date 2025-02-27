@@ -1,18 +1,61 @@
-## Getting Started
+# Instruções de Compilação e Execução
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Este projeto foi implementado em Java. A seguir, estão as instruções para compilar e executar o sistema.
 
-## Folder Structure
+## Pré-requisitos
 
-The workspace contains two folders by default, where:
+1. **Java Development Kit (JDK)**:
+   - **Versão:** JDK 21 ou superior.
+   - **Instalação no Windows:**
+     - [Download e instalação do JDK](https://adoptium.net/)
+     - Certifique-se de adicionar o `JAVA_HOME` nas variáveis de ambiente e que o `java` e `javac` estejam acessíveis no terminal.
+   - **Instalação no Linux:**
+     - Para distribuições baseadas em Debian/Ubuntu:
+       ```bash
+       sudo apt update
+       sudo apt install openjdk-11-jdk
+       java -version
+       ```
+     - Para distribuições baseadas em Fedora:
+       ```bash
+       sudo dnf update
+       sudo dnf install java-11-openjdk-devel
+       java -version
+       ```
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+2. **Git**:
+   - **Instalação no Windows:**
+     - [Download do Git](https://git-scm.com/)
+     - Verifique a instalação com:
+       ```bash
+       git --version
+       ```
+   - **Instalação no Linux:**
+     - Para distribuições baseadas em Debian/Ubuntu:
+       ```bash
+       sudo apt update
+       sudo apt install git
+       git --version
+       ```
+     - Para distribuições baseadas em Fedora:
+       ```bash
+       sudo dnf update
+       sudo dnf install git
+       git --version
+       ```
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Execução:
+1. **Clone o repositório**:
+   ```bash
+   git clone https://github.com/Tuscoco/TrabalhoPraticoAEDS3.git
+   ```
+2. **Entre no diretório do projeto na pasta Codigo**:
+   ```bash
+   cd seu_diretorio/TrabalhoPraticoAEDS3/Codigo
+   ```
+3. **Compile e execute o projeto(há um arquivo executavel pronto para isso)**:
+   ```bash
+   ls -l ./Exec
+   chmod +x ./Exec
+   ./Exec
+   ```   
