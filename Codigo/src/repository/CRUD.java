@@ -1,8 +1,11 @@
+package repository;
+
 import java.io.*;
+import model.*;
 
 public final class CRUD {
     
-    private static String arquivo = "DataBase/rock.db";
+    private static String arquivo = "data/database/rock.db";
 
     private CRUD(){}//Construtor privado para impedir instanciações
 
