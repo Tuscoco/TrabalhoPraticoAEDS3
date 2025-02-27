@@ -4,7 +4,7 @@ public final class CRUD {
     
     private static String arquivo = "DataBase/rock.db";
 
-    private CRUD(){} 
+    private CRUD(){}//Construtor privado para impedir instanciações
 
 /////////////////////////////////////////////////CREATE//////////////////////////////////////////////////////
 
@@ -17,7 +17,6 @@ public final class CRUD {
      * -O ponteiro é movido para o final do arquivo e escreve o registro, que é organizado em: lápide, tamanho do registro e dados.
      * -O arquivo é fechado.
      */
-
     public static void create(Musica musica, boolean conf) throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
@@ -63,7 +62,6 @@ public final class CRUD {
      * -Se a lápide estiver verdadeira(registro "removido"), os dados não são imprimidos na tela.
      * -O arquivo é fechado.
      */
-
     public static void read() throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
@@ -110,7 +108,6 @@ public final class CRUD {
      *     -Se o índice não for encontrado, o método retorna null(registro não encontrado).
      * -O arquivo é fechado.
      */
-
     public static Musica read(int id) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
@@ -157,7 +154,7 @@ public final class CRUD {
 
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
-        /*
+    /*
      * Método para atualizar um registro do arquivo. 
      * 
      * Funcionamento: 
@@ -166,8 +163,6 @@ public final class CRUD {
      * -Se o novo tamanho é menor ou igual ao antigo, o registro é atualizado.
      * -Se o novo tamanho é maior que o antigo, a lápide é marcada como verdadeira e um novo registro é adicionado no final do arquivo com o mesmo índice da música a ser atualizada.
      */
-    
-    
      public static boolean update(int id, Musica novaMusica) throws IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
@@ -242,7 +237,6 @@ public final class CRUD {
      *     -Se o índice não for encontrado, o método retorna false(registro não encontrado).
      * -O arquivo é fechado.
      */
-
     public static boolean delete(int id) throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
@@ -285,7 +279,6 @@ public final class CRUD {
 
 /////////////////////////////////////////////////AUXILIARES//////////////////////////////////////////////////////
 
-
     /*
      * Método para obter o próximo índice. 
      * 
@@ -314,6 +307,12 @@ public final class CRUD {
 
     }
 
+    /*
+     * Método para apagar database
+     * 
+     * Funcionamento: 
+     * -Abre o arquivo .db e apaga todo o conteúdo
+     */
     public static void reiniciarBD() throws FileNotFoundException, IOException{
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){

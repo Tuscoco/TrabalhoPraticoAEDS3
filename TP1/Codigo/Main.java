@@ -10,6 +10,14 @@ public class Main {
 
 //////////////////////////////////////////////////////AUXILIARES//////////////////////////////////////////////////////
 
+    /*
+     * Método para preencher arquivo com dados do csv
+     * 
+     * Funcionamento: 
+     * -Abre o arquivo .csv e le a primeira linha(cabeçalho)
+     * -Le o arquivo linha a linha, trata e organiza dados 
+     * -Cria um objeto com os dados e os envia para o arquivo atraves do método create da classe CRUD
+     */
     public static void preencherCatalogo(){
 
         String arquivo = "CSV/rock6.csv";
@@ -21,7 +29,7 @@ public class Main {
 
             RandomAccessFile file = new RandomAccessFile(arquivo, "r");
 
-            file.readLine();
+            file.readLine();//Cabeçalho(não é necessário)
 
             String linha;
 
@@ -78,6 +86,12 @@ public class Main {
 
     }
 
+    /*
+     * Método para imprimir o menu de escolhas do usuário
+     * 
+     * Funcionamento: 
+     * -Imprime na tela todas as opções de ações do usuário
+     */
     public static void menu(){
 
         System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
@@ -93,6 +107,12 @@ public class Main {
 
     }
 
+    /*
+     * Método "limpar" o terminal
+     * 
+     * Funcionamento: 
+     * -Imprime várias linhas em branco em sequencia para "limpar" o terminal
+     */
     public static void clear(){
 
         System.out.print("\033[H\033[2J");
@@ -102,6 +122,13 @@ public class Main {
 
 //////////////////////////////////////////////////////MAIN//////////////////////////////////////////////////////
 
+    /*
+     * Método Principal
+     * 
+     * Funcionamento:
+     * 
+     * -Organiza as opções do usuário e chama cada método necessário para cada opção
+     */
     public static void main(String[] args) throws FileNotFoundException, IOException {
     
         Scanner scan = new Scanner(System.in);
@@ -206,11 +233,14 @@ public class Main {
                     long date = 0;
 
                     try{
+
                         Date parsedDate = dateFormat.parse(dateStr);
                         date = parsedDate.getTime();
-                    } catch (ParseException e){
+                        
+                    }catch(ParseException e){
 
                         System.out.println("Erro: " + e.getMessage());
+
                     }
 
                     System.out.print("Nova duração: ");
