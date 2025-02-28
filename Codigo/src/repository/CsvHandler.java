@@ -8,13 +8,12 @@ import java.util.Date;
 
 import model.*;
 
-public class ManipularCSV {
+public class CsvHandler {
     
     private static String arquivo = "data/csv/rock6.csv";
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private ManipularCSV(){}
-
+    private CsvHandler(){}
 
     /*
      * Método para preencher arquivo com dados do csv

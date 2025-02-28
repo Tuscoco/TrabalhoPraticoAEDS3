@@ -1,8 +1,19 @@
 package util;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
+import model.Musica;
+import repository.CRUD;
+import repository.CsvHandler;
+
 public class ConsoleHelper {
     
-    private ConsoleHelper(){}
+    public ConsoleHelper(){}
 
     /*
      * Método para imprimir o menu de escolhas do usuário
@@ -10,7 +21,7 @@ public class ConsoleHelper {
      * Funcionamento: 
      * -Imprime na tela todas as opções de ações do usuário
      */
-    public static void menu(){
+    private void menu(){
 
         System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
         System.out.println("Escolha uma opção: ");
@@ -31,10 +42,193 @@ public class ConsoleHelper {
      * Funcionamento: 
      * -Imprime várias linhas em branco em sequencia para "limpar" o terminal
      */
-    public static void clear(){
+    private void clear(){
 
         System.out.print("\033[H\033[2J");
         System.out.flush();
+
+    }
+
+    public void run() throws FileNotFoundException, IOException{
+
+        Scanner scan = new Scanner(System.in);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //Reconhece o formato que a data será lida e exibida ao usuário para utilizar nas transformações para Timestamp
+    
+        int op = -1;
+        int id = -1;
+    
+        while(op != 0){
+    
+            menu();
+    
+            op = scan.nextInt();
+    
+            switch(op){
+    
+                case 0:
+
+                    break;
+                
+                case 1:
+    
+                    clear();
+                    CsvHandler.preencherCatalogo();
+                    break;
+
+                case 2:
+                
+                    scan.nextLine();
+                    clear();
+    
+                    System.out.print("Nome: ");
+                    String nome = scan.nextLine();
+                    System.out.print("Artista: ");
+                    String artista = scan.nextLine();
+                    System.out.print("Data dd-MM-yyyy: ");
+                    String dataStr = scan.nextLine();
+                    long data = 0;
+
+                    try{
+
+                        Date parsedDate = dateFormat.parse(dataStr);
+                        data = parsedDate.getTime();
+
+                    }catch(ParseException e){
+
+                        System.out.println("Erro: " + e.getMessage());
+                        
+                    }
+
+                    System.out.print("Duração: ");
+                    double duracao = scan.nextDouble();
+                    scan.nextLine();
+                    
+                    System.out.print("Artistas relacionados (separados por vírgula): ");
+                    String[] artistas = scan.nextLine().split(",\s*");
+
+                    Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
+                    CRUD.create(addNovaMusica, true);
+        
+                    break;
+                
+                case 3:
+    
+                    clear();
+                    System.out.print("Informe o index da música procurada: ");
+                    id = scan.nextInt();
+
+                    Musica musica = CRUD.read(id);
+    
+                    clear();
+
+    
+                    if(musica == null){
+    
+                        System.out.println();
+                        System.out.println("Registro não encontrado!");
+                        System.out.println();
+    
+                    }else{
+    
+                        System.out.println(musica);
+    
+                    }
+    
+                    break;
+    
+                case 4:
+    
+                    clear();
+                    System.out.print("Informe o index da música a ser atualizada: ");
+                    id = scan.nextInt();
+                    scan.nextLine();
+
+                    System.out.print("Novo nome: ");
+                    String name = scan.nextLine();
+                    System.out.print("Novo artista: ");
+                    String artist = scan.nextLine();
+                    System.out.print("Nova data dd-MM-yyyy: ");
+                    String dateStr = scan.nextLine();
+                    long date = 0;
+
+                    try{
+
+                        Date parsedDate = dateFormat.parse(dateStr);
+                        date = parsedDate.getTime();
+                        
+                    }catch(ParseException e){
+
+                        System.out.println("Erro: " + e.getMessage());
+
+                    }
+
+                    System.out.print("Nova duração: ");
+                    double length = scan.nextDouble();
+                    scan.nextLine();
+                    
+                    System.out.print("Novos artistas relacionados (separados por vírgula): ");
+                    String[] fArtists = scan.nextLine().split(",\s*");
+
+                    Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
+
+                    if(CRUD.update(id, novaMusica)){
+
+                        System.out.println();
+                        System.out.println("Registro atualizado com sucesso!");
+                        System.out.println();
+
+                    }else{
+
+                        System.out.println();
+                        System.out.println("Erro ao atualizar o registro!");
+                        System.out.println();
+
+                    }
+                    
+                    break;
+    
+                case 5:
+    
+                    clear();
+                    System.out.print("Informe o index da música que deseja remover: ");
+                    id = scan.nextInt();
+
+                    clear();
+                    
+                    if(CRUD.delete(id)){
+
+                        System.out.println();
+                        System.out.println("Música removida com sucesso!");
+                        System.out.println();
+
+                    }else{
+
+                        System.out.println();
+                        System.out.println("Erro ao remover a música!");
+                        System.out.println();
+
+                    }
+
+                    System.out.println();
+
+                    break;
+
+                case 6:
+
+                    clear();
+                    CRUD.read();
+                    break;
+    
+                default:
+                    
+                    op = 0;
+                    break;
+    
+            }
+    
+        }
+    
+        scan.close();
 
     }
 
