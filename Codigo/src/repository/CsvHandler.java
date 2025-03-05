@@ -10,7 +10,7 @@ import model.*;
 
 public class CsvHandler {
     
-    private static String arquivo = "data/csv/rock6.csv";
+    private static String arquivo = "./Codigo/data/csv/rock6.csv";
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private CsvHandler(){}

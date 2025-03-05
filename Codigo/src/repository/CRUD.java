@@ -5,7 +5,7 @@ import model.*;
 
 public final class CRUD {
     
-    private static String arquivo = "data/database/rock.db";
+    private static String arquivo = "./Codigo/data/database/rock.db";
 
     private CRUD(){}//Construtor privado para impedir instanciações
 

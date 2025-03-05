@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+import algorithms.sorting.IntercalacaoBalanceada;
 import model.Musica;
 import repository.CRUD;
 import repository.CsvHandler;
@@ -31,6 +32,7 @@ public class ConsoleHelper {
         System.out.println("4 -> Atualizar registro");
         System.out.println("5 -> Deletar registro");
         System.out.println("6 -> Ler todos os registros");
+        System.out.println("7 -> Reordenar");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -217,6 +219,17 @@ public class ConsoleHelper {
 
                     clear();
                     CRUD.read();
+                    break;
+
+                case 7:
+
+                    clear();
+                    System.out.print("Informe o tamanho do bloco: ");
+                    int M = scan.nextInt();
+                    System.out.print("Informe o numero de fitas: ");
+                    int N = scan.nextInt();
+                    scan.nextLine();
+                    IntercalacaoBalanceada.reordenarArquivo(M, N, "./Codigo/data/database/rock.db");
                     break;
     
                 default:
