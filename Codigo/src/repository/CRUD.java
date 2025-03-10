@@ -1,6 +1,8 @@
 package repository;
 
 import java.io.*;
+
+import util.*;
 import model.*;
 
 public final class CRUD {
@@ -21,6 +23,8 @@ public final class CRUD {
      * -O arquivo é fechado.
      */
     public static void create(Musica musica, boolean conf) throws FileNotFoundException, IOException{
+
+        Logger.log(LogLevel.INFO, "CREATE chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
@@ -48,7 +52,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: CRUD.create - " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUD.create: " + e.getMessage());
 
         }
 
@@ -66,6 +70,8 @@ public final class CRUD {
      * -O arquivo é fechado.
      */
     public static void read() throws FileNotFoundException, IOException{
+
+        Logger.log(LogLevel.INFO, "READALL chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
 
@@ -93,7 +99,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: CRUD.readAll - " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUD.readAll: " + e.getMessage());
 
         }
 
@@ -112,6 +118,8 @@ public final class CRUD {
      * -O arquivo é fechado.
      */
     public static Musica read(int id) throws IOException{
+
+        Logger.log(LogLevel.INFO, "READ chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
 
@@ -147,7 +155,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: CRUD.read - " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUD.read: " + e.getMessage());
 
         }
 
@@ -167,6 +175,8 @@ public final class CRUD {
      * -Se o novo tamanho é maior que o antigo, a lápide é marcada como verdadeira e um novo registro é adicionado no final do arquivo com o mesmo índice da música a ser atualizada.
      */
      public static boolean update(int id, Musica novaMusica) throws IOException{
+
+        Logger.log(LogLevel.INFO, "UPDATE chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
@@ -218,7 +228,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: CRUD.update - " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUD.update: " + e.getMessage());
 
         }
 
@@ -241,6 +251,8 @@ public final class CRUD {
      * -O arquivo é fechado.
      */
     public static boolean delete(int id) throws FileNotFoundException, IOException{
+
+        Logger.log(LogLevel.INFO, "DELETE chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
@@ -272,7 +284,7 @@ public final class CRUD {
 
         }catch(IOException e){
 
-            System.out.println("Erro: CRUD.delete - " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUD.delete: " + e.getMessage());
 
         }
 
