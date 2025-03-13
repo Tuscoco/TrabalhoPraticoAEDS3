@@ -10,6 +10,7 @@ import java.util.Scanner;
 import model.Musica;
 import repository.CRUD;
 import repository.CsvHandler;
+import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
     
@@ -221,7 +222,8 @@ public class ConsoleHelper {
     
                 default:
                     
-                    op = 0;
+                    //op = 0;
+                    IntercalacaoBalanceada.ordenar(2, 4, "data/database/final.db");
                     break;
     
             }
