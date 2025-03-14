@@ -138,12 +138,9 @@ public final class CRUD {
 
                 if(nova.getIndex() == id){
 
-                    if(lapide){
+                    if(!lapide){
 
-                        return null;
-
-                    }else{
-
+                    
                         return nova;
 
                     }
