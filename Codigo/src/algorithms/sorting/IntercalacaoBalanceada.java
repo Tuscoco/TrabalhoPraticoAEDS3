@@ -1,5 +1,6 @@
 package algorithms.sorting;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,6 +8,7 @@ import java.util.*;
 
 import model.Musica;
 import model.Registro;
+import util.*;
 
 public class IntercalacaoBalanceada {
     
@@ -15,13 +17,30 @@ public class IntercalacaoBalanceada {
 
     public static void ordenar(int numCaminhos, int registros, String arquivoFinal) throws FileNotFoundException, IOException{
 
-        distribuirBlocos("data/database/rock.db", numCaminhos, registros);
+        Logger.log(LogLevel.INFO, "Ordenar chamado!");
 
-        intercalar(numCaminhos, arquivoFinal);
+        try{
+
+            distribuirBlocos("data/database/rock.db", numCaminhos, registros);
+
+            intercalar(numCaminhos, arquivoFinal, registros);
+
+        }catch(Exception e){
+
+            System.out.println("Falha ao ordenar arquivo!");
+
+        }
+
+        System.out.println("Arquivo ordenado com sucesso!");
+        System.out.println();
+
+        Logger.log(LogLevel.INFO, "Ordenar encerrado!");
 
     }
 
     private static void distribuirBlocos(String input, int numCaminhos, int registros) throws FileNotFoundException, IOException{
+
+        Logger.log(LogLevel.INFO, "Distribuir Blocos chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(input, "r")){
 
@@ -67,9 +86,13 @@ public class IntercalacaoBalanceada {
 
         }
 
+        Logger.log(LogLevel.INFO, "Distribuir Blocos encerrado!");
+
     }
 
     private static void salvarBloco(List<Musica> buffer, int index) throws FileNotFoundException, IOException{
+
+        Logger.log(LogLevel.INFO, "Salvar Bloco chamado!");
 
         Collections.sort(buffer, Comparator.comparing(Musica::getIndex));
 
@@ -92,15 +115,19 @@ public class IntercalacaoBalanceada {
 
     }
 
-    private static void intercalar(int numCaminhos, String arquivoFinal) throws IOException{
+    private static void intercalar(int numCaminhos, String arquivoFinal, int registros) throws IOException{
+
+        Logger.log(LogLevel.INFO, "Intercalar chamado!");
 
         List<RandomAccessFile> arquivos = new ArrayList<>();
+        List<File> temp = new ArrayList<>();
         PriorityQueue<Registro> fila = new PriorityQueue<>(Comparator.comparing(Registro::getIndex));
 
         for(int i = 0;i < numCaminhos;i++){
 
             String nome = diretorio + "temp" + i + ".db";
             arquivos.add(new RandomAccessFile(nome, "r"));
+            temp.add(new File(nome));
 
         }
 
@@ -142,17 +169,35 @@ public class IntercalacaoBalanceada {
 
             }
 
-        }
+        }catch(Exception e){
 
-        for(RandomAccessFile x : arquivos){
+            e.printStackTrace();
 
-            x.close();
+        }finally{
+
+            for(RandomAccessFile x : arquivos){
+
+                x.close();
+    
+            }
+
+            for(File x : temp){
+
+                if(x.exists()){
+
+                    x.delete();
+
+                }
+
+            }
 
         }
 
     }
 
     private static Registro carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
+
+        Logger.log(LogLevel.INFO, "Carregar registro chamado!");
 
         boolean lapide = arquivo.readBoolean();
         int tamanho = arquivo.readInt();

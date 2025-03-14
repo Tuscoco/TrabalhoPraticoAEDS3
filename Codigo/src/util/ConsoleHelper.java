@@ -32,6 +32,7 @@ public class ConsoleHelper {
         System.out.println("4 -> Atualizar registro");
         System.out.println("5 -> Deletar registro");
         System.out.println("6 -> Ler todos os registros");
+        System.out.println("7 -> Ordenar arquivo");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -219,11 +220,18 @@ public class ConsoleHelper {
                     clear();
                     CRUD.read();
                     break;
+
+                case 7:
+                    
+                    clear();
+                    IntercalacaoBalanceada.ordenar(2, 4, "data/database/final.db");
+
+                    break;
     
                 default:
                     
-                    //op = 0;
-                    IntercalacaoBalanceada.ordenar(2, 4, "data/database/final.db");
+                    clear();
+                    op = 0;
                     break;
     
             }
