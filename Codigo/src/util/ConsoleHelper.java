@@ -51,6 +51,13 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para a interação com o usuário
+     * 
+     * Funcionamento: 
+     * -Chama o método menu e recebe a opção do usuário
+     * -Recebe informações do usuário e chama o método necessário pra cada caso
+     */
     public void run() throws FileNotFoundException, IOException{
 
         Scanner scan = new Scanner(System.in);

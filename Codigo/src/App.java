@@ -7,7 +7,14 @@ import util.Logger;
 
 public class App {
 
-    //Método Principal
+    /*
+     * Método Principal
+     * 
+     * Funcionamento:
+     * 
+     * Inicializa o arquivo de log e o ConsoleHelper, iniciando a interação com o usuario
+     * chamando o método ConsoleHelper.run
+     */
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
         Logger.reiniciarLog();
