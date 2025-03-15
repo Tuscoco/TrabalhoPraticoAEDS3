@@ -107,6 +107,7 @@ public class IntercalacaoBalanceada {
 
     }
 
+    //Método que separa os registros em blocos e os distribui de acordo com o número de caminhos informado
     private static void distribuirBlocos(String input, int numCaminhos, int registros) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "Distribuir Blocos chamado!");
@@ -184,6 +185,7 @@ public class IntercalacaoBalanceada {
 
     }
 
+    //Método que intercala os registros dos caminhos em um arquivo final
     private static void intercalar(int numCaminhos, String arquivoFinal, int registros) throws IOException{
 
         Logger.log(LogLevel.INFO, "Intercalar chamado!");
@@ -263,7 +265,8 @@ public class IntercalacaoBalanceada {
         }
 
     }
-
+    
+    //Métodos auxiliares para manipulação de registros
     @SuppressWarnings("unused")
     private static Registro carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
 
@@ -287,6 +290,7 @@ public class IntercalacaoBalanceada {
 
     }
 
+    //Método para verificar se o arquivo está totalmente ordenado, utilizado nas iterações da intercalação
     @SuppressWarnings("unused")
     public static boolean estaOrdenado(String arquivo) throws IOException{
 
