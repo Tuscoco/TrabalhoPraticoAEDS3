@@ -53,9 +53,7 @@ Este projeto foi implementado em Java. A seguir, estão as instruções para com
    ```bash
    cd seu_diretorio/TrabalhoPraticoAEDS3/Codigo
    ```
-3. **Compile e execute o projeto(há um arquivo executavel pronto para isso)**:
+3. **Compile e execute o projeto(há um arquivo makefile pronto para isso)**:
    ```bash
-   ls -l ./Exec
-   chmod +x ./Exec
-   ./Exec
+   make run
    ```   
