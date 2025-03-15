@@ -4,11 +4,15 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/*
+ * Classe que guarda um registro do arquivo
+ * Organizado em: id, nome, artista, data, tamanho e artistasRelacionados
+ */
 public class Musica {
     
     private int index;
-    private String name;
-    private String artist;
+    private String name; //Tamanho variável
+    private String artist; //Tamanho fixo
     private long date;
     private double length;
     private String[] fArtists;

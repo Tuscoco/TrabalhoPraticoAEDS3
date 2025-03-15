@@ -12,6 +12,7 @@ import util.*;
 
 /*
  * Classe que implementa a Intercalação balanceada e a verificação se um arquivo está ordenado
+ * Implementado com ajuda de inteligência artificial
  */
 public class IntercalacaoBalanceada {
     
@@ -54,7 +55,7 @@ public class IntercalacaoBalanceada {
         while(!ordenado){
             
             ordenar(arquivoInicial, numCaminhos, 100, arquivoFinal);
-            ordenado = isSorted(arquivoFinal);
+            ordenado = estaOrdenado(arquivoFinal);
 
             if(!ordenado){
 
@@ -287,46 +288,58 @@ public class IntercalacaoBalanceada {
     }
 
     @SuppressWarnings("unused")
-    public static boolean isSorted(String arquivo) throws IOException {
+    public static boolean estaOrdenado(String arquivo) throws IOException{
+
         Logger.log(LogLevel.INFO, "Verificando se o arquivo está ordenado!");
 
-        try (RandomAccessFile file = new RandomAccessFile(arquivo, "r")) {
-            if (file.length() == 0) {
-                return true; // Arquivo vazio é considerado ordenado
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+
+            if(file.length() == 0){
+
+                return true; //Arquivo vazio sempre é ordenado
+
             }
 
-            int id = file.readInt(); // Lê o último ID
-            Musica previous = null;
+            int id = file.readInt(); //Lê o último ID que está gravado no inicio do arquivo
+            Musica anterior = null;
 
-            while (file.getFilePointer() < file.length()) {
+            while(file.getFilePointer() < file.length()){
+
                 boolean lapide = file.readBoolean();
                 int tamanho = file.readInt();
                 byte[] array = new byte[tamanho];
                 file.readFully(array);
 
-                if (!lapide) {
-                    Musica current = new Musica();
-                    current.fromByteArray(array);
+                if(!lapide){
 
-                    if (previous != null && previous.getIndex() > current.getIndex()) {
-                        return false; // Encontrou um registro fora de ordem
+                    Musica atual = new Musica();
+                    atual.fromByteArray(array);
+
+                    if(anterior != null && anterior.getIndex() > atual.getIndex()){
+
+                        return false; //Encontrou algum registro fora de ordem
+
                     }
 
-                    previous = current;
+                    anterior = atual;
+
                 }
+
             }
+
         }
 
-        return true; // Todos os registros estão em ordem
+        return true; //O arquivo está totalmente ordenado
 
     }
 
+    //Método que usa o makefile para excluir todos os arquivos temporários criados para a ordenação
     private static void excluirTemporarios(){
 
         try{
 
-            Process process = new ProcessBuilder("make", "delete").start();
-            process.waitFor();
+            Process make = new ProcessBuilder("make", "delete").start();
+            make.waitFor();
 
         }catch(IOException | InterruptedException e){
 

@@ -124,10 +124,10 @@ public final class CRUD {
      * Funcionamento: 
      * -Recebe o índice do registro desejado.
      * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
-     *     -Se o índice for encontrado.
-     *         -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e retornado.
-     *         -Se a lápide estiver verdadeira(registro "removido"), o método retorna null(registro não encontrado).
-     *     -Se o índice não for encontrado, o método retorna null(registro não encontrado).
+     * -Se o índice for encontrado.
+     * -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e retornado.
+     * -Se a lápide estiver verdadeira(registro "removido"), o método retorna null(registro não encontrado).
+     * -Se o índice não for encontrado, o método retorna null(registro não encontrado).
      * -O arquivo é fechado.
      */
     public static Musica read(int id) throws IOException{
@@ -254,10 +254,10 @@ public final class CRUD {
      * Funcionamento: 
      * -Recebe o índice do registro que se deseja "deletar".
      * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
-     *     -Se o índice for encontrado, o ponteiro retorna até a lápide do registro .
-     *         -Se a lápide estiver falsa(registro não removido) ela é marcada como verdadeira e o método retorna true(registro "removido").
-     *         -Se a lápide estiver verdadeira(registro removido) o método retorna false(registro já "removido").
-     *     -Se o índice não for encontrado, o método retorna false(registro não encontrado).
+     * -Se o índice for encontrado, o ponteiro retorna até a lápide do registro .
+     * -Se a lápide estiver falsa(registro não removido) ela é marcada como verdadeira e o método retorna true(registro "removido").
+     * -Se a lápide estiver verdadeira(registro removido) o método retorna false(registro já "removido").
+     * -Se o índice não for encontrado, o método retorna false(registro não encontrado).
      * -O arquivo é fechado.
      */
     public static boolean delete(int id) throws FileNotFoundException, IOException{
