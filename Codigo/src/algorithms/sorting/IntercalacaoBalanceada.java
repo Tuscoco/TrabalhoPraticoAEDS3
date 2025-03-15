@@ -217,4 +217,37 @@ public class IntercalacaoBalanceada {
 
     }
 
+    public static boolean isSorted(String arquivo) throws IOException {
+        Logger.log(LogLevel.INFO, "Verificando se o arquivo está ordenado!");
+
+        try (RandomAccessFile file = new RandomAccessFile(arquivo, "r")) {
+            if (file.length() == 0) {
+                return true; // Arquivo vazio é considerado ordenado
+            }
+
+            int id = file.readInt(); // Lê o último ID
+            Musica previous = null;
+
+            while (file.getFilePointer() < file.length()) {
+                boolean lapide = file.readBoolean();
+                int tamanho = file.readInt();
+                byte[] array = new byte[tamanho];
+                file.readFully(array);
+
+                if (!lapide) {
+                    Musica current = new Musica();
+                    current.fromByteArray(array);
+
+                    if (previous != null && previous.getIndex() > current.getIndex()) {
+                        return false; // Encontrou um registro fora de ordem
+                    }
+
+                    previous = current;
+                }
+            }
+        }
+
+        return true; // Todos os registros estão em ordem
+    }
+
 }

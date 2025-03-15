@@ -8,7 +8,7 @@ import model.*;
 public final class CRUD {
     
     private static String arquivo = "data/database/rock.db";
-    //private static String arquivo = "data/database/final.db";
+    private static String arquivoOrdenado = "data/database/final.db";
 
     private CRUD(){}//Construtor privado para impedir instanciações
 
@@ -70,11 +70,23 @@ public final class CRUD {
      * -Se a lápide estiver verdadeira(registro "removido"), os dados não são imprimidos na tela.
      * -O arquivo é fechado.
      */
-    public static void read() throws FileNotFoundException, IOException{
+    public static void read(char c) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "READALL chamado!");
 
-        try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+        String arq = "";
+
+        if(c == 'D'){
+
+            arq = arquivo;
+
+        }else{
+
+            arq = arquivoOrdenado;
+
+        }
+
+        try(RandomAccessFile file = new RandomAccessFile(arq, "r")){
 
             file.readInt();
 

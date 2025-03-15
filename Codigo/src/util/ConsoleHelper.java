@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.io.File;
 
 import model.Musica;
 import repository.CRUD;
@@ -33,6 +34,7 @@ public class ConsoleHelper {
         System.out.println("5 -> Deletar registro");
         System.out.println("6 -> Ler todos os registros");
         System.out.println("7 -> Ordenar arquivo");
+        System.out.println("8 -> Ler arquivo ordenado");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -225,17 +227,49 @@ public class ConsoleHelper {
                 case 6:
 
                     clear();
-                    CRUD.read();
+                    CRUD.read('D');
                     break;
 
                 case 7:
-                    
-                    clear();
-                    IntercalacaoBalanceada.ordenar("data/database/rock.db", 2, 4, "data/database/final.db");
 
+                    clear();
+                    String arquivoInicial = "data/database/rock.db";
+                    String arquivoFinal = "data/database/final.db";
+                    String arquivoTemp = "data/database/temp.db";
+                    boolean ordenado = false;
+
+                    while (!ordenado) {
+                        IntercalacaoBalanceada.ordenar(arquivoInicial, 4, 100, arquivoFinal);
+                        ordenado = IntercalacaoBalanceada.isSorted(arquivoFinal);
+
+                        if (!ordenado) {
+                            // Se não estiver ordenado, o arquivo final se torna o inicial para a próxima iteração
+                            arquivoInicial = arquivoFinal;
+                            // Cria um novo arquivo temporário para a próxima iteração
+                            arquivoFinal = arquivoTemp;
+                            arquivoTemp = "data/database/temp" + System.currentTimeMillis() + ".db";
+                        }
+                    }
+
+                    // Se o arquivo final estiver ordenado, renomeia para o arquivo final desejado
+                    File finalFile = new File(arquivoFinal);
+                    File desiredFinalFile = new File("data/database/final.db");
+                    if (desiredFinalFile.exists()) {
+                        desiredFinalFile.delete();
+                    }
+                    finalFile.renameTo(desiredFinalFile);
+
+                    System.out.println("Arquivo ordenado com sucesso!");
+                    
                     break;
     
-                default:
+                case 8:
+
+                    CRUD.read('O');
+
+                    break;
+                
+                    default:
                     
                     clear();
                     op = 0;
