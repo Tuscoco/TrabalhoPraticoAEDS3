@@ -231,7 +231,7 @@ public class ConsoleHelper {
                 case 7:
                     
                     clear();
-                    IntercalacaoBalanceada.ordenar(2, 4, "data/database/final.db");
+                    IntercalacaoBalanceada.ordenar("data/database/rock.db", 2, 4, "data/database/final.db");
 
                     break;
     

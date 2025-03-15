@@ -15,13 +15,13 @@ public class IntercalacaoBalanceada {
     private static String diretorio = "data/temp/";
     private static int ultimoId = 0;
 
-    public static void ordenar(int numCaminhos, int registros, String arquivoFinal) throws FileNotFoundException, IOException{
+    public static void ordenar(String arquivoInicial, int numCaminhos, int registros, String arquivoFinal) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "Ordenar chamado!");
 
         try{
 
-            distribuirBlocos("data/database/rock.db", numCaminhos, registros);
+            distribuirBlocos(arquivoInicial, numCaminhos, registros);
 
             intercalar(numCaminhos, arquivoFinal, registros);
 
