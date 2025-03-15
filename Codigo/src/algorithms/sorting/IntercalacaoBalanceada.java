@@ -66,8 +66,7 @@ public class IntercalacaoBalanceada {
                     contador++;
 
                 }
-                
-                //Salva o bloco no arquivo temporário
+
                 if(contador == registros){
 
                     salvarBloco(buffer, atual);
@@ -116,79 +115,84 @@ public class IntercalacaoBalanceada {
 
     }
 
-    private static void intercalar(int numCaminhos, String arquivoFinal, int registros) throws IOException {
+    private static void intercalar(int numCaminhos, String arquivoFinal, int registros) throws IOException{
 
         Logger.log(LogLevel.INFO, "Intercalar chamado!");
-    
+
+        List<RandomAccessFile> arquivos = new ArrayList<>();
         List<File> temp = new ArrayList<>();
-        for (int i = 0; i < numCaminhos; i++) {
+        PriorityQueue<Registro> fila = new PriorityQueue<>(Comparator.comparing(Registro::getIndex));
+
+        for(int i = 0;i < numCaminhos;i++){
+
             String nome = diretorio + "temp" + i + ".db";
+            arquivos.add(new RandomAccessFile(nome, "r"));
             temp.add(new File(nome));
+
         }
-    
-        int rodada = 0;
-        while (temp.size() > 1) {
-            List<File> novosTemp = new ArrayList<>();
-            int numArquivos = temp.size();
-            for (int i = 0; i < numArquivos; i += numCaminhos) {
-                List<RandomAccessFile> arquivos = new ArrayList<>();
-                PriorityQueue<Registro> fila = new PriorityQueue<>(Comparator.comparing(Registro::getIndex));
-    
-                for (int j = 0; j < numCaminhos && (i + j) < numArquivos; j++) {
-                    arquivos.add(new RandomAccessFile(temp.get(i + j), "r"));
-                }
-    
-                for (int j = 0; j < arquivos.size(); j++) {
-                    RandomAccessFile file = arquivos.get(j);
-                    if (file.getFilePointer() < file.length()) {
-                        Registro registro = carregarRegistro(file, j);
-                        fila.add(registro);
-                    }
-                }
-    
-                String novoNome = diretorio + "temp_rodada" + rodada + "_" + i / numCaminhos + ".db";
-                try (RandomAccessFile novoArquivo = new RandomAccessFile(novoNome, "rw")) {
-                    while (!fila.isEmpty()) {
-                        Registro registro = fila.poll();
-                        byte[] array = registro.toByteArray();
-    
-                        novoArquivo.writeBoolean(false);
-                        novoArquivo.writeInt(array.length);
-                        novoArquivo.write(array);
-    
-                        int index = registro.getOrigem();
-                        RandomAccessFile origem = arquivos.get(index);
-    
-                        if (origem.getFilePointer() < origem.length()) {
-                            Registro novo = carregarRegistro(origem, index);
-                            fila.add(novo);
-                        }
-                    }
-                }
-    
-                for (RandomAccessFile x : arquivos) {
-                    x.close();
-                }
-    
-                novosTemp.add(new File(novoNome));
+
+        for(int i = 0;i < numCaminhos;i++){
+
+            RandomAccessFile file = arquivos.get(i);
+
+            if(file.getFilePointer() < file.length()){
+
+                Registro registro = carregarRegistro(file, i);
+                fila.add(registro);
+
             }
+
+        }
+
+        try(RandomAccessFile finalizar = new RandomAccessFile(arquivoFinal, "rw")){
+
+            finalizar.writeInt(ultimoId);
+
+            while(!fila.isEmpty()){
+
+                Registro registro = fila.poll();
+                byte[] array = registro.toByteArray();
+
+                finalizar.writeBoolean(false);
+                finalizar.writeInt(array.length);
+                finalizar.write(array);
+
+                int index = registro.getOrigem();
+                RandomAccessFile origem = arquivos.get(index);
+
+                if(origem.getFilePointer() < origem.length()){
+
+                    Registro novo = carregarRegistro(origem, index);
+                    fila.add(novo);
+
+                }
+
+            }
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }finally{
+
+            for(RandomAccessFile x : arquivos){
+
+                x.close();
     
-            for (File x : temp) {
-                if (x.exists()) {
+            }
+
+            for(File x : temp){
+
+                if(x.exists()){
+
                     x.delete();
+
                 }
+
             }
-    
-            temp = novosTemp;
-            rodada++;
+
         }
-    
-        if (!temp.isEmpty()) {
-            File arquivoFinalTemp = temp.get(0);
-            arquivoFinalTemp.renameTo(new File(arquivoFinal));
-        }
-    
-        Logger.log(LogLevel.INFO, "Intercalar encerrado!");
+
     }
 
     private static Registro carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
