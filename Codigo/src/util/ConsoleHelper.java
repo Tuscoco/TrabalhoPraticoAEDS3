@@ -233,13 +233,19 @@ public class ConsoleHelper {
                 case 7:
 
                     clear();
+                    System.out.print("Informe o número de caminhos: ");
+                    int numCaminhos = scan.nextInt();
                     String arquivoInicial = "data/database/rock.db";
                     String arquivoFinal = "data/database/final.db";
                     String arquivoTemp = "data/database/temp.db";
+
+                    //Partimos de um arquivo não ordenado e chamamos a ordenação de forma iterativa para que, a cada iteração, o arquivo vá trazendo os registros para uma organização cada vez mais ordenada. 
                     boolean ordenado = false;
 
+                    //Optamos por deixar 100 elementos no bloco (fixo) para não acontecer de o usuário colocar poucos elementos e a ordenação rodar por muito tempo
+                    //Fizemos testes com 4 elementos e a ordenação rodou por mais de 5 minutos
                     while (!ordenado) {
-                        IntercalacaoBalanceada.ordenar(arquivoInicial, 4, 100, arquivoFinal);
+                        IntercalacaoBalanceada.ordenar(arquivoInicial, numCaminhos, 100, arquivoFinal);
                         ordenado = IntercalacaoBalanceada.isSorted(arquivoFinal);
 
                         if (!ordenado) {

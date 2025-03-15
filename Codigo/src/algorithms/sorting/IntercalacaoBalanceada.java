@@ -10,11 +10,21 @@ import model.Musica;
 import model.Registro;
 import util.*;
 
+/*
+ * Classe que implementa a Intercalação balanceada e a verificação se um arquivo está ordenado
+ */
 public class IntercalacaoBalanceada {
     
     private static String diretorio = "data/temp/";
     private static int ultimoId = 0;
 
+    /**
+     * Método que implementa o algoritmo de Intercalação Balanceada
+     * 
+     * Funcionamento: Recebe os registros não ordenados e divide em blocos com o número de registros infomado no parâmetro.
+     * Em seguida, intercala os blocos no número de caminhos informado na chamada da função.
+     * Para finalizar, caminha sobre os arquivos temporários e intercala os registros em um arquivo final escolhendo sempre o registro com menor índice.
+     */
     public static void ordenar(String arquivoInicial, int numCaminhos, int registros, String arquivoFinal) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "Ordenar chamado!");
