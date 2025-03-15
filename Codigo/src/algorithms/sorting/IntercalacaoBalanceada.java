@@ -18,13 +18,74 @@ public class IntercalacaoBalanceada {
     private static String diretorio = "data/temp/";
     private static int ultimoId = 0;
 
-    /**
+    /*
      * Método que implementa o algoritmo de Intercalação Balanceada
      * 
      * Funcionamento: Recebe os registros não ordenados e divide em blocos com o número de registros infomado no parâmetro.
      * Em seguida, intercala os blocos no número de caminhos informado na chamada da função.
      * Para finalizar, caminha sobre os arquivos temporários e intercala os registros em um arquivo final escolhendo sempre o registro com menor índice.
      */
+    public static void ordenar(int numCaminhos) throws FileNotFoundException, IOException{
+
+        String arquivoInicial = "data/database/rock.db";
+        String arquivoFinal = "data/database/final.db";
+        String arquivoTemp = "data/temp/temp.db";
+
+        try{
+
+            RandomAccessFile excluir = new RandomAccessFile(arquivoFinal, "rw");
+
+            excluir.setLength(0);
+
+            excluir.close();
+
+        }catch(Exception e){
+
+            Logger.log(LogLevel.ERROR, "Falha ao esvaziar arquivo!");
+            return;
+
+        }
+
+        //Partimos de um arquivo não ordenado e chamamos a ordenação de forma iterativa para que, a cada iteração, o arquivo vá trazendo os registros para uma organização cada vez mais ordenada. 
+        boolean ordenado = false;
+
+        //Optamos por deixar 100 elementos no bloco (fixo) para não acontecer de o usuário colocar poucos elementos e a ordenação rodar por muito tempo
+        //Fizemos testes com 4 elementos e a ordenação rodou por mais de 5 minutos
+        while(!ordenado){
+            
+            ordenar(arquivoInicial, numCaminhos, 100, arquivoFinal);
+            ordenado = isSorted(arquivoFinal);
+
+            if(!ordenado){
+
+                // Se não estiver ordenado, o arquivo final se torna o inicial para a próxima iteração
+                arquivoInicial = arquivoFinal;
+                // Cria um novo arquivo temporário para a próxima iteração
+                arquivoFinal = arquivoTemp;
+                arquivoTemp = "data/temp/temp" + System.currentTimeMillis() + ".db";
+
+            }
+
+        }
+
+        // Se o arquivo final estiver ordenado, renomeia para o arquivo final desejado
+        File finalFile = new File(arquivoFinal);
+        File desiredFinalFile = new File("data/database/final.db");
+        
+        if(desiredFinalFile.exists()){
+
+            desiredFinalFile.delete();
+
+        }
+
+        finalFile.renameTo(desiredFinalFile);
+
+        System.out.println("Arquivo ordenado com sucesso!");
+
+        excluirTemporarios();
+
+    }
+
     public static void ordenar(String arquivoInicial, int numCaminhos, int registros, String arquivoFinal) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "Ordenar chamado!");
@@ -40,9 +101,6 @@ public class IntercalacaoBalanceada {
             System.out.println("Falha ao ordenar arquivo!");
 
         }
-
-        System.out.println("Arquivo ordenado com sucesso!");
-        System.out.println();
 
         Logger.log(LogLevel.INFO, "Ordenar encerrado!");
 
@@ -205,6 +263,7 @@ public class IntercalacaoBalanceada {
 
     }
 
+    @SuppressWarnings("unused")
     private static Registro carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
 
         Logger.log(LogLevel.INFO, "Carregar registro chamado!");
@@ -227,6 +286,7 @@ public class IntercalacaoBalanceada {
 
     }
 
+    @SuppressWarnings("unused")
     public static boolean isSorted(String arquivo) throws IOException {
         Logger.log(LogLevel.INFO, "Verificando se o arquivo está ordenado!");
 
@@ -258,6 +318,22 @@ public class IntercalacaoBalanceada {
         }
 
         return true; // Todos os registros estão em ordem
+
+    }
+
+    private static void excluirTemporarios(){
+
+        try{
+
+            Process process = new ProcessBuilder("make", "delete").start();
+            process.waitFor();
+
+        }catch(IOException | InterruptedException e){
+
+            e.printStackTrace();
+
+        }
+
     }
 
 }

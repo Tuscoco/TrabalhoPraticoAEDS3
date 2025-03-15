@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.io.File;
 
 import model.Musica;
 import repository.CRUD;
@@ -235,37 +234,8 @@ public class ConsoleHelper {
                     clear();
                     System.out.print("Informe o número de caminhos: ");
                     int numCaminhos = scan.nextInt();
-                    String arquivoInicial = "data/database/rock.db";
-                    String arquivoFinal = "data/database/final.db";
-                    String arquivoTemp = "data/database/temp.db";
 
-                    //Partimos de um arquivo não ordenado e chamamos a ordenação de forma iterativa para que, a cada iteração, o arquivo vá trazendo os registros para uma organização cada vez mais ordenada. 
-                    boolean ordenado = false;
-
-                    //Optamos por deixar 100 elementos no bloco (fixo) para não acontecer de o usuário colocar poucos elementos e a ordenação rodar por muito tempo
-                    //Fizemos testes com 4 elementos e a ordenação rodou por mais de 5 minutos
-                    while (!ordenado) {
-                        IntercalacaoBalanceada.ordenar(arquivoInicial, numCaminhos, 100, arquivoFinal);
-                        ordenado = IntercalacaoBalanceada.isSorted(arquivoFinal);
-
-                        if (!ordenado) {
-                            // Se não estiver ordenado, o arquivo final se torna o inicial para a próxima iteração
-                            arquivoInicial = arquivoFinal;
-                            // Cria um novo arquivo temporário para a próxima iteração
-                            arquivoFinal = arquivoTemp;
-                            arquivoTemp = "data/database/temp" + System.currentTimeMillis() + ".db";
-                        }
-                    }
-
-                    // Se o arquivo final estiver ordenado, renomeia para o arquivo final desejado
-                    File finalFile = new File(arquivoFinal);
-                    File desiredFinalFile = new File("data/database/final.db");
-                    if (desiredFinalFile.exists()) {
-                        desiredFinalFile.delete();
-                    }
-                    finalFile.renameTo(desiredFinalFile);
-
-                    System.out.println("Arquivo ordenado com sucesso!");
+                    IntercalacaoBalanceada.ordenar(numCaminhos);
                     
                     break;
     

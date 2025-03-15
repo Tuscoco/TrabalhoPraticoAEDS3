@@ -8,4 +8,8 @@ build:
 
 clean:
 
-	rm -rf bin/*.class
+	@rm -rf bin/*.class
+
+delete:
+
+	@find data/temp -type f ! -name "tem.db" -delete
