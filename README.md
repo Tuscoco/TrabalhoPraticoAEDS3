@@ -1,4 +1,4 @@
-# Trabalhos Práticos de AEDS III
+# Trabalho Prático de AEDs III
 
 Os Trabalhos Práticos de AEDS III têm como objetivo permitir que o aluno implemente a representação de entidades em registros, armazene-os em memória secundária e faça a manipulação desses registros através de acesso sequencial, na primeira entrega. As demais entregas serão complementos da primeira e devem contemplar acesso indexado, compressão e criptografia.
 
