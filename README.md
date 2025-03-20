@@ -1,52 +1,62 @@
-# TrabalhoPraticoAEDS3
+# Trabalhos Práticos de AEDS III
 
-# TP1 - Sistema de CRUD Sequencial com Ordenação Externa
+Os Trabalhos Práticos de AEDS III têm como objetivo permitir que o aluno implemente a representação de entidades em registros, armazene-os em memória secundária e faça a manipulação desses registros através de acesso sequencial, na primeira entrega. As demais entregas serão complementos da primeira e devem contemplar acesso indexado, compressão e criptografia.
 
-Este projeto consiste em um sistema implementado em Java que realiza operações de CRUD (Create, Read, Update, Delete) sobre um arquivo binário, utilizando manipulação de arquivo sequencial. O sistema também inclui uma funcionalidade de ordenação externa para otimizar o armazenamento de dados no arquivo.
+Os trabalhos poderão ser realizados individualmente ou em dupla.
 
-## Estrutura do Sistema
+Os alunos deverão selecionar uma base de dados que permita a identificação de pelo menos um campo de cada um dos tipos abaixo:
 
-O sistema possui as seguintes funcionalidades principais:
+- Tamanho fixo
+- Tamanho variável
+- Data
+- Lista de valores com separador a definir
 
-- **Carga da base de dados**: Importação de dados de um arquivo CSV, rota de API ou outro formato escolhido, para um arquivo binário.
-- **Leitura de registros**: O sistema pode ler um registro específico de acordo com o ID.
-- **Atualização de registros**: Atualiza um registro no arquivo binário, respeitando as alterações de tamanho.
-- **Exclusão de registros**: Marca um registro como deletado, sem removê-lo fisicamente do arquivo, mas com uma marcação de lápide.
-- **Ordenação externa**: Implementação de ordenação externa com o uso de múltiplos caminhos e controle de registros em memória, removendo espaços em branco de registros atualizados ou deletados.
+## Etapas do TP
 
-## Estrutura do Arquivo Binário
+### Etapa 1: Criação da base de dados, Manipulação de Arquivo Sequencial, Ordenação Externa
+- Implementação + Vídeo
 
-O arquivo binário é estruturado da seguinte forma:
+### Etapa 2: Manipulação de Arquivo Indexado com Árvore B+, Hash e Lista Invertida
+- Implementação + Vídeo
 
-- **Cabeçalho**: Um inteiro que armazena o último ID utilizado.
-- **Registros**:
-  - **Lápide (Byte)**: Indica se o registro é válido ou foi excluído.
-  - **Indicador de Tamanho do Registro (Inteiro)**: Indica o tamanho do vetor de bytes.
-  - **Vetor de Bytes**: Contém os dados do objeto em formato binário.
+### Etapa 3: Compactação com Huffman e LZW
+- Implementação + Vídeo
 
-## Funcionalidades do CRUD Sequencial
+### Etapa 4: Casamento de Padrões e Criptografia
+- Implementação + Relatório Final
 
-### 1. Carga da Base de Dados
-O sistema permite a importação de dados de arquivos CSV ou de uma rota de API para um arquivo binário. O cabeçalho do arquivo contém o último ID utilizado, e cada registro é armazenado com lápide, indicador de tamanho e os dados binários.
+## Vídeos
 
-### 2. Leitura de um Registro
-Este método recebe um ID como parâmetro e percorre o arquivo binário até encontrar o registro correspondente, retornando os dados desse registro.
+A cada etapa intermediária (1 a 3), o grupo deve criar um vídeo (duração máxima de 10 minutos) com os seguintes itens:
 
-### 3. Atualização de Registro
-Quando um registro é atualizado:
-- Se o tamanho do registro não mudar, os dados são atualizados diretamente no local do arquivo binário.
-- Se o registro mudar de tamanho, o registro anterior é marcado como excluído (com lápide) e o novo registro é adicionado ao final do arquivo.
+- Explicação das principais decisões de implementação dos códigos criados.
+- Demonstração da execução do sistema.
+- Testes e resultados realizados.
 
-### 4. Deleção de Registro
-Este método recebe um ID como parâmetro e marca o registro correspondente como excluído, utilizando a lápide para indicar que o registro foi deletado.
+## Entrega Final
 
-## Ordenação Externa
+A entrega final deve incluir:
 
-A ordenação externa tem como objetivo reorganizar os registros no arquivo binário. O processo é realizado em múltiplos caminhos, controlando o número máximo de registros que podem ser mantidos em memória durante cada ordenação.
+- **Relatório**: O relatório deve ser feito usando LaTeX, utilizando o template "SBC Conferences Template" (máximo de 10 páginas).
+- **Projeto do Sistema**: O projeto desenvolvido deve ser entregue em formato .zip.
 
-### Parâmetros:
-- **Número de Caminhos**: Define o número de caminhos para a ordenação.
-- **Número de Registros Máximos em Memória**: Limita a quantidade de registros que podem ser mantidos em memória durante o processo de ordenação.
+O relatório final deve conter a seguinte estrutura:
 
-Após a ordenação, o arquivo binário será reescrito com os registros atualizados e excluídos removidos.
+1. **Título**
+2. **Resumo**
+3. **Introdução**
+4. **Desenvolvimento**
+5. **Testes e Resultados**
+6. **Conclusão**
 
+## Critérios para Avaliação
+
+- **Implementação do Sistema**
+- **Correção e Robustez dos Programas**
+- **Conformidade às Especificações**
+- **Clareza de Codificação**
+- **Critérios de Escolha**
+- **Documentação**
+- **Vídeo**
+
+## NOTA FINAL = Implementação x Documentação x Vídeo
