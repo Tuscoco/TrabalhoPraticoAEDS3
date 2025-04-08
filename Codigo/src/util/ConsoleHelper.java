@@ -114,7 +114,7 @@ public class ConsoleHelper {
                     scan.nextLine();
                     
                     System.out.print("Artistas relacionados (separados por vírgula): ");
-                    String[] artistas = scan.nextLine().split(",\s*");
+                    String[] artistas = scan.nextLine().split(",\\s*");
 
                     Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
                     CRUD.create(addNovaMusica, true);
@@ -177,7 +177,7 @@ public class ConsoleHelper {
                     scan.nextLine();
                     
                     System.out.print("Novos artistas relacionados (separados por vírgula): ");
-                    String[] fArtists = scan.nextLine().split(",\s*");
+                    String[] fArtists = scan.nextLine().split(",\\s*");
 
                     Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
 
