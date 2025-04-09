@@ -1,6 +1,6 @@
 package algorithms.hash;
 
-import model.Registro;
+import model.RegistroSort;
 import model.Musica;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class HashExtensivel {
         return chave & ((1 << profundidade) - 1);
     }
 
-    public void inserir(Registro registro) throws IOException {
+    public void inserir(RegistroSort registro) throws IOException {
         int profundidadeGlobal = diretorio.getProfundidadeGlobal();
         int chave = registro.getIndex();
         int posicao = hash(chave, profundidadeGlobal);
@@ -95,7 +95,7 @@ public class HashExtensivel {
                 Musica musica = new Musica(dados);
                 int hashLocal = hash(musica.getIndex(), profundidade + 1);
 
-                Registro reg = new Registro(musica, -1);
+                RegistroSort reg = new RegistroSort(musica, -1);
 
                 if ((hashLocal & 1) == 1) {
                     novo.adicionar(reg, capacidadeBucket); // manda pro novo
