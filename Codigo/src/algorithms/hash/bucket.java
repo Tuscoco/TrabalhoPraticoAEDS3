@@ -1,7 +1,11 @@
 package algorithms.hash;
 
 import java.io.*;
+<<<<<<< Updated upstream
 import model.RegistroSort;
+=======
+import model.Registro;
+>>>>>>> Stashed changes
 import model.Musica;
 
 public class Bucket {
@@ -40,7 +44,11 @@ public class Bucket {
         }
     }
 
+<<<<<<< Updated upstream
     public boolean adicionar(RegistroSort r, int capacidadeMaxima) throws IOException {
+=======
+    public boolean adicionar(Registro r, int capacidadeMaxima) throws IOException {
+>>>>>>> Stashed changes
         try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
             arq.seek(4);
             int quantidade = arq.readInt();

@@ -1,6 +1,10 @@
 package algorithms.hash;
 
+<<<<<<< Updated upstream
 import model.RegistroSort;
+=======
+import model.Registro;
+>>>>>>> Stashed changes
 import model.Musica;
 
 import java.io.IOException;
@@ -29,7 +33,11 @@ public class HashExtensivel {
         return chave & ((1 << profundidade) - 1);
     }
 
+<<<<<<< Updated upstream
     public void inserir(RegistroSort registro) throws IOException {
+=======
+    public void inserir(Registro registro) throws IOException {
+>>>>>>> Stashed changes
         int profundidadeGlobal = diretorio.getProfundidadeGlobal();
         int chave = registro.getIndex();
         int posicao = hash(chave, profundidadeGlobal);
@@ -95,7 +103,11 @@ public class HashExtensivel {
                 Musica musica = new Musica(dados);
                 int hashLocal = hash(musica.getIndex(), profundidade + 1);
 
+<<<<<<< Updated upstream
                 RegistroSort reg = new RegistroSort(musica, -1);
+=======
+                Registro reg = new Registro(musica, -1);
+>>>>>>> Stashed changes
 
                 if ((hashLocal & 1) == 1) {
                     novo.adicionar(reg, capacidadeBucket); // manda pro novo
