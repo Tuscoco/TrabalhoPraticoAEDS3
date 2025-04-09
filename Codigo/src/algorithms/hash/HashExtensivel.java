@@ -1,7 +1,11 @@
 package algorithms.hash;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import model.RegistroSort;
+=======
+import model.Registro;
+>>>>>>> Stashed changes
 =======
 import model.Registro;
 >>>>>>> Stashed changes
@@ -34,7 +38,11 @@ public class HashExtensivel {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void inserir(RegistroSort registro) throws IOException {
+=======
+    public void inserir(Registro registro) throws IOException {
+>>>>>>> Stashed changes
 =======
     public void inserir(Registro registro) throws IOException {
 >>>>>>> Stashed changes
@@ -104,7 +112,11 @@ public class HashExtensivel {
                 int hashLocal = hash(musica.getIndex(), profundidade + 1);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 RegistroSort reg = new RegistroSort(musica, -1);
+=======
+                Registro reg = new Registro(musica, -1);
+>>>>>>> Stashed changes
 =======
                 Registro reg = new Registro(musica, -1);
 >>>>>>> Stashed changes
