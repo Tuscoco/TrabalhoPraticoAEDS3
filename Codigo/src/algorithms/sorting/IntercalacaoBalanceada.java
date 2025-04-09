@@ -7,7 +7,7 @@ import java.io.RandomAccessFile;
 import java.util.*;
 
 import model.Musica;
-import model.Registro;
+import model.RegistroSort;
 import util.*;
 
 /*
@@ -192,7 +192,7 @@ public class IntercalacaoBalanceada {
 
         List<RandomAccessFile> arquivos = new ArrayList<>();
         List<File> temp = new ArrayList<>();
-        PriorityQueue<Registro> fila = new PriorityQueue<>(Comparator.comparing(Registro::getIndex));
+        PriorityQueue<RegistroSort> fila = new PriorityQueue<>(Comparator.comparing(RegistroSort::getIndex));
 
         for(int i = 0;i < numCaminhos;i++){
 
@@ -208,7 +208,7 @@ public class IntercalacaoBalanceada {
 
             if(file.getFilePointer() < file.length()){
 
-                Registro registro = carregarRegistro(file, i);
+                RegistroSort registro = carregarRegistro(file, i);
                 fila.add(registro);
 
             }
@@ -221,7 +221,7 @@ public class IntercalacaoBalanceada {
 
             while(!fila.isEmpty()){
 
-                Registro registro = fila.poll();
+                RegistroSort registro = fila.poll();
                 byte[] array = registro.toByteArray();
 
                 finalizar.writeBoolean(false);
@@ -233,7 +233,7 @@ public class IntercalacaoBalanceada {
 
                 if(origem.getFilePointer() < origem.length()){
 
-                    Registro novo = carregarRegistro(origem, index);
+                    RegistroSort novo = carregarRegistro(origem, index);
                     fila.add(novo);
 
                 }
@@ -268,7 +268,7 @@ public class IntercalacaoBalanceada {
     
     //Métodos auxiliares para manipulação de registros
     @SuppressWarnings("unused")
-    private static Registro carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
+    private static RegistroSort carregarRegistro(RandomAccessFile arquivo, int index) throws IOException{
 
         Logger.log(LogLevel.INFO, "Carregar registro chamado!");
 
@@ -280,7 +280,7 @@ public class IntercalacaoBalanceada {
         Musica nova = new Musica();
         nova.fromByteArray(array);
 
-        return new Registro(nova, index);
+        return new RegistroSort(nova, index);
 
     }
 

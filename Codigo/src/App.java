@@ -20,10 +20,8 @@ public class App {
         Logger.reiniciarLog();
 
         Logger.log(LogLevel.INFO, "Programa executado!");
-    
-        ConsoleHelper console = new ConsoleHelper();
 
-        console.run();
+        ConsoleHelper.run();
 
         Logger.log(LogLevel.INFO, "Programa encerrado!");
     

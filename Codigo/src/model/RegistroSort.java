@@ -7,12 +7,12 @@ import java.io.IOException;
  * Guarda o registro(musica) inteiro e também sua origem,
  * que é utilizado na fila de prioridade da ordenação
  */
-public class Registro {
+public class RegistroSort {
     
     private Musica musica;
     private int origem;
 
-    public Registro(Musica musica, int origem){
+    public RegistroSort(Musica musica, int origem){
 
         this.musica = musica;
         this.origem = origem;

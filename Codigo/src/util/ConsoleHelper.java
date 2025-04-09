@@ -14,7 +14,7 @@ import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
     
-    public ConsoleHelper(){}
+    private ConsoleHelper(){}
 
     /*
      * Método para imprimir o menu de escolhas do usuário
@@ -22,7 +22,7 @@ public class ConsoleHelper {
      * Funcionamento: 
      * -Imprime na tela todas as opções de ações do usuário
      */
-    private void menu(){
+    private static void menu(){
 
         System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
         System.out.println("Escolha uma opção: ");
@@ -45,7 +45,7 @@ public class ConsoleHelper {
      * Funcionamento: 
      * -Imprime várias linhas em branco em sequencia para "limpar" o terminal
      */
-    private void clear(){
+    private static void clear(){
 
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -59,7 +59,7 @@ public class ConsoleHelper {
      * -Chama o método menu e recebe a opção do usuário
      * -Recebe informações do usuário e chama o método necessário pra cada caso
      */
-    public void run() throws FileNotFoundException, IOException{
+    public static void run() throws FileNotFoundException, IOException{
 
         Scanner scan = new Scanner(System.in);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //Reconhece o formato que a data será lida e exibida ao usuário para utilizar nas transformações para Timestamp
