@@ -1,10 +1,11 @@
 run: build
 	
+	@clear
 	@java -cp bin App
 
 build:
 
-	@javac -d bin -sourcepath src src/App.java
+	@javac -d bin -sourcepath src src/*.java
 
 clean:
 
