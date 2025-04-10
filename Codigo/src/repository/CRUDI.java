@@ -4,6 +4,8 @@ import java.io.*;
 
 import util.*;
 import model.*;
+import algorithms.*;
+import algorithms.btree.BTree;
 
 public final class CRUDI {
     
@@ -23,7 +25,7 @@ public final class CRUDI {
      * -O ponteiro é movido para o final do arquivo e escreve o registro, que é organizado em: lápide, tamanho do registro e dados.
      * -O arquivo é fechado.
      */
-    public static void create(Musica musica, boolean conf) throws FileNotFoundException, IOException{
+    public static void create(Musica musica, boolean conf, int indice) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "CREATE chamado!");
 
@@ -41,6 +43,22 @@ public final class CRUDI {
             file.writeBoolean(false);
             file.writeInt(array.length);
             file.write(array);
+
+            Registro registro = new Registro(musica.getIndex(), endereco);
+
+            if(indice == 1){
+
+                //BTree
+
+            }else if(indice == 2){
+
+                //Hash Extensível
+
+            }else if(indice == 3){
+
+                //Lista Invertida
+
+            }
 
             if(conf){
 

@@ -2,8 +2,8 @@ package model;
 
 public class Registro{
 
-    int id;
-    long end;
+    public int id;
+    public long end;
 
     public Registro(){
 
