@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import model.Musica;
-import repository.CRUD;
+import repository.*;
 import repository.CsvHandler;
 import algorithms.sorting.IntercalacaoBalanceada;
 
@@ -358,7 +358,6 @@ public class ConsoleHelper {
 
                     do{
         
-                        clear();
                         menu(2);
                 
                         op = scan.nextInt();
@@ -372,7 +371,38 @@ public class ConsoleHelper {
                             case 1:
                 
                                 clear();
-                                CsvHandler.preencherCatalogo();
+
+                                int ordem = 0;
+
+                                if(indice == 1){
+
+                                    System.out.println("Informe a ordem da árvore B (acima de 2):");
+
+                                    ordem = scan.nextInt();
+
+                                    while(ordem <= 2){
+
+                                        System.out.println("Ordem inválida!");
+                                        ordem = scan.nextInt();
+
+                                    }
+
+                                }else if(indice == 2){
+
+                                    System.out.println("Informe o tamanho de cada bucket da tabela Hash (acima de 2):");
+
+                                    ordem = scan.nextInt();
+
+                                    while(ordem <= 2){
+
+                                        System.out.println("Tamanho inválido!");
+                                        ordem = scan.nextInt();
+
+                                    }
+
+                                }
+
+                                CsvHandler.preencherCatalogoIndexado(indice, ordem);
                                 break;
             
                             case 2:
@@ -407,7 +437,7 @@ public class ConsoleHelper {
                                 String[] artistas = scan.nextLine().split(",\\s*");
             
                                 Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
-                                CRUD.create(addNovaMusica, true);
+                                CRUDI.create(addNovaMusica, true, indice);
                     
                                 break;
                             

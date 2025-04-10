@@ -4,13 +4,16 @@ import java.io.*;
 
 import util.*;
 import model.*;
-import algorithms.*;
+import algorithms.btree.*;
+import algorithms.hash.*;
 import algorithms.btree.BTree;
 
 public final class CRUDI {
     
-    private static String arquivo = "data/database/rock.db";
-    private static String arquivoOrdenado = "data/database/final.db";
+    private static String arquivo = "data/database/rockI.db";
+    private static String arvoreB = "data/indexes/BTree.db";
+    private static String hashExtensivel = "data/indexes/Hash.db";
+    private static String listaInvertida = "data/indexes/ListaInvertida.db";
 
     private CRUDI(){}//Construtor privado para impedir instanciações
 
@@ -48,7 +51,9 @@ public final class CRUDI {
 
             if(indice == 1){
 
-                //BTree
+                BTree btree = new BTree();
+
+                btree.inserir(registro);
 
             }else if(indice == 2){
 
@@ -89,21 +94,11 @@ public final class CRUDI {
      * -Se a lápide estiver verdadeira(registro "removido"), os dados não são imprimidos na tela.
      * -O arquivo é fechado.
      */
-    public static void read(char c) throws FileNotFoundException, IOException{
+    public static void read() throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "READALL chamado!");
 
         String arq = "";
-
-        if(c == 'D'){
-
-            arq = arquivo;
-
-        }else{
-
-            arq = arquivoOrdenado;
-
-        }
 
         try(RandomAccessFile file = new RandomAccessFile(arq, "r")){
 
@@ -149,38 +144,56 @@ public final class CRUDI {
      * -Se o índice não for encontrado, o método retorna null(registro não encontrado).
      * -O arquivo é fechado.
      */
-    public static Musica read(int id) throws IOException{
+    public static Musica read(int id, int indice) throws IOException{
 
         Logger.log(LogLevel.INFO, "READ chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
 
-            file.readInt();
+            Registro registro = null;
 
-            while(file.getFilePointer() < file.length()){
+            if(indice == 1){
 
-                boolean lapide = file.readBoolean();
-                int tamanho = file.readInt();
-                byte[] array = new byte[tamanho];
-                file.readFully(array);
+                BTree btree = new BTree();
+                registro = btree.procurar(id);
 
-                Musica nova = new Musica();
-                nova.fromByteArray(array);
+            }else if(indice == 2){
+                
+                //Procurar na hash
 
-                if(nova.getIndex() == id){
+            }else if(indice == 3){
 
-                    if(!lapide){
-
-                    
-                        return nova;
-
-                    }
-
-                }
+                //Procurar na Lista Invertida
 
             }
 
-            file.close();
+            if(registro != null){
+
+                file.seek(registro.end);
+                boolean lapide = file.readBoolean();
+
+                if(!lapide){
+
+                    int tamanho = file.readInt();
+                    byte[] array = new byte[tamanho];
+                    file.readFully(array);
+    
+                    Musica nova = new Musica();
+                    nova.fromByteArray(array);
+
+                    return nova;
+
+                }else{
+
+                    return null;
+
+                }
+
+            }else{
+
+                return null;
+
+            }
 
         }catch(IOException e){
 

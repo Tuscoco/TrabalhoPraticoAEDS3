@@ -199,7 +199,7 @@ public class BTree {
 
     }
 
-    public void inserirPagina(Pagina pagina, long endereco){
+    private void inserirPagina(Pagina pagina, long endereco){
 
         try{
 
@@ -227,7 +227,7 @@ public class BTree {
 
     }
 
-    public Pagina lerPagina(long endereco){
+    private Pagina lerPagina(long endereco){
 
         try{
 
