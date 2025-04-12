@@ -1,130 +1,71 @@
 package algorithms.hash;
 
-import java.io.*;
 import model.Registro;
 
-import model.Musica;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bucket {
-    private String nomeArquivo;
+    public int profundidadeLocal;
+    public List<Registro> registros;
+    public int maxRegistros;
 
-    public Bucket(int id) {
-        this.nomeArquivo = "bucket_" + id + ".dat";
+    public Bucket(int maxRegistros) {
+        this.profundidadeLocal = 1;
+        this.registros = new ArrayList<>();
+        this.maxRegistros = maxRegistros;
     }
 
-    public void criar(int profundidadeLocal) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.setLength(0);
-            arq.writeInt(profundidadeLocal); // profundidade local
-            arq.writeInt(0); // quantidade de registros
-        }
+    public boolean isFull() {
+        return registros.size() >= maxRegistros;
     }
 
-    public int getProfundidadeLocal() throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "r")) {
-            arq.seek(0);
-            return arq.readInt();
-        }
-    }
-
-    public void setProfundidadeLocal(int novaProfundidade) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.seek(0);
-            arq.writeInt(novaProfundidade);
-        }
-    }
-
-    public int getQuantidadeRegistros() throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "r")) {
-            arq.seek(4);
-            return arq.readInt();
-        }
-    }
-
-    public boolean adicionar(Registro registro, int capacidade) throws IOException {
-
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.seek(4);
-            int quantidade = arq.readInt();
-
-            if (quantidade >= capacidade) {
-                return false;
-            }
-
-            arq.seek(arq.length()); // fim do arquivo
-            byte[] dados = toByteArray(registro);
-            arq.writeInt(dados.length);
-            arq.write(dados);
-
-            // Atualiza quantidade
-            arq.seek(4);
-            arq.writeInt(quantidade + 1);
-
+    public boolean inserir(Registro r) {
+        if (!isFull()) {
+            registros.add(r);
             return true;
         }
+        return false;
     }
 
-    private byte[] toByteArray(Registro registro) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toByteArray'");
+    public Registro buscar(int id) {
+        for (Registro r : registros) {
+            if (r.id == id) return r;
+        }
+        return null;
     }
 
-    public boolean remover(int index) throws IOException {
-        File temp = new File(nomeArquivo + ".tmp");
-        boolean removido = false;
+    public byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
 
-        try (RandomAccessFile original = new RandomAccessFile(nomeArquivo, "r");
-             RandomAccessFile novo = new RandomAccessFile(temp, "rw")) {
+        dos.writeInt(profundidadeLocal);
+        dos.writeInt(maxRegistros);
+        dos.writeInt(registros.size());
 
-            int profundidade = original.readInt();
-            int quantidade = original.readInt();
-
-            novo.writeInt(profundidade);
-            novo.writeInt(0); // será atualizado
-
-            int novaQuantidade = 0;
-
-            while (original.getFilePointer() < original.length()) {
-                int tam = original.readInt();
-                byte[] dados = new byte[tam];
-                original.readFully(dados);
-
-                Musica m = new Musica(dados);
-                if (m.getIndex() == index) {
-                    removido = true;
-                    continue;
-                }
-
-                novo.writeInt(tam);
-                novo.write(dados);
-                novaQuantidade++;
-            }
-
-            novo.seek(4);
-            novo.writeInt(novaQuantidade);
+        for (Registro r : registros) {
+            dos.writeInt(r.id);
+            dos.writeLong(r.end);
         }
 
-        if (removido) {
-            new File(nomeArquivo).delete();
-            temp.renameTo(new File(nomeArquivo));
-        } else {
-            temp.delete();
-        }
-
-        return removido;
+        return baos.toByteArray();
     }
 
-    public void listarRegistros() throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "r")) {
-            arq.seek(8); // após cabecalho
-            while (arq.getFilePointer() < arq.length()) {
-                int tam = arq.readInt();
-                byte[] dados = new byte[tam];
-                arq.readFully(dados);
+    public void fromByteArray(byte[] array) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(array);
+        DataInputStream dis = new DataInputStream(bais);
 
-                Musica m = new Musica(dados);
-                System.out.println("Index: " + m.getIndex());
-            }
+        profundidadeLocal = dis.readInt();
+        maxRegistros = dis.readInt();
+        int size = dis.readInt();
+
+        registros = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            Registro r = new Registro();
+            r.id = dis.readInt();
+            r.end = dis.readLong();
+            registros.add(r);
         }
     }
 }

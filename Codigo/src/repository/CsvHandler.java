@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Scanner;
 
 import algorithms.btree.BTree;
-import algorithms.hash.Functions;
 import algorithms.hash.HashExtensivel;
 import model.Musica;
 import model.Registro;
@@ -104,46 +103,11 @@ public class CsvHandler {
                 BTree btree = new BTree(ordem);
 
         if (indice == 2) {
-            System.out.println("Inicializando Hash Extensível...");
-            HashExtensivel hashExtensivel = new HashExtensivel(ordem, 2); // Profundidade inicial = 2
+           
 
-            file.readLine(); // Cabeçalho (não é necessário)
+                HashExtensivel hash = new HashExtensivel(ordem);
 
-            String linha;
-
-            while ((linha = file.readLine()) != null) {
-
-                String[] dados = linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-                String name = dados[0];
-                String artist = String.format("%-" + 15 + "s", dados[1]);
-                long date = 0;
-
-                try {
-                    Date parsedDate = dateFormat.parse(dados[2]);
-                    date = parsedDate.getTime();
-                } catch (ParseException e) {
-                    System.out.println("Erro: " + e.getMessage());
-                }
-
-                double length = Double.parseDouble(dados[3]);
-                String[] fArtist = new String[0];
-
-                if (dados.length > 5) {
-                    String featuredArtists = dados[4];
-                    if (featuredArtists.startsWith("\"")) {
-                        featuredArtists = featuredArtists.substring(1, featuredArtists.length() - 1);
-                    }
-                    fArtist = featuredArtists.split(",\\s*");
-                }
-
-                Musica musica = new Musica(name, artist, date, length, fArtist);
-                Registro registro = new Registro(musica.getIndex(), 0);
-
-                hashExtensivel.inserir(registro); // Insere no Hash Extensível
-            }
-
-            System.out.println("Registros adicionados ao Hash Extensível com sucesso!");
+                
         }else if(indice == 3){
 
                 //Inicializar Lista Invertida

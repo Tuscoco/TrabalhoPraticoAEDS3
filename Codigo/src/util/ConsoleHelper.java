@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import model.Musica;
 import repository.*;
-import algorithms.hash.Functions;
 import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
@@ -397,12 +396,7 @@ public class ConsoleHelper {
                                         tamanhoBucket = scan.nextInt();
                                     }
                                 
-                                    // Preenche o Hash Extensível com os registros do arquivo
-                                    CsvHandler.preencherCatalogoIndexado(indice, tamanhoBucket);
                                 
-                                    // Após preencher, exibe o menu para o usuário interagir com o Hash Extensível
-                                    Functions functions = new Functions(tamanhoBucket, tamanhoBucket); // Inicializa o Hash Extensível
-                                    functions.menuHash(); // Chama o menu para adicionar, listar ou remover registros
                                 }
 
                                 CsvHandler.preencherCatalogoIndexado(indice, ordem);

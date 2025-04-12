@@ -1,78 +1,51 @@
 package algorithms.hash;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.util.Arrays;
 
 public class Diretorio {
+    public int profundidadeGlobal;
+    public long[] enderecosBuckets;
 
-    private final String nomeArquivo = "diretorio.dat";
+    public Diretorio(int profundidadeGlobal) {
+        this.profundidadeGlobal = profundidadeGlobal;
+        int tamanho = 1 << profundidadeGlobal;
+        this.enderecosBuckets = new long[tamanho];
+        Arrays.fill(enderecosBuckets, -1); // -1 significa sem bucket atribuído ainda
+    }
 
-    public Diretorio(int profundidadeInicial) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.setLength(0);
-            arq.writeInt(profundidadeInicial); // profundidade global
+    public int hash(int chave) {
+        return chave & ((1 << profundidadeGlobal) - 1);
+    }
 
-            int entradas = 1 << profundidadeInicial;
-            for (int i = 0; i < entradas; i++) {
-                arq.writeInt(i); // cada posição aponta para um bucket diferente no começo
-            }
+    public byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        dos.writeInt(profundidadeGlobal);
+        dos.writeInt(enderecosBuckets.length);
+
+        for (long end : enderecosBuckets) {
+            dos.writeLong(end);
         }
+
+        return baos.toByteArray();
     }
 
-    public int getProfundidadeGlobal() throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "r")) {
-            return arq.readInt();
-        }
-    }
+    public void fromByteArray(byte[] array) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(array);
+        DataInputStream dis = new DataInputStream(bais);
 
-    public void setProfundidadeGlobal(int profundidade) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.seek(0);
-            arq.writeInt(profundidade);
-        }
-    }
+        profundidadeGlobal = dis.readInt();
+        int tamanho = dis.readInt();
+        enderecosBuckets = new long[tamanho];
 
-    public int getPonteiro(int posicao) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "r")) {
-            arq.seek(4 + posicao * 4);
-            return arq.readInt();
-        }
-    }
-
-    public void setPonteiro(int posicao, int bucketID) throws IOException {
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            arq.seek(4 + posicao * 4);
-            arq.writeInt(bucketID);
-        }
-    }
-
-    public int tamanho() throws IOException {
-        return 1 << getProfundidadeGlobal();
-    }
-
-    public void duplicar() throws IOException {
-        int profundidadeAtual = getProfundidadeGlobal();
-        int tamanhoAtual = 1 << profundidadeAtual;
-        int novoTamanho = tamanhoAtual * 2;
-
-        try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
-            // Lê todos os ponteiros antigos
-            int[] ponteiros = new int[tamanhoAtual];
-            arq.seek(4);
-            for (int i = 0; i < tamanhoAtual; i++) {
-                ponteiros[i] = arq.readInt();
-            }
-
-            // Atualiza profundidade
-            arq.seek(0);
-            arq.writeInt(profundidadeAtual + 1);
-
-            // Escreve ponteiros duplicados
-            arq.seek(4);
-            for (int i = 0; i < tamanhoAtual; i++) {
-                arq.writeInt(ponteiros[i]);
-                arq.writeInt(ponteiros[i]); // duplica
-            }
+        for (int i = 0; i < tamanho; i++) {
+            enderecosBuckets[i] = dis.readLong();
         }
     }
 }
