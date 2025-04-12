@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import model.Musica;
 import repository.*;
-import repository.CsvHandler;
+import algorithms.hash.Functions;
 import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
@@ -387,19 +387,22 @@ public class ConsoleHelper {
 
                                     }
 
-                                }else if(indice == 2){
-
+                                } else if (indice == 2) {
                                     System.out.println("Informe o tamanho de cada bucket da tabela Hash (acima de 2):");
-
-                                    ordem = scan.nextInt();
-
-                                    while(ordem <= 2){
-
+                                
+                                    int tamanhoBucket = scan.nextInt();
+                                
+                                    while (tamanhoBucket <= 2) {
                                         System.out.println("Tamanho inválido!");
-                                        ordem = scan.nextInt();
-
+                                        tamanhoBucket = scan.nextInt();
                                     }
-
+                                
+                                    // Preenche o Hash Extensível com os registros do arquivo
+                                    CsvHandler.preencherCatalogoIndexado(indice, tamanhoBucket);
+                                
+                                    // Após preencher, exibe o menu para o usuário interagir com o Hash Extensível
+                                    Functions functions = new Functions(tamanhoBucket, tamanhoBucket); // Inicializa o Hash Extensível
+                                    functions.menuHash(); // Chama o menu para adicionar, listar ou remover registros
                                 }
 
                                 CsvHandler.preencherCatalogoIndexado(indice, ordem);

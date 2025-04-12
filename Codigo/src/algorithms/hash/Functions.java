@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import model.Musica;
-import model.RegistroSort;
+import model.Registro;
 
 public class Functions {
 
@@ -45,7 +45,7 @@ public class Functions {
                     String[] artistas = scanner.nextLine().split(",\\s*");
 
                     Musica novaMusica = new Musica(nome, artista, System.currentTimeMillis(), duracao, artistas);
-                    RegistroSort registro = new RegistroSort(novaMusica, id);
+                    Registro registro = new Registro(id, end);
                     hashExtensivel.inserir(registro);
                     System.out.println("Registro adicionado com sucesso!");
                     break;

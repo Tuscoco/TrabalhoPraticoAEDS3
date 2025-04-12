@@ -2,8 +2,11 @@ package algorithms.hash;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 import model.Musica;
+import model.Registro;
 import model.RegistroSort;
 
 public class HashExtensivel {
@@ -32,14 +35,69 @@ public class HashExtensivel {
         return chave & ((1 << profundidade) - 1);
     }
 
-    public void inserir(RegistroSort registro) throws IOException {
+    
+    // Conversão de int para byte[]
+    private byte[] intToByteArray(int value) {
+        return new byte[] {
+            (byte) (value >> 24),
+            (byte) (value >> 16),
+            (byte) (value >> 8),
+            (byte) value
+        };
+    }
+    
+    // Conversão de long para byte[]
+    private byte[] longToByteArray(long value) {
+        return new byte[] {
+            (byte) (value >> 56),
+            (byte) (value >> 48),
+            (byte) (value >> 40),
+            (byte) (value >> 32),
+            (byte) (value >> 24),
+            (byte) (value >> 16),
+            (byte) (value >> 8),
+            (byte) value
+        };
+    }
+
+
+    
+    public Registro fromByteArray(byte[] byteArray) {
+        int id = byteArray[0]; // Exemplo simplificado, ajuste conforme necessário
+        long end = byteArray[1]; // Exemplo simplificado, ajuste conforme necessário
+        return new Registro(id, end);
+    }
+
+    public byte[] toByteArray(Registro registro) {
+        byte[] bytes = new byte[12]; // Assumindo 12 bytes, ajuste conforme necessário
+        bytes[0] = (byte) registro.id;
+        bytes[1] = (byte) (registro.end & 0xFF); // Exemplo simplificado
+        return bytes;
+    }
+
+    public void carregarCsvNoHash(String caminhoCsv) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoCsv))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(",");
+                int id = Integer.parseInt(dados[0].trim());
+                long end = Long.parseLong(dados[1].trim());
+                Registro registro = new Registro(id, end);
+                inserir(registro); // Você pode precisar criar um método inserir que aceite Registro
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void inserir(Registro registro) throws IOException {
         int profundidadeGlobal = diretorio.getProfundidadeGlobal();
-        int chave = registro.getIndex();
+        int chave = registro.id; // Usando o ID como chave
         int posicao = hash(chave, profundidadeGlobal);
         int bucketID = diretorio.getPonteiro(posicao);
         Bucket bucket = new Bucket(bucketID);
 
-        boolean inserido = bucket.adicionar(registro, capacidadeBucket);
+        boolean inserido = bucket.adicionar(registro, capacidadeBucket); // Certifique-se de que o método adicionar suporta Registro.
 
         if (inserido) return;
 
@@ -98,7 +156,7 @@ public class HashExtensivel {
                 Musica musica = new Musica(dados);
                 int hashLocal = hash(musica.getIndex(), profundidade + 1);
 
-                RegistroSort reg = new RegistroSort(musica, -1);
+                Registro reg = new Registro(musica.getIndex(), 0);
 
                 if ((hashLocal & 1) == 1) {
                     novo.adicionar(reg, capacidadeBucket); // manda pro novo

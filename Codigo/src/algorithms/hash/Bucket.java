@@ -1,7 +1,7 @@
 package algorithms.hash;
 
 import java.io.*;
-import model.RegistroSort;
+import model.Registro;
 
 import model.Musica;
 
@@ -41,18 +41,18 @@ public class Bucket {
         }
     }
 
-    public boolean adicionar(RegistroSort r, int capacidadeMaxima) throws IOException {
+    public boolean adicionar(Registro registro, int capacidade) throws IOException {
 
         try (RandomAccessFile arq = new RandomAccessFile(nomeArquivo, "rw")) {
             arq.seek(4);
             int quantidade = arq.readInt();
 
-            if (quantidade >= capacidadeMaxima) {
+            if (quantidade >= capacidade) {
                 return false;
             }
 
             arq.seek(arq.length()); // fim do arquivo
-            byte[] dados = r.toByteArray();
+            byte[] dados = toByteArray(registro);
             arq.writeInt(dados.length);
             arq.write(dados);
 
