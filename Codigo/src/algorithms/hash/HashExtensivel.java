@@ -1,27 +1,30 @@
 package algorithms.hash;
 
-import model.RegistroSort;
-import model.Musica;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import model.Musica;
+import model.RegistroSort;
 
 public class HashExtensivel {
 
     private Diretorio diretorio;
     private int capacidadeBucket;
 
-    public HashExtensivel(int capacidadeBucket) throws IOException {
+    public HashExtensivel(int capacidadeBucket, int profundidadeInicial) throws IOException {
         this.capacidadeBucket = capacidadeBucket;
 
-        // Inicializa o diretório se ele não existir
+        // Inicializa o diretório com a profundidade inicial informada
         try {
             new RandomAccessFile("diretorio.dat", "r").close();
-            this.diretorio = new Diretorio(0); // abre normalmente, já existe
+            this.diretorio = new Diretorio(profundidadeInicial); // abre normalmente, já existe
         } catch (IOException e) {
-            this.diretorio = new Diretorio(1); // profundidade inicial 1
-            new Bucket(0).criar(1);
-            new Bucket(1).criar(1);
+            this.diretorio = new Diretorio(profundidadeInicial); // profundidade inicial informada
+            int numBuckets = 1 << profundidadeInicial; // 2^profundidadeInicial
+            for (int i = 0; i < numBuckets; i++) {
+                Bucket bucket = new Bucket(i);
+                bucket.criar(profundidadeInicial); // Cria o bucket com profundidade local igual à global
+            }
         }
     }
 
@@ -118,7 +121,7 @@ public class HashExtensivel {
     private int criarNovoBucket(int profundidade) throws IOException {
         int novoID = maiorIDBucket() + 1;
         Bucket novo = new Bucket(novoID);
-        novo.criar(profundidade);
+        novo.criar(profundidade); // Cria o bucket com a nova profundidade local
         return novoID;
     }
 
@@ -155,3 +158,4 @@ public class HashExtensivel {
         }
     }
 }
+

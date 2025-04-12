@@ -5,9 +5,11 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 import algorithms.btree.BTree;
-import model.*;
+import algorithms.hash.Functions;
+import model.Musica;
 
 public class CsvHandler {
     
@@ -101,7 +103,10 @@ public class CsvHandler {
 
             }else if(indice == 2){
 
-                //Inicializar Hash Extensível
+                System.out.println("Inicializando Hash Extensível...");
+
+                Functions functions = new Functions(ordem, 1);
+                functions.menuHash();
 
             }else if(indice == 3){
 
