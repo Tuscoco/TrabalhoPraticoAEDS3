@@ -64,6 +64,11 @@ public class Bucket {
         }
     }
 
+    private byte[] toByteArray(Registro registro) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toByteArray'");
+    }
+
     public boolean remover(int index) throws IOException {
         File temp = new File(nomeArquivo + ".tmp");
         boolean removido = false;

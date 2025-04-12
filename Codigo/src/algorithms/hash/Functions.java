@@ -45,7 +45,7 @@ public class Functions {
                     String[] artistas = scanner.nextLine().split(",\\s*");
 
                     Musica novaMusica = new Musica(nome, artista, System.currentTimeMillis(), duracao, artistas);
-                    Registro registro = new Registro(id, end);
+                    Registro registro = new Registro(id, 0);
                     hashExtensivel.inserir(registro);
                     System.out.println("Registro adicionado com sucesso!");
                     break;

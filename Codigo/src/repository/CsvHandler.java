@@ -138,7 +138,7 @@ public class CsvHandler {
                 }
 
                 Musica musica = new Musica(name, artist, date, length, fArtist);
-                Registro registro = new Registro(musica.getIndex(), musica.toByteArray());
+                Registro registro = new Registro(musica.getIndex(), 0);
 
                 hashExtensivel.inserir(registro); // Insere no Hash Extensível
             }
@@ -203,7 +203,7 @@ public class CsvHandler {
             System.out.println("Base de dados carregada no arquivo de dados e no índice!");
             System.out.println();
 
-        }catch(IOException e){
+        }}catch(IOException e){
 
             System.out.println("Erro: " + e.getMessage());
 
