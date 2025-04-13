@@ -444,7 +444,7 @@ public class ConsoleHelper {
                                 System.out.print("Informe o index da música procurada: ");
                                 id = scan.nextInt();
             
-                                Musica musica = CRUD.read(id);
+                                Musica musica = CRUDI.read(id, indice);
                 
                                 clear();
             
@@ -498,7 +498,7 @@ public class ConsoleHelper {
             
                                 Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
             
-                                if(CRUD.update(id, novaMusica)){
+                                if(CRUDI.update(id, novaMusica)){
             
                                     System.out.println();
                                     System.out.println("Registro atualizado com sucesso!");
@@ -522,7 +522,7 @@ public class ConsoleHelper {
             
                                 clear();
                                 
-                                if(CRUD.delete(id)){
+                                if(CRUDI.delete(id, indice)){
             
                                     System.out.println();
                                     System.out.println("Música removida com sucesso!");
@@ -543,7 +543,7 @@ public class ConsoleHelper {
                             case 6:
             
                                 clear();
-                                CRUD.read('D');
+                                CRUDI.read();
                                 break;
                             
                             default:

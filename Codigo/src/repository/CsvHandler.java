@@ -5,12 +5,10 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 import algorithms.btree.BTree;
 import algorithms.hash.HashExtensivel;
 import model.Musica;
-import model.Registro;
 
 public class CsvHandler {
     
@@ -92,6 +90,7 @@ public class CsvHandler {
 
     }
 
+    @SuppressWarnings("unused")
     public static void preencherCatalogoIndexado(int indice, int ordem){
 
         try{
@@ -102,13 +101,11 @@ public class CsvHandler {
 
                 BTree btree = new BTree(ordem);
 
-        if (indice == 2) {
+            }else if (indice == 2) {
            
-
                 HashExtensivel hash = new HashExtensivel(ordem);
-
                 
-        }else if(indice == 3){
+            }else if(indice == 3){
 
                 //Inicializar Lista Invertida
 
@@ -167,7 +164,7 @@ public class CsvHandler {
             System.out.println("Base de dados carregada no arquivo de dados e no índice!");
             System.out.println();
 
-        }}catch(IOException e){
+        }catch(IOException e){
 
             System.out.println("Erro: " + e.getMessage());
 

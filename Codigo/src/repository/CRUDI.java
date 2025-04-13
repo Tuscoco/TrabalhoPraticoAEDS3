@@ -4,14 +4,13 @@ import java.io.*;
 
 import util.*;
 import model.*;
-import algorithms.btree.*;
-import algorithms.hash.*;
 import algorithms.btree.BTree;
+import algorithms.hash.*;
 
+@SuppressWarnings("unused")
 public final class CRUDI {
     
     private static String arquivo = "data/database/rockI.db";
-    private static String arvoreB = "data/indexes/BTree.db";
     private static String hashExtensivel = "data/indexes/Hash.db";
     private static String listaInvertida = "data/indexes/ListaInvertida.db";
 
@@ -77,7 +76,7 @@ public final class CRUDI {
 
         }catch(IOException e){
 
-            Logger.log(LogLevel.ERROR, "Erro CRUD.create: " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUDI.create: " + e.getMessage());
 
         }
 
@@ -126,7 +125,7 @@ public final class CRUDI {
 
         }catch(IOException e){
 
-            Logger.log(LogLevel.ERROR, "Erro CRUD.readAll: " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUDI.readAll: " + e.getMessage());
 
         }
 
@@ -197,7 +196,7 @@ public final class CRUDI {
 
         }catch(IOException e){
 
-            Logger.log(LogLevel.ERROR, "Erro CRUD.read: " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUDI.read: " + e.getMessage());
 
         }
 
@@ -270,7 +269,7 @@ public final class CRUDI {
 
         }catch(IOException e){
 
-            Logger.log(LogLevel.ERROR, "Erro CRUD.update: " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUDI.update: " + e.getMessage());
 
         }
 
@@ -292,41 +291,57 @@ public final class CRUDI {
      * -Se o índice não for encontrado, o método retorna false(registro não encontrado).
      * -O arquivo é fechado.
      */
-    public static boolean delete(int id) throws FileNotFoundException, IOException{
+    public static boolean delete(int id, int indice) throws FileNotFoundException, IOException{
 
         Logger.log(LogLevel.INFO, "DELETE chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
-            file.readInt();
+            Registro registro = null;
 
-            while(file.getFilePointer() < file.length()){
+            if(indice == 1){
 
-                long posicao = file.getFilePointer();
+                BTree btree = new BTree();
+                registro = btree.procurar(id);
+
+            }else if(indice == 2){
+                
+                //Procurar na hash
+
+            }else if(indice == 3){
+
+                //Procurar na Lista Invertida
+
+            }
+
+            if(registro != null){
+
+                long endereco = registro.end;
+                file.seek(endereco);
                 boolean lapide = file.readBoolean();
-                int tamanho = file.readInt();
-                byte[] array = new byte[tamanho];
-                file.readFully(array);
 
-                Musica nova = new Musica();
-                nova.fromByteArray(array);
+                if(!lapide){
 
-                if(nova.getIndex() == id && !lapide){
-
-                    file.seek(posicao);
+                    file.seek(endereco);
                     file.writeBoolean(true);
 
                     return true;
 
+                }else{
+
+                    return false;
+
                 }
+
+            }else{
+
+                return false;
 
             }
 
-            file.close();
-
         }catch(IOException e){
 
-            Logger.log(LogLevel.ERROR, "Erro CRUD.delete: " + e.getMessage());
+            Logger.log(LogLevel.ERROR, "Erro CRUDI.delete: " + e.getMessage());
 
         }
 
