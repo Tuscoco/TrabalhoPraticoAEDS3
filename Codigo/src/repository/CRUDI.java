@@ -1,11 +1,14 @@
 package repository;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import util.*;
 import model.*;
 import algorithms.btree.BTree;
 import algorithms.hash.*;
+import algorithms.invertedList.InvertedList;
 
 @SuppressWarnings("unused")
 public final class CRUDI {
@@ -60,7 +63,9 @@ public final class CRUDI {
 
             }else if(indice == 3){
 
-                //Lista Invertida
+                InvertedList lista = new InvertedList();
+
+                lista.inserir(musica);
 
             }
 
@@ -160,10 +165,6 @@ public final class CRUDI {
                 
                 //Procurar na hash
 
-            }else if(indice == 3){
-
-                //Procurar na Lista Invertida
-
             }
 
             if(registro != null){
@@ -197,6 +198,38 @@ public final class CRUDI {
         }catch(IOException e){
 
             Logger.log(LogLevel.ERROR, "Erro CRUDI.read: " + e.getMessage());
+
+        }
+
+        return null;
+
+    }
+
+    public static List<Musica> read(String artista){
+
+        try{
+
+            List<Integer> elementos = new ArrayList<>();
+            List<Musica> resultado = new ArrayList<>();
+            InvertedList lista = new InvertedList();
+
+            elementos = lista.procurar(artista);
+
+            if(!elementos.isEmpty()){
+
+                for(Integer x : elementos){
+
+                    resultado.add(read(x, 1));
+
+                }
+
+            }
+
+            return resultado;
+
+        }catch(Exception e){
+
+            e.printStackTrace();
 
         }
 

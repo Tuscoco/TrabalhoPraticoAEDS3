@@ -8,6 +8,7 @@ import java.util.Date;
 
 import algorithms.btree.BTree;
 import algorithms.hash.HashExtensivel;
+import algorithms.invertedList.InvertedList;
 import model.Musica;
 
 public class CsvHandler {
@@ -107,13 +108,13 @@ public class CsvHandler {
                 
             }else if(indice == 3){
 
-                //Inicializar Lista Invertida
+                InvertedList lista = new InvertedList(ordem);
 
             }
 
             CRUDI.reiniciarBD();
 
-            file.readLine();//Cabeçalho(não é necessário)
+            file.readLine();
 
             String linha;
 

@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 import model.Musica;
@@ -14,6 +16,7 @@ import algorithms.sorting.IntercalacaoBalanceada;
 public class ConsoleHelper {
     
     private static Scanner scan;
+    private static String tipoIndice;
 
     private ConsoleHelper(){}
 
@@ -34,7 +37,7 @@ public class ConsoleHelper {
      * Funcionamento: 
      * -Imprime na tela todas as opções de ações do usuário
      */
-    private static void menu(int tipo){
+    private static void menu(int tipo, int indice){
 
         if(tipo == 1){
 
@@ -53,7 +56,18 @@ public class ConsoleHelper {
 
         }else if(tipo == 2){
 
+            if(indice == 1){
+                        
+                tipoIndice = "====================================ArvoreB=====================================";
+
+            }else if(indice == 2){
+
+                tipoIndice = "===================================TabelaHash===================================";
+
+            }
+
             System.out.println("====================================INDEXADO====================================");
+            System.out.println(tipoIndice);
             System.out.println("Escolha uma opção: ");
             System.out.println("1 -> Carregar base de dados no arquivo");
             System.out.println("2 -> Criar um registro");
@@ -61,6 +75,17 @@ public class ConsoleHelper {
             System.out.println("4 -> Atualizar registro");
             System.out.println("5 -> Deletar registro");
             System.out.println("6 -> Ler todos os registros");
+            System.out.println("0 -> Voltar");
+            System.out.println("================================================================================");
+
+        }else if(tipo == 3){
+
+            System.out.println("====================================INDEXADO====================================");
+            System.out.println("=================================ListaInvertida=================================");
+            System.out.println("Escolha uma opção: ");
+            System.out.println("1 -> Carregar base de dados no arquivo");
+            System.out.println("2 -> Criar um registro");
+            System.out.println("3 -> Ler um conjunto de registros");
             System.out.println("0 -> Voltar");
             System.out.println("================================================================================");
 
@@ -149,7 +174,7 @@ public class ConsoleHelper {
     
         do{
     
-            menu(1);
+            menu(1, 0);
     
             op = scan.nextInt();
     
@@ -353,11 +378,12 @@ public class ConsoleHelper {
 
             if(indice != 0){
 
-                if(indice >= 1 && indice <= 3){
+                if(indice == 1 || indice == 2){
 
                     do{
         
-                        menu(2);
+                        clear();
+                        menu(2, indice);
                 
                         op = scan.nextInt();
                 
@@ -556,6 +582,99 @@ public class ConsoleHelper {
                 
                     }while(op != 0);
     
+                }else if(indice == 3){
+
+                    do{
+
+                        //clear();
+                        menu(3, indice);
+                
+                        op = scan.nextInt();
+
+                        switch(op){
+
+                            case 0:
+
+                                break;
+
+                            case 1:
+
+                                clear();
+                                CsvHandler.preencherCatalogoIndexado(indice, 0);
+                                break;
+
+                            case 2:
+
+                                scan.nextLine();
+                                clear();
+            
+                                System.out.print("Nome: ");
+                                String nome = scan.nextLine();
+                                System.out.print("Artista: ");
+                                String artista = scan.nextLine();
+                                System.out.print("Data dd-MM-yyyy: ");
+                                String dataStr = scan.nextLine();
+                                long data = 0;
+        
+                                try{
+        
+                                    Date parsedDate = dateFormat.parse(dataStr);
+                                    data = parsedDate.getTime();
+        
+                                }catch(ParseException e){
+        
+                                    System.out.println("Erro: " + e.getMessage());
+                                
+                                }
+        
+                                System.out.print("Duração: ");
+                                double duracao = scan.nextDouble();
+                                scan.nextLine();
+                            
+                                System.out.print("Artistas relacionados (separados por vírgula): ");
+                                String[] artistas = scan.nextLine().split(",\\s*");
+        
+                                Musica addNovaMusica = new Musica(nome, artista, data, duracao, artistas);
+                                CRUDI.create(addNovaMusica, true, indice);
+
+                                break;
+
+                            case 3:
+
+                                scan.nextLine();
+                                clear();
+
+                                System.out.print("Informe o nome do artista: ");
+                                String banda = scan.nextLine();
+
+                                List<Musica> lista = CRUDI.read(banda);
+
+                                if(!lista.isEmpty()){
+
+                                    for(Musica x : lista){
+
+                                        System.out.println(x.toString());
+
+                                    }
+
+                                }else{
+
+                                    System.out.println("Elementos não encontrados!");
+
+                                }
+
+                                break;
+
+                            default:
+
+                                clear();
+                                System.out.println("Opção inválida!");
+                                break;
+
+                        }
+
+                    }while(op != 0);
+
                 }else{
     
                     System.out.println("Opção inválida!");

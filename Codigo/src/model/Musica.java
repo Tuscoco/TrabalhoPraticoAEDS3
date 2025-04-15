@@ -56,6 +56,12 @@ public class Musica {
 
     }
 
+    public String getArtist(){
+
+        return artist;
+
+    }
+
     @Override
     public String toString(){
 
