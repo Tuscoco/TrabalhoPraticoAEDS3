@@ -113,11 +113,12 @@ public class InvertedList {
 
     }
 
-    public List<Integer> procurar(String banda){
+    public List<Integer> procurar(String artista){
 
         try{
 
             List<Integer> lista = new ArrayList<>();
+            String banda = tratarTamanho(artista, 15);
 
             file.seek(0);
 
@@ -176,6 +177,18 @@ public class InvertedList {
             System.out.println(banda + " -- " + id + " -- " + end);
 
         }
+
+    }
+
+    private String tratarTamanho(String str, int tamanho){
+
+        if(str.length() > tamanho){
+
+            return str.substring(0, tamanho);
+
+        }
+
+        return String.format("%-" + tamanho + "s", str);
 
     }
     
