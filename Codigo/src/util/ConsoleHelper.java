@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -375,6 +374,7 @@ public class ConsoleHelper {
             clear();
             menuDeIndices();
             indice = scan.nextInt();
+            clear();
 
             if(indice != 0){
 
@@ -382,7 +382,6 @@ public class ConsoleHelper {
 
                     do{
         
-                        clear();
                         menu(2, indice);
                 
                         op = scan.nextInt();
@@ -425,6 +424,7 @@ public class ConsoleHelper {
                                 
                                 }
 
+                                clear();
                                 CsvHandler.preencherCatalogoIndexado(indice, ordem);
                                 break;
             
@@ -586,7 +586,6 @@ public class ConsoleHelper {
 
                     do{
 
-                        //clear();
                         menu(3, indice);
                 
                         op = scan.nextInt();
