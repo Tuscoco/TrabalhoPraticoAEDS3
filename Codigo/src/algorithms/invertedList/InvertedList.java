@@ -132,7 +132,7 @@ public class InvertedList {
                     int id = file.readInt();
                     long end = file.readLong();
 
-                    if(bandaArq.trim().equals(banda)){
+                    if(bandaArq.trim().toLowerCase().equals(banda.trim().toLowerCase())){
 
                         lista.add(id);
 
