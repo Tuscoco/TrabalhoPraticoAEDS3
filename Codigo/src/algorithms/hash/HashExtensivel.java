@@ -43,20 +43,27 @@ public class HashExtensivel {
     }
 
     private void salvarDiretorio() throws IOException {
-        file.seek(4); // após o int do bucketSize
-        byte[] bytes = diretorio.toByteArray();
-        file.writeInt(bytes.length);
-        file.write(bytes);
+        file.seek(4); // Pula o tamanho do bucket (4 bytes)
+
+        file.writeInt(diretorio.profundidadeGlobal);
+    
+        int tamanho = (int) Math.pow(2, diretorio.profundidadeGlobal);
+        for (int i = 0; i < tamanho; i++) {
+            file.writeLong(diretorio.enderecosBuckets[i]);
+        }
     }
 
     private void carregarDiretorio() throws IOException {
-        file.seek(4); // após o int do bucketSize
-        int tam = file.readInt();
-        byte[] bytes = new byte[tam];
-        file.readFully(bytes);
+        file.seek(4); // Após o tamanho do bucket
 
-        diretorio = new Diretorio(1); // placeholder
-        diretorio.fromByteArray(bytes);
+        int profundidadeGlobal = file.readInt();
+        int tamanho = (int) Math.pow(2, profundidadeGlobal);
+    
+        diretorio = new Diretorio(profundidadeGlobal);
+    
+        for (int i = 0; i < tamanho; i++) {
+            diretorio.enderecosBuckets[i] = file.readLong();
+        }
     }
 
     private long escreverBucket(Bucket b) throws IOException {
