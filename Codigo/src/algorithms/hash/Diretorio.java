@@ -48,4 +48,22 @@ public class Diretorio {
             enderecosBuckets[i] = dis.readLong();
         }
     }
+
+    public void duplicar() {
+        int novoTamanho = enderecosBuckets.length * 2;
+        long[] novoEnderecos = new long[novoTamanho];
+    
+        for (int i = 0; i < enderecosBuckets.length; i++) {
+            novoEnderecos[i] = enderecosBuckets[i];
+            novoEnderecos[i + enderecosBuckets.length] = enderecosBuckets[i];
+        }
+    
+        enderecosBuckets = novoEnderecos;
+        profundidadeGlobal++;
+    }
+    
+    public int hashComBits(int chave, int bits) {
+        return chave & ((1 << bits) - 1);
+    }
+    
 }

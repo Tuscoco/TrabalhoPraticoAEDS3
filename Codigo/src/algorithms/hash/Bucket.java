@@ -53,12 +53,19 @@ public class Bucket {
     }
 
     public void fromByteArray(byte[] array) throws IOException {
+        if (array == null || array.length < 12) {
+            throw new IOException("Dados inválidos para o bucket.");
+        }
         ByteArrayInputStream bais = new ByteArrayInputStream(array);
         DataInputStream dis = new DataInputStream(bais);
 
         profundidadeLocal = dis.readInt();
         maxRegistros = dis.readInt();
         int size = dis.readInt();
+
+        if (size < 0 || size > maxRegistros * 2) {
+            throw new IOException("Número inválido de registros no bucket: " + size);
+        }
 
         registros = new ArrayList<>();
         for (int i = 0; i < size; i++) {

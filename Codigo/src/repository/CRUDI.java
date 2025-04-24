@@ -59,7 +59,9 @@ public final class CRUDI {
 
             }else if(indice == 2){
 
-                //Hash Extensível
+                HashExtensivel hash = new HashExtensivel(2);
+                hash.inserir(registro);
+                
 
             }else if(indice == 3){
 
