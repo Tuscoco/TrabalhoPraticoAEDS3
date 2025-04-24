@@ -92,53 +92,6 @@ public final class CRUDI {
 /////////////////////////////////////////////////READ//////////////////////////////////////////////////////
 
     /*
-     * Método para ler todos os registros do arquivo. 
-     * 
-     * Funcionamento: 
-     * -O arquivo é aberto e o ponteiro lê registro por registro.
-     * -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e imprimidos na tela.
-     * -Se a lápide estiver verdadeira(registro "removido"), os dados não são imprimidos na tela.
-     * -O arquivo é fechado.
-     */
-    public static void read() throws FileNotFoundException, IOException{
-
-        Logger.log(LogLevel.INFO, "READALL chamado!");
-
-        String arq = "";
-
-        try(RandomAccessFile file = new RandomAccessFile(arq, "r")){
-
-            file.readInt();
-
-            while(file.getFilePointer() < file.length()){
-
-                boolean lapide = file.readBoolean();
-                int tamanho = file.readInt();
-                byte[] array = new byte[tamanho];
-                file.readFully(array);
-
-                Musica nova = new Musica();
-                nova.fromByteArray(array);
-
-                if(!lapide){
-
-                    System.out.println(nova);
-
-                }
-
-            }
-
-            file.close();
-
-        }catch(IOException e){
-
-            Logger.log(LogLevel.ERROR, "Erro CRUDI.readAll: " + e.getMessage());
-
-        }
-
-    }
-
-    /*
      * Método para ler um registro do arquivo. 
      * 
      * Funcionamento: 
@@ -250,33 +203,46 @@ public final class CRUDI {
      * -Se o novo tamanho é menor ou igual ao antigo, o registro é atualizado.
      * -Se o novo tamanho é maior que o antigo, a lápide é marcada como verdadeira e um novo registro é adicionado no final do arquivo com o mesmo índice da música a ser atualizada.
      */
-     public static boolean update(int id, Musica novaMusica) throws IOException{
+     public static boolean update(int id, Musica novaMusica, int indice) throws IOException{
 
         Logger.log(LogLevel.INFO, "UPDATE chamado!");
 
         try(RandomAccessFile file = new RandomAccessFile(arquivo, "rw")){
 
-            file.readInt(); 
+            Registro registro = null;
 
-            while(file.getFilePointer() < file.length()){
+            if(indice == 1){
 
-                long posicao = file.getFilePointer();
+                BTree btree = new BTree();
+                registro = btree.procurar(id);
+
+            }else if(indice == 2){
+                
+                //Procurar na hash
+
+            }
+
+            if(registro != null){
+
+                long endereco = registro.end;
+                file.seek(endereco);
                 boolean lapide = file.readBoolean();
-                int tamanhoAntigo = file.readInt();
-                byte[] array = new byte[tamanhoAntigo];
-                file.readFully(array);
 
-                Musica musicaAntiga = new Musica();
-                musicaAntiga.fromByteArray(array);
+                if(!lapide){
 
-                if(musicaAntiga.getIndex() == id && !lapide){
+                    int tamanhoAntigo = file.readInt();
+                    byte[] array = new byte[tamanhoAntigo];
+                    file.readFully(array);
+    
+                    Musica musicaAntiga = new Musica();
+                    musicaAntiga.fromByteArray(array);
 
                     byte[] novoArray = novaMusica.toByteArray();
                     int tamanhoNovo = novoArray.length;
 
                     if(tamanhoNovo <= tamanhoAntigo){
 
-                        file.seek(posicao + 1 + 4); 
+                        file.seek(endereco + 1 + 4); 
                         file.write(novoArray);
 
                         if(tamanhoNovo < tamanhoAntigo){
@@ -287,18 +253,41 @@ public final class CRUDI {
 
                     }else{
 
-                        file.seek(posicao);
+                        file.seek(endereco);
                         file.writeBoolean(true);
 
-                        file.seek(file.length());
+                        long enderecoNovo = file.length();
+
+                        file.seek(enderecoNovo);
                         file.writeBoolean(false); 
                         file.writeInt(novoArray.length);
-                        file.write(novoArray);                        
+                        file.write(novoArray);
+
+                        if(indice == 1){
+
+                            BTree btree = new BTree();
+
+                            btree.atualizar(id, enderecoNovo);
+    
+                        }else if(indice == 2){
+    
+                            //Atualizar na Hash
+    
+                        }
+
                     }
 
                     return true;
 
+                }else{
+
+                    return false;
+
                 }
+
+            }else{
+
+                return false;
 
             }
 

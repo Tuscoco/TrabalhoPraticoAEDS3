@@ -524,7 +524,7 @@ public class ConsoleHelper {
             
                                 Musica novaMusica = new Musica(id, name, artist, date, length, fArtists);
             
-                                if(CRUDI.update(id, novaMusica)){
+                                if(CRUDI.update(id, novaMusica, indice)){
             
                                     System.out.println();
                                     System.out.println("Registro atualizado com sucesso!");
@@ -564,12 +564,6 @@ public class ConsoleHelper {
             
                                 System.out.println();
             
-                                break;
-            
-                            case 6:
-            
-                                clear();
-                                CRUDI.read();
                                 break;
                             
                             default:

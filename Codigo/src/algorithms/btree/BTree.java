@@ -520,5 +520,55 @@ public class BTree {
         return null;
 
     }
+
+    public boolean atualizar(int id, long endNovo){
+
+        if(raiz == -1){
+
+            return false;
+
+        }
+
+        return atualizar(id, raiz, endNovo);
+
+    }
+
+    private boolean atualizar(int id, long endereco, long endNovo){
+
+        Pagina pagina = lerPagina(endereco);
+
+        for(int i = 0;i < pagina.numElementos;i++){
+
+            if(id == pagina.chaves[i].id){
+
+                Registro novo = new Registro(id, endNovo);
+
+                pagina.chaves[i] = novo;
+
+                inserirPagina(pagina, endereco);
+
+            }else if(id < pagina.chaves[i].id){
+
+                if(pagina.filhos[i] == -1){
+
+                    return false;
+
+                }
+
+                return atualizar(id, pagina.filhos[i], endNovo);
+
+            }
+
+        }
+
+        if(pagina.filhos[pagina.numElementos] == -1){
+
+            return false;
+
+        }
+
+        return atualizar(id, pagina.filhos[pagina.numElementos], endNovo);
+
+    }
     
 }
