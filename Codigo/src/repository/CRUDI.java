@@ -25,10 +25,11 @@ public final class CRUDI {
      * Método para adicionar um registro do arquivo. 
      * 
      * Funcionamento: 
-     * -Recebe um objeto "Musica" e organiza o registro.
-     * -O arquivo é aberto, o ponteiro é movido para o início, onde escreve o ultimo índice incerido.
-     * -O ponteiro é movido para o final do arquivo e escreve o registro, que é organizado em: lápide, tamanho do registro e dados.
-     * -O arquivo é fechado.
+     * - Recebe um objeto "Musica" e organiza o registro.
+     * - O arquivo é aberto, o ponteiro é movido para o início, onde escreve o ultimo índice incerido.
+     * - O ponteiro é movido para o final do arquivo e escreve o registro, que é organizado em: lápide, tamanho do registro e dados.
+     * - Pega o endereço onde o registro foi inserido no arquivo de dados, cria um objeto Registro e o insere no arquivo de indice escolhido
+     * - O arquivo é fechado.
      */
     public static void create(Musica musica, boolean conf, int indice) throws FileNotFoundException, IOException{
 
@@ -95,13 +96,13 @@ public final class CRUDI {
      * Método para ler um registro do arquivo. 
      * 
      * Funcionamento: 
-     * -Recebe o índice do registro desejado.
-     * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
-     * -Se o índice for encontrado.
-     * -Se a lápide estiver falsa, um novo objeto "Musica" é criado com os dados lidos do arquivo e retornado.
-     * -Se a lápide estiver verdadeira(registro "removido"), o método retorna null(registro não encontrado).
-     * -Se o índice não for encontrado, o método retorna null(registro não encontrado).
-     * -O arquivo é fechado.
+     * - Recebe o índice do registro desejado.
+     * - O índice do registro é procurado no arquivo de índice e retorna um objeto Registro
+     * - Se o índice for encontrado.
+     * - Abre o arquivo de dados no endereço retornado do arquivo de indice
+     * - Um novo objeto "Musica" é criado com os dados lidos do arquivo e retornado.
+     * - Se o índice não for encontrado, o método retorna null(registro não encontrado).
+     * - O arquivo é fechado.
      */
     public static Musica read(int id, int indice) throws IOException{
 
@@ -160,6 +161,16 @@ public final class CRUDI {
 
     }
 
+    /*
+     * Método para ler um conjunto de registros de uma lista invertida
+     * 
+     * Funcionamento:
+     * - Cria dois arrayList necessários
+     * - Busca os ids procurados(de acordo com o nome da banda) na lista invertida
+     * - Se a lista estiver vazia, retorna null(não há elementos)
+     * - Se a lista não estiver vazia, busca todos os elementos na árvore B
+     * - Retorna a lista de registros
+     */
     public static List<Musica> read(String artista){
 
         try{
@@ -198,10 +209,10 @@ public final class CRUDI {
      * Método para atualizar um registro do arquivo. 
      * 
      * Funcionamento: 
-     * -Recebe o id da música a ser atualizada e o novo objeto de música.
-     * -Identifica se a música está "viva" ou "morta" e se o novo tamanho é menor ou igual ao antigo. Se estiver "morta retorna false."
-     * -Se o novo tamanho é menor ou igual ao antigo, o registro é atualizado.
-     * -Se o novo tamanho é maior que o antigo, a lápide é marcada como verdadeira e um novo registro é adicionado no final do arquivo com o mesmo índice da música a ser atualizada.
+     * - Recebe o id da música a ser atualizada e o novo objeto de música.
+     * - Busca o registro no arquivo de indice
+     * - Se estiver null(não há elemento), o elemento não existe
+     * - Se não estiver null, o elemento é atualizado no arquivo de dados, e se necessário, atualizado no arquivo de indice
      */
      public static boolean update(int id, Musica novaMusica, int indice) throws IOException{
 
@@ -307,13 +318,11 @@ public final class CRUDI {
      * Método para "deletar" um registro do arquivo. 
      * 
      * Funcionamento: 
-     * -Recebe o índice do registro que se deseja "deletar".
-     * -O arquivo é aberto e o ponteiro lê registro por registro até achar o índice procurado.
-     * -Se o índice for encontrado, o ponteiro retorna até a lápide do registro .
-     * -Se a lápide estiver falsa(registro não removido) ela é marcada como verdadeira e o método retorna true(registro "removido").
-     * -Se a lápide estiver verdadeira(registro removido) o método retorna false(registro já "removido").
-     * -Se o índice não for encontrado, o método retorna false(registro não encontrado).
-     * -O arquivo é fechado.
+     * - Recebe o índice do registro que se deseja "deletar".
+     * - Busca o registro no arquivo de índice
+     * - Se o objeto Registro for null, o elemento já foi deletado
+     * - Se o objeto Registro não for null, vai no endereço do registro e marca a lápide como true
+     * - Deleta o registro no arquivo de indice
      */
     public static boolean delete(int id, int indice) throws FileNotFoundException, IOException{
 
