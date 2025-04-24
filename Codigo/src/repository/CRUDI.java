@@ -334,7 +334,7 @@ public final class CRUDI {
 
             }else if(indice == 3){
 
-                //Procurar na Lista Invertida
+                //Procurar na Lista Invertida 
 
             }
 
@@ -348,6 +348,18 @@ public final class CRUDI {
 
                     file.seek(endereco);
                     file.writeBoolean(true);
+
+                    if(indice == 1){
+
+                        BTree btree = new BTree();
+
+                        btree.deletar(id);
+
+                    }else if(indice == 2){
+
+                        //Deletar na hash
+
+                    }
 
                     return true;
 

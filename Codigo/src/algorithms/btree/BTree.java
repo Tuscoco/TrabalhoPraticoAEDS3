@@ -10,9 +10,15 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/*
+ * Classe que implementa o algoritmo da Arvore B em memória secundária
+ */
 @SuppressWarnings("unused")
 public class BTree {
 
+    /*
+     * Classe que implementa a estrutura da Página da Arvore B
+     */
     public class Pagina{
 
         public int numElementos;
@@ -26,6 +32,9 @@ public class BTree {
 
         }
 
+        /*
+         * Método que preenche a página com valores "nulos" (-1), para ids e endereços
+         */
         public void criarPagina(int ordem){
 
             numElementos = 0;
@@ -37,6 +46,9 @@ public class BTree {
 
         }
 
+        /*
+         * Método que transforma o objeto Pagina em um vetor de bytes para ser inserido no arquivo
+         */
         public byte[] toByteArray(){
 
             try{
@@ -73,6 +85,9 @@ public class BTree {
 
         }
 
+        /*
+         * Método que transforma um vetor de bytes em um objeto Pagina, para que seja manipulado
+         */
         public void fromByteArray(byte[] array){
 
             try{
@@ -111,6 +126,10 @@ public class BTree {
 
         }
 
+        /*
+         * Método que ordena os registros da página, para que as operações de 
+         * busca, inserção e remoção sejam feitas corretamente
+         */
         public void ordenarChaves(){
 
             Registro[] validos = new Registro[numElementos];
@@ -147,6 +166,9 @@ public class BTree {
 
     }
 
+    /*
+     * Classe para auxiliar o split de uma página da Arvore B
+     */
     private class SplitResult{
 
         public Registro registro;
@@ -169,6 +191,13 @@ public class BTree {
     private Registro registroAux;
     private long paginaAux;
 
+    /*
+     * Construtor usado quando a árvore já está construída
+     * 
+     * Funcionamento:
+     * - Abre o arquivo de índice e lê um long, que é a raiz da árvore, e guarda no atributo.
+     * - Após isso lê um inteiro, que é a ordem da árvore, e guarda no atributo.
+     */
     public BTree(){
 
         try{
@@ -187,6 +216,13 @@ public class BTree {
 
     }
 
+    /*
+     * Construtor usado quando a árvore será construída
+     * 
+     * Funcionamento:
+     * - Abre o arquivo de índice e o esvazia completamente.
+     * - Após isso, escreve um long, a raiz, e um inteiro, a ordem.
+     */
     public BTree(int ordem){
 
         this.ordem = ordem;
@@ -209,6 +245,9 @@ public class BTree {
 
     }
 
+    /*
+     * Método que insere a página no arquivo, no endereço informado
+     */
     private void inserirPagina(Pagina pagina, long endereco){
 
         try{
@@ -237,6 +276,9 @@ public class BTree {
 
     }
 
+    /*
+     * Método que vai até o endereço informado, lê uma página inteira, cria o objeto e o retorna
+     */
     private Pagina lerPagina(long endereco){
 
         try{
@@ -262,52 +304,16 @@ public class BTree {
 
     }
 
-    public Registro procurar(int id){
+/////////////////////////////////////////////////INSERIR//////////////////////////////////////////////////////
 
-        if(raiz == -1){
-
-            return null;
-
-        }
-
-        return procurar(id, raiz);
-
-    }
-
-    private Registro procurar(int id, long endereco){
-
-        Pagina pagina = lerPagina(endereco);
-
-        for(int i = 0;i < pagina.numElementos;i++){
-
-            if(id == pagina.chaves[i].id){
-
-                return pagina.chaves[i];
-
-            }else if(id < pagina.chaves[i].id){
-
-                if(pagina.filhos[i] == -1){
-
-                    return null;
-
-                }
-
-                return procurar(id, pagina.filhos[i]);
-
-            }
-
-        }
-
-        if(pagina.filhos[pagina.numElementos] == -1){
-
-            return null;
-
-        }
-
-        return procurar(id, pagina.filhos[pagina.numElementos]);
-
-    }
-
+    /*
+     * Método que insere um registro quando a árvore está vazia
+     * 
+     * Funcionamento:
+     * - Verifica se a raiz é -1 (árvore vazia)
+     * - Se for -1, vai para o final do arquivo, cria a página, insere o registro e insere a página no arquivo
+     * - Se não for -1, chama o outro método de inserir, que possui os outros casos
+     */
     public void inserir(Registro registro){
 
         try{
@@ -341,6 +347,16 @@ public class BTree {
 
     }
 
+    /*
+     * Método que insere um registro
+     * 
+     * Funcionamento:
+     * - Lê a página no endereço informado e verifica se é uma folha
+     * - Se não for, procura o endereço da página em que ele se encaixa
+     * - Se for, verifica a quantidade de elementos
+     * - Se for possível inserir, insere o registro e insere a página no arquivo
+     * - Se não for possível inserir, faz split na página
+     */
     private void inserir(Registro registro, long endereco, Pagina pai, long enderecoPai){
 
         try{
@@ -385,6 +401,9 @@ public class BTree {
 
     }
 
+    /* 
+     * Método auxiliar para o split, que recebe o elemento que irá subir e o coloca na página pai
+    */
     private SplitResult inserirEndereco(Pagina pai, long enderecoPai, long endereco, Registro aSubir){
 
         try{
@@ -429,6 +448,9 @@ public class BTree {
 
     }
 
+    /*
+     * Método que procura o endereço da próxima página para inserir o registro
+     */
     private long procurarEndereco(Registro registro, Pagina pagina){
 
         for(int i = 0;i < pagina.numElementos;i++){
@@ -445,6 +467,16 @@ public class BTree {
 
     }
 
+    /*
+     * Método split
+     * 
+     * Funcionamento:
+     * - Recebe a página cheia e o registro a ser inserido, e insere todos em um array
+     * - Ordena o array para saber qual elemento irá subir
+     * - Cria duas páginas novas, insere os elementos da esquerda e da direita do elemento que irá subir nas páginas criadas
+     * - Insere os endereços dos filhos da página cheia nas páginas criadas
+     * - Insere as páginas no arquivo de índice
+     */
     private SplitResult splitPagina(Pagina cheia, Registro novo, long enderecoPaginaCheia){
 
         try{
@@ -521,6 +553,79 @@ public class BTree {
 
     }
 
+/////////////////////////////////////////////////PROCURAR//////////////////////////////////////////////////////
+
+    /*
+     * Método de procura
+     * 
+     * Funcionamento:
+     * - Se a árvore for vazia, retorna nulo
+     * - Se não, chama o método de procura
+     */
+    public Registro procurar(int id){
+
+        if(raiz == -1){
+
+            return null;
+
+        }
+
+        return procurar(id, raiz);
+
+    }
+
+    /*
+     * Método de procura
+     * 
+     * Funcionamento:
+     * - Lê a página no endereço informado
+     * - Verifica se o id está presente na página
+     * - Se sim, retorna o registro
+     * - Se não, caminha para a próxima página
+     */
+    private Registro procurar(int id, long endereco){
+
+        Pagina pagina = lerPagina(endereco);
+
+        for(int i = 0;i < pagina.numElementos;i++){
+
+            if(id == pagina.chaves[i].id){
+
+                return pagina.chaves[i];
+
+            }else if(id < pagina.chaves[i].id){
+
+                if(pagina.filhos[i] == -1){
+
+                    return null;
+
+                }
+
+                return procurar(id, pagina.filhos[i]);
+
+            }
+
+        }
+
+        if(pagina.filhos[pagina.numElementos] == -1){
+
+            return null;
+
+        }
+
+        return procurar(id, pagina.filhos[pagina.numElementos]);
+
+    }
+
+/////////////////////////////////////////////////ATUALIZAR//////////////////////////////////////////////////////
+
+    /*
+     * Método de atualização
+     * 
+     * Funcionamento:
+     * - Se a árvore for vazia, retorna falso
+     * - Se não, chama o método de atualização
+     */
     public boolean atualizar(int id, long endNovo){
 
         if(raiz == -1){
@@ -533,6 +638,15 @@ public class BTree {
 
     }
 
+    /*
+     * Método de atualização
+     * 
+     * Funcionamento:
+     * - Lê a página no endereço informado
+     * - Verifica se o id está presente na página
+     * - Se sim, atualiza o registro e insere no arquivo
+     * - Se não, caminha para a próxima página
+     */
     private boolean atualizar(int id, long endereco, long endNovo){
 
         Pagina pagina = lerPagina(endereco);
@@ -568,6 +682,74 @@ public class BTree {
         }
 
         return atualizar(id, pagina.filhos[pagina.numElementos], endNovo);
+
+    }
+
+/////////////////////////////////////////////////DELETAR//////////////////////////////////////////////////////
+
+    /*
+     * Método de deletar
+     * 
+     * Funcionamento:
+     * - Se a árvore for vazia, retorna falso
+     * - Se não, chama o método de deletar
+     */
+    public boolean deletar(int id){
+
+        if(raiz == -1){
+
+            return false;
+
+        }
+
+        return deletar(id, raiz);
+
+    }
+
+    /*
+     * Método de deletar
+     * 
+     * Funcionamento:
+     * - Lê a página no endereço informado
+     * - Verifica se o id está presente na página
+     * - Se sim, deleta o registro e insere a página no arquivo
+     * - Se não, caminha para a próxima página
+     */
+    private boolean deletar(int id, long endereco){
+
+        Pagina pagina = lerPagina(endereco);
+
+        for(int i = 0;i < pagina.numElementos;i++){
+
+            if(id == pagina.chaves[i].id){
+
+                Registro novo = new Registro();
+
+                pagina.chaves[i] = novo;
+
+                inserirPagina(pagina, endereco);
+
+            }else if(id < pagina.chaves[i].id){
+
+                if(pagina.filhos[i] == -1){
+
+                    return false;
+
+                }
+
+                return deletar(id, pagina.filhos[i]);
+
+            }
+
+        }
+
+        if(pagina.filhos[pagina.numElementos] == -1){
+
+            return false;
+
+        }
+
+        return deletar(id, pagina.filhos[pagina.numElementos]);
 
     }
     
