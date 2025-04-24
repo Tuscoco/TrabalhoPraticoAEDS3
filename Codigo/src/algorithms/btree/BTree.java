@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Comparator;
 
+@SuppressWarnings("unused")
 public class BTree {
 
     public class Pagina{
@@ -19,13 +20,13 @@ public class BTree {
         public long[] filhos = new long[ordem];
         public boolean folha = true;
 
-        public Pagina(){
+        public Pagina(int ordem){
 
-            criarPagina();
+            criarPagina(ordem);
 
         }
 
-        public void criarPagina(){
+        public void criarPagina(int ordem){
 
             numElementos = 0;
 
@@ -49,12 +50,12 @@ public class BTree {
 
                     dos.writeLong(filhos[i]);
 
-                    if(i < chaves.length && chaves[i] != null){
+                }
 
-                        dos.writeInt(chaves[i].id);
-                        dos.writeLong(chaves[i].end);
+                for(int i = 0;i < ordem - 1;i++){
 
-                    }
+                    dos.writeInt(chaves[i].id);
+                    dos.writeLong(chaves[i].end);
 
                 }
 
@@ -85,12 +86,18 @@ public class BTree {
 
                     this.filhos[i] = dis.readLong();
 
-                    if(i < chaves.length && chaves[i] != null){
+                }
 
-                        this.chaves[i].id = dis.readInt();
-                        this.chaves[i].end = dis.readLong();
+                for(int i = 0;i < ordem - 1;i++){
+
+                    if(chaves[i] == null){
+
+                        chaves[i] = new Registro();
 
                     }
+
+                    this.chaves[i].id = dis.readInt();
+                    this.chaves[i].end = dis.readLong();
 
                 }
 
@@ -158,6 +165,9 @@ public class BTree {
     private long raiz;
     private static final String arquivo = "data/indexes/BTree.db";
     public static RandomAccessFile file;
+
+    private Registro registroAux;
+    private long paginaAux;
 
     public BTree(){
 
@@ -237,7 +247,7 @@ public class BTree {
             byte[] array = new byte[tam];
             file.readFully(array);
 
-            Pagina nova = new Pagina();
+            Pagina nova = new Pagina(this.ordem);
             nova.fromByteArray(array);
 
             return nova;
@@ -276,7 +286,7 @@ public class BTree {
 
             }else if(id < pagina.chaves[i].id){
 
-                if(pagina.folha){
+                if(pagina.filhos[i] == -1){
 
                     return null;
 
@@ -288,7 +298,7 @@ public class BTree {
 
         }
 
-        if(pagina.folha){
+        if(pagina.filhos[pagina.numElementos] == -1){
 
             return null;
 
@@ -307,7 +317,7 @@ public class BTree {
                 long endereco = file.length();
                 file.seek(endereco);
 
-                Pagina pagina = new Pagina();
+                Pagina pagina = new Pagina(this.ordem);
                 pagina.chaves[0] = registro;
                 pagina.numElementos = 1;
 
@@ -451,8 +461,8 @@ public class BTree {
     
             Arrays.sort(registros, Comparator.comparingInt(r -> r.id));
     
-            Pagina novaEsq = new Pagina();
-            Pagina novaDir = new Pagina();
+            Pagina novaEsq = new Pagina(this.ordem);
+            Pagina novaDir = new Pagina(this.ordem);
     
             for(int i = 0;i < (ordem / 2);i++){ novaEsq.chaves[i] = registros[i]; }
             Registro vaiSubir = registros[ordem / 2];
@@ -490,15 +500,17 @@ public class BTree {
 
             if(enderecoPaginaCheia == raiz){
                 
-                Pagina raizNova = new Pagina();
+                Pagina raizNova = new Pagina(this.ordem);
                 raizNova.chaves[0] = vaiSubir;
                 raizNova.filhos[0] = enderecoPaginaCheia;
                 raizNova.filhos[1] = enderecoNovo;
+                raizNova.numElementos = 1;
 
                 long enderecoRaizNova = file.length();
                 inserirPagina(raizNova, enderecoRaizNova);
                 file.seek(0);
                 file.writeLong(enderecoRaizNova);
+                this.raiz = enderecoRaizNova;
 
             }else{
 
