@@ -474,22 +474,15 @@ public class BTree {
             novaEsq.ordenarChaves();
             novaDir.ordenarChaves();
 
-            if(!cheia.folha){
+            for(int i = 0;i <= ordem / 2;i++){
 
-                novaEsq.folha = false;
-                novaDir.folha = false;
+                novaEsq.filhos[i] = cheia.filhos[i];
 
-                for(int i = 0;i <= ordem / 2;i++){
+            }
 
-                    novaEsq.filhos[i] = cheia.filhos[i];
+            for(int i = (ordem / 2) + 1,j = 0;i < ordem;i++,j++){
 
-                }
-
-                for(int i = (ordem / 2) + 1,j = 0;i <= ordem;i++,j++){
-
-                    novaDir.filhos[j] = cheia.filhos[i];
-
-                }
+                novaDir.filhos[j] = cheia.filhos[i];
 
             }
     
