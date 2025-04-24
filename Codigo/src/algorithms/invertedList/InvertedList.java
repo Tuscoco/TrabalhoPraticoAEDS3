@@ -1,17 +1,25 @@
 package algorithms.invertedList;
 
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Musica;
 
+/*
+ * Classe que implementa o algoritmo de Lista Invertida em memória secundária
+ */
 public class InvertedList {
 
     private static final String arquivo = "data/indexes/InvertedList.db";
     public static RandomAccessFile file;
 
+    /*
+     * Construtor usado quando a lista já está construída
+     * 
+     * Funcionamento:
+     * - Abre o arquivo de índice
+     */
     public InvertedList(){
 
         try{
@@ -26,6 +34,12 @@ public class InvertedList {
 
     }
 
+    /*
+     * Construtor usado quando a lista não está construída
+     * 
+     * Funcionamento:
+     * - Abre o arquivo de índice e apaga tudo
+     */
     public InvertedList(int i){
 
         try{
@@ -42,6 +56,16 @@ public class InvertedList {
 
     }
 
+    /*
+     * Método de inserir um registro na lista invertida
+     * 
+     * Funcionamento:
+     * - Vai para o início do arquivo e procura a banda da musica a ser inserida
+     * - Se não achar, vai para o final do arquivo e insere
+     * - Se achar, verifica o ponteiro para o próximo até achar o -1
+     * - Insere no final
+     * - Organizado em: Banda - ID - ponteiro para o próximo
+     */
     public void inserir(Musica musica){
 
         try{
@@ -113,6 +137,15 @@ public class InvertedList {
 
     }
 
+    /*
+     * Método para procurar um conjunto de índices de musicas
+     * 
+     * Funcionamento:
+     * - Anda pelo arquivo até achar a primeira aparição da banda
+     * - Se não houver, retorna uma lista vazia
+     * - Depois da primeira aparição, anda pelos ponteiros guardando os índices na lista
+     * - Retorna a lista
+     */
     public List<Integer> procurar(String artista){
 
         try{
@@ -165,21 +198,9 @@ public class InvertedList {
 
     }
 
-    public void lerTudo() throws IOException{
-
-        file.seek(0);
-        while(file.getFilePointer() < file.length()){
-
-            String banda = file.readUTF();
-            int id = file.readInt();
-            long end = file.readLong();
-
-            System.out.println(banda + " -- " + id + " -- " + end);
-
-        }
-
-    }
-
+    /*
+     * Método que limita o tamanho do nome recebido
+     */
     private String tratarTamanho(String str, int tamanho){
 
         if(str.length() > tamanho){

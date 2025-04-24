@@ -11,6 +11,7 @@ import algorithms.hash.HashExtensivel;
 import algorithms.invertedList.InvertedList;
 import model.Musica;
 
+@SuppressWarnings("unused")
 public class CsvHandler {
     
     private static String arquivo = "data/csv/rock6.csv";
@@ -19,7 +20,7 @@ public class CsvHandler {
     private CsvHandler(){}
 
     /*
-     * Método para preencher arquivo com dados do csv
+     * Método para preencher arquivo com dados do csv para CRUD Sequencial
      * 
      * Funcionamento: 
      * -Abre o arquivo .csv e le a primeira linha(cabeçalho)
@@ -91,7 +92,15 @@ public class CsvHandler {
 
     }
 
-    @SuppressWarnings("unused")
+    /*
+     * Método para preencher arquivo com dados do csv para CRUD Indexado
+     * 
+     * Funcionamento: 
+     * - Abre o arquivo .csv e le a primeira linha(cabeçalho)
+     * - Le o arquivo linha a linha, trata e organiza dados 
+     * - Cria um objeto com os dados e os envia para o arquivo atraves do método create da classe CRUD
+     * - Cria um objeto Registro e insere no arquivo de índice escolhido
+     */
     public static void preencherCatalogoIndexado(int indice, int ordem){
 
         try{

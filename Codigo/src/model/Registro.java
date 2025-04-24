@@ -1,5 +1,8 @@
 package model;
 
+/*
+ * Classe para ser utilizada nos algoritmos de BTree e Hash Extensível
+ */
 public class Registro{
 
     public int id;

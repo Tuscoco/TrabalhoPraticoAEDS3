@@ -19,6 +19,9 @@ public class ConsoleHelper {
 
     private ConsoleHelper(){}
 
+    /*
+     * Método para imprimir o menu de escolhas do usuário
+     */
     private static void tipoMenu(){
 
         System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
@@ -32,9 +35,6 @@ public class ConsoleHelper {
 
     /*
      * Método para imprimir o menu de escolhas do usuário
-     * 
-     * Funcionamento: 
-     * -Imprime na tela todas as opções de ações do usuário
      */
     private static void menu(int tipo, int indice){
 
@@ -92,6 +92,9 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para imprimir o menu de escolhas do usuário
+     */
     private static void menuDeIndices(){
 
         System.out.println("================================================================================");
@@ -117,6 +120,9 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para a execução do programa
+     */
     public static void run() throws FileNotFoundException, IOException{
 
         scan = new Scanner(System.in);
@@ -158,7 +164,7 @@ public class ConsoleHelper {
     }
 
     /*
-     * Método para a interação com o usuário
+     * Método para a interação com o usuário para CRUD Sequencial
      * 
      * Funcionamento: 
      * -Chama o método menu e recebe a opção do usuário
@@ -361,6 +367,13 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para a interação com o usuário para CRUD Indexado
+     * 
+     * Funcionamento: 
+     * -Chama o método menu e recebe a opção do usuário
+     * -Recebe informações do usuário e chama o método necessário pra cada caso
+     */
     private static void runIndexado() throws FileNotFoundException, IOException{
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //Reconhece o formato que a data será lida e exibida ao usuário para utilizar nas transformações para Timestamp

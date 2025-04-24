@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.Registro;
 
+@SuppressWarnings("unused")
 public class HashExtensivel {
     private static final String ARQUIVO = "data/indexes/Hash.db";
     private RandomAccessFile file;
