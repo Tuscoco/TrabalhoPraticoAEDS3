@@ -16,15 +16,12 @@ public class HashExtensivel {
     public HashExtensivel(int bucketSize) throws IOException {
         this.bucketSize = bucketSize;
         
-        // Garante que o diretório existe
         new File("data/indexes").mkdirs();
         
-        // Abre os arquivos
         dirFile = new RandomAccessFile(ARQUIVO_DIRETORIO, "rw");
         bucketsFile = new RandomAccessFile(ARQUIVO_BUCKETS, "rw");
 
         if (dirFile.length() == 0) {
-            // Inicialização nova
             inicializarNovoHash();
         } else {
             carregarEstruturaExistente();
@@ -32,17 +29,14 @@ public class HashExtensivel {
     }
 
     private void inicializarNovoHash() throws IOException {
-        diretorio = new Diretorio(1); // Profundidade global inicial = 1
+        diretorio = new Diretorio(1);
         
-        // Cria dois buckets iniciais
         Bucket b1 = new Bucket(bucketSize);
         Bucket b2 = new Bucket(bucketSize);
         
-        // Escreve os buckets no arquivo
         long pos1 = escreverBucket(b1);
         long pos2 = escreverBucket(b2);
         
-        // Configura o diretório
         diretorio.enderecosBuckets[0] = pos1;
         diretorio.enderecosBuckets[1] = pos2;
         
@@ -50,12 +44,12 @@ public class HashExtensivel {
     }
 
     private void carregarEstruturaExistente() throws IOException {
-        // Carrega o diretório
+        
         byte[] dirBytes = new byte[(int) dirFile.length()];
         dirFile.seek(0);
         dirFile.readFully(dirBytes);
         
-        diretorio = new Diretorio(1); // Valor temporário
+        diretorio = new Diretorio(1); 
         diretorio.fromByteArray(dirBytes);
     }
 
@@ -64,8 +58,8 @@ public class HashExtensivel {
         bucketsFile.seek(pos);
         
         byte[] bucketBytes = bucket.toByteArray();
-        bucketsFile.writeInt(bucketBytes.length); // Tamanho do bucket
-        bucketsFile.write(bucketBytes);           // Dados do bucket
+        bucketsFile.writeInt(bucketBytes.length); 
+        bucketsFile.write(bucketBytes);          
         
         return pos;
     }
@@ -96,29 +90,23 @@ public class HashExtensivel {
         Bucket bucket = lerBucket(enderecoBucket);
         
         if (!bucket.inserir(registro)) {
-            // Bucket cheio - precisa dividir
             dividirBucket(bucket, enderecoBucket, registro);
         } else {
-            // Atualiza o bucket no arquivo
             escreverBucket(bucket);
         }
     }
 
     private void dividirBucket(Bucket bucketAntigo, long enderecoAntigo, Registro novoRegistro) 
             throws IOException {
-        // Aumenta a profundidade local
         bucketAntigo.profundidadeLocal++;
         
-        // Verifica se precisa expandir o diretório
         if (bucketAntigo.profundidadeLocal > diretorio.profundidadeGlobal) {
             expandirDiretorio();
         }
         
-        // Cria novo bucket
         Bucket novoBucket = new Bucket(bucketSize);
         novoBucket.profundidadeLocal = bucketAntigo.profundidadeLocal;
         
-        // Redistribui os registros
         List<Registro> registrosParaRedistribuir = new ArrayList<>(bucketAntigo.registros);
         registrosParaRedistribuir.add(novoRegistro);
         bucketAntigo.registros.clear();
@@ -133,11 +121,9 @@ public class HashExtensivel {
             }
         }
         
-        // Escreve os buckets atualizados
         long novoEndereco = escreverBucket(novoBucket);
         escreverBucket(bucketAntigo);
         
-        // Atualiza o diretório
         atualizarDiretorio(bucketAntigo, enderecoAntigo, novoEndereco);
     }
 
