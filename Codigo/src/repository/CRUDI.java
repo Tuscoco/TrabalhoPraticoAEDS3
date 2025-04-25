@@ -118,7 +118,7 @@ public final class CRUDI {
                 BTree btree = new BTree();
                 registro = btree.procurar(id);
 
-            }else if (indice == 2) { // Hash Extensível
+            }else if (indice == 2) {
                 HashExtensivel hash = new HashExtensivel(2);
                 try {
                     registro = hash.buscar(id);
@@ -297,7 +297,7 @@ public final class CRUDI {
     
                         }else if(indice == 2){
     
-                            //Atualizar na Hash
+                            HashExtensivel hash = new HashExtensivel(2);
     
                         }
 
@@ -354,11 +354,7 @@ public final class CRUDI {
 
             }else if(indice == 2){
                 
-                //Procurar na hash
-
-            }else if(indice == 3){
-
-                //Procurar na Lista Invertida 
+                HashExtensivel hash = new HashExtensivel(2);
 
             }
 
@@ -381,7 +377,7 @@ public final class CRUDI {
 
                     }else if(indice == 2){
 
-                        //Deletar na hash
+                        HashExtensivel hash = new HashExtensivel(2);
 
                     }
 
