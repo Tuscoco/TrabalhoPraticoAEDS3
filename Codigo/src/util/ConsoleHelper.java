@@ -73,7 +73,6 @@ public class ConsoleHelper {
             System.out.println("3 -> Ler um registro");
             System.out.println("4 -> Atualizar registro");
             System.out.println("5 -> Deletar registro");
-            System.out.println("6 -> Ler todos os registros");
             System.out.println("0 -> Voltar");
             System.out.println("================================================================================");
 

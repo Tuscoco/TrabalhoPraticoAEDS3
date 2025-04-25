@@ -62,7 +62,6 @@ public final class CRUDI {
 
                 HashExtensivel hash = new HashExtensivel(2);
                 hash.inserir(registro);
-                hash.debugPrint();
 
                 hash.close();
 
