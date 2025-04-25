@@ -33,7 +33,8 @@ public class HashExtensivel {
         
         Bucket b1 = new Bucket(bucketSize);
         Bucket b2 = new Bucket(bucketSize);
-        
+        b1.inserir(new Registro(-1, -1));
+        b2.inserir(new Registro(-1, -1));
         long pos1 = escreverBucket(b1);
         long pos2 = escreverBucket(b2);
         
@@ -86,18 +87,31 @@ public class HashExtensivel {
 
         int hash = diretorio.hash(registro.id);
         long enderecoBucket = diretorio.enderecosBuckets[hash];
-        
+        if (enderecoBucket <= 0) {
+            // Cria novo bucket se o endereço for inválido
+            Bucket novoBucket = new Bucket(bucketSize);
+            novoBucket.inserir(registro);
+            long novoEndereco = escreverBucket(novoBucket);
+            diretorio.enderecosBuckets[hash] = novoEndereco;
+            salvarDiretorio();
+            return;
+        }
         Bucket bucket = lerBucket(enderecoBucket);
         
-        if (!bucket.inserir(registro)) {
-            dividirBucket(bucket, enderecoBucket, registro);
-        } else {
+        if (bucket.inserir(registro)) {
+            // Atualiza o bucket no arquivo
             escreverBucket(bucket);
+        } else {
+            // Bucket cheio - precisa dividir
+            dividirBucket(bucket, enderecoBucket, registro);
         }
     }
 
     private void dividirBucket(Bucket bucketAntigo, long enderecoAntigo, Registro novoRegistro) 
             throws IOException {
+        // Remove o registro vazio de inicialização se existir
+        bucketAntigo.registros.removeIf(r -> r.id == -1);
+        
         bucketAntigo.profundidadeLocal++;
         
         if (bucketAntigo.profundidadeLocal > diretorio.profundidadeGlobal) {
@@ -121,9 +135,11 @@ public class HashExtensivel {
             }
         }
         
+        // Escreve os buckets atualizados
         long novoEndereco = escreverBucket(novoBucket);
         escreverBucket(bucketAntigo);
         
+        // Atualiza o diretório
         atualizarDiretorio(bucketAntigo, enderecoAntigo, novoEndereco);
     }
 
