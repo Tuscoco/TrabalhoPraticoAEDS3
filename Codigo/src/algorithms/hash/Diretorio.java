@@ -3,6 +3,9 @@ package algorithms.hash;
 import java.io.*;
 import java.util.Arrays;
 
+/*
+ * Classe que implementa o diretório para apontar para os buckets
+ */
 public class Diretorio {
     public int profundidadeGlobal;
     public long[] enderecosBuckets;
@@ -14,10 +17,16 @@ public class Diretorio {
         Arrays.fill(enderecosBuckets, -1);
     }
 
+    /*
+     * Método da função de hash
+     */
     public int hash(int chave) {
         return chave & ((1 << profundidadeGlobal) - 1);
     }
 
+    /*
+     * Método para transformar um objeto Diretorio em um array de bytes
+     */
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
@@ -32,6 +41,9 @@ public class Diretorio {
         return baos.toByteArray();
     }
 
+    /*
+     * Método para transformar um array de bytes em um objeto Diretório
+     */
     public void fromByteArray(byte[] array) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(array);
         DataInputStream dis = new DataInputStream(bais);
@@ -45,6 +57,9 @@ public class Diretorio {
         }
     }
 
+    /*
+     * Método para duplicar o diretório quando a profundidade global aumenta
+     */
     public void duplicar() {
         int novoTamanho = enderecosBuckets.length * 2;
         long[] novoEnderecos = new long[novoTamanho];
@@ -58,6 +73,9 @@ public class Diretorio {
         profundidadeGlobal++;
     }
 
+    /*
+     * Método da função de hash com bits
+     */
     public int hashComBits(int chave, int bits) {
         return chave & ((1 << bits) - 1);
     }

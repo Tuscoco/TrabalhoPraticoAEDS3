@@ -5,6 +5,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Classe que implementa um Bucket da Tabela Hash Extensível
+ */
 public class Bucket {
     public int profundidadeLocal;
     public List<Registro> registros;
@@ -16,10 +19,21 @@ public class Bucket {
         this.maxRegistros = maxRegistros;
     }
 
+    /*
+     * Método para verificar se o bucket está cheio
+     */
     public boolean isFull() {
         return registros.size() >= maxRegistros;
     }
 
+    /*
+     * Método para inserir um registro no bucket
+     * 
+     * Funcionamento:
+     * - Verifica se o bucket está cheio
+     * - Se estiver, retorna falso
+     * - Se não, adiciona o registro e retorna true
+     */
     public boolean inserir(Registro r) {
         if (!isFull()) {
             registros.add(r);
@@ -28,6 +42,16 @@ public class Bucket {
         return false;
     }
 
+    /*
+     * Método de busca de um registro no bucket
+     * 
+     * Funcionamento:
+     * - Verifica se o bucket foi inicializado
+     * - Se não, retorna nulo
+     * - Se sim, procura o registro no bucket
+     * - Se achar o registro, o retorna
+     * - Se não, retorna nulo
+     */
     public Registro buscar(int id) {
         if (registros == null) {
             System.err.println("Lista de registros não inicializada");
@@ -45,6 +69,9 @@ public class Bucket {
         return null;
     }
 
+    /*
+     * Método para transformar um objeto Bucket em um array de bytes
+     */
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
@@ -61,6 +88,9 @@ public class Bucket {
         return baos.toByteArray();
     }
 
+    /*
+     * Método para transformar um array de bytes em um objeto Bucket
+     */
     public void fromByteArray(byte[] array) throws IOException {
         if (array == null || array.length < 12) {
             throw new IOException("Dados inválidos para o bucket");

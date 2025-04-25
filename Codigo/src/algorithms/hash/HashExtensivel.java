@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Registro;
 
+/*
+ * Classe que implementa o algoritmo de Hash Extensível
+ */
+@SuppressWarnings("unused")
 public class HashExtensivel {
     private static final String ARQUIVO_DIRETORIO = "data/indexes/HashDirectory.db";
     private static final String ARQUIVO_BUCKETS = "data/indexes/HashBuckets.db";
@@ -28,6 +32,14 @@ public class HashExtensivel {
         }
     }
 
+    /*
+     * Método que inicializa uma nova Tabela hash
+     * 
+     * Funcionamento:
+     * - Cria um novo diretório
+     * - Cria dois buckets(pois a profundidade global começa em 1)
+     * - Insere registros apenas para preencher
+     */
     private void inicializarNovoHash() throws IOException {
         diretorio = new Diretorio(1);
         
@@ -44,6 +56,9 @@ public class HashExtensivel {
         salvarDiretorio();
     }
 
+    /*
+     * Método para quando a tabela hash já existe
+     */
     private void carregarEstruturaExistente() throws IOException {
         
         byte[] dirBytes = new byte[(int) dirFile.length()];
@@ -54,6 +69,9 @@ public class HashExtensivel {
         diretorio.fromByteArray(dirBytes);
     }
 
+    /*
+     * Método que escreve o bucket no arquivo de índice
+     */
     private long escreverBucket(Bucket bucket) throws IOException {
         long pos = bucketsFile.length();
         bucketsFile.seek(pos);
@@ -65,6 +83,9 @@ public class HashExtensivel {
         return pos;
     }
 
+    /*
+     * Método para ler um bucket do arquivo de índice, para ser alterado
+     */
     private Bucket lerBucket(long pos) throws IOException {
         if (pos <= 0 || pos >= bucketsFile.length()) {
             throw new IOException("Posição inválida para bucket: " + pos);
@@ -80,6 +101,17 @@ public class HashExtensivel {
         return bucket;
     }
 
+    /*
+     * Método para inserir um registro
+     * 
+     * Funcionamento:
+     * - Faz a função de hash utilizando o id do registro
+     * - Verifica o endereço do bucket no diretório
+     * - Se o endereço for inválido, cria um novo bucket, insere o registro e insere o bucket no arquivo
+     * - Se o endereço for válido, le o bucket e tenta inserir
+     * - Se o registro couber no bucket, o insere e insere o bucket no arquivo
+     * - Se não couber, faz a divisão do bucket e insere o registro
+     */
     public synchronized void inserir(Registro registro) throws IOException {
         if (registro == null || registro.id < 0) {
             return;
@@ -107,8 +139,17 @@ public class HashExtensivel {
         }
     }
 
-    private void dividirBucket(Bucket bucketAntigo, long enderecoAntigo, Registro novoRegistro) 
-            throws IOException {
+    /*
+     * Método para dividir o bucket quando ele ta cheio
+     * 
+     * Funcionamento:
+     * - Aumenta a profundidade local do bucket
+     * - Aumenta o diretório se for necessário
+     * - Cria um novo bucket e faz o diretório apontar para ele
+     * - Refaz a função de hash para cada um dos registros no bucket cheio
+     * - Insere os registros reorganizados em seu respectivo bucket
+     */
+    private void dividirBucket(Bucket bucketAntigo, long enderecoAntigo, Registro novoRegistro) throws IOException {
         // Remove o registro vazio de inicialização se existir
         bucketAntigo.registros.removeIf(r -> r.id == -1);
         
@@ -143,11 +184,17 @@ public class HashExtensivel {
         atualizarDiretorio(bucketAntigo, enderecoAntigo, novoEndereco);
     }
 
+    /*
+     * Método para expandir o bucket quando a profundidade global aumenta
+     */
     private void expandirDiretorio() throws IOException {
         diretorio.duplicar();
         salvarDiretorio();
     }
 
+    /*
+     * Método para atualizar os ponteiros de cada bucket no diretório
+     */
     private void atualizarDiretorio(Bucket bucket, long enderecoOriginal, long enderecoNovo) 
             throws IOException {
         int bitsIgnorados = diretorio.profundidadeGlobal - bucket.profundidadeLocal;
@@ -164,6 +211,15 @@ public class HashExtensivel {
         salvarDiretorio();
     }
 
+    /*
+     * Método para buscar um registro
+     * 
+     * Funcionamento:
+     * - Faz a função de hash para saber o bucket que o registro está
+     * - Le o bucket e procura o registro la
+     * - Se achar, o retorna
+     * - Se não, retorna nulo
+     */
     public Registro buscar(int id) throws IOException {
         int hash = diretorio.hash(id);
         long endereco = diretorio.enderecosBuckets[hash];
@@ -172,6 +228,9 @@ public class HashExtensivel {
         return bucket.buscar(id);
     }
 
+    /*
+     * Método para salvar o diretório em um arquivo
+     */
     private void salvarDiretorio() throws IOException {
         dirFile.seek(0);
         dirFile.write(diretorio.toByteArray());
