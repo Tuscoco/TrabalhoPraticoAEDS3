@@ -62,7 +62,9 @@ public final class CRUDI {
 
                 HashExtensivel hash = new HashExtensivel(2);
                 hash.inserir(registro);
-                
+                hash.debugPrint();
+
+                hash.close();
 
             }else if(indice == 3){
 
@@ -117,10 +119,21 @@ public final class CRUDI {
                 BTree btree = new BTree();
                 registro = btree.procurar(id);
 
-            }else if(indice == 2){
-                
-                //Procurar na hash
-
+            }else if (indice == 2) { // Hash Extensível
+                HashExtensivel hash = new HashExtensivel(2);
+                try {
+                    registro = hash.buscar(id);
+                    
+                    if (registro == null) {
+                        Logger.log(LogLevel.WARNING, "Registro não encontrado no Hash para ID: " + id);
+                        return null;
+                    }
+                    
+                    Logger.log(LogLevel.INFO, "Registro encontrado no Hash - ID: " + registro.id + 
+                              ", Endereço: " + registro.end);
+                } finally {
+                    hash.close();
+                }
             }
 
             if(registro != null){
@@ -229,7 +242,10 @@ public final class CRUDI {
 
             }else if(indice == 2){
                 
-                //Procurar na hash
+                HashExtensivel hash = new HashExtensivel(2);
+                registro = hash.buscar(id);
+                // Implementar atualização no hash 
+                hash.close();
 
             }
 

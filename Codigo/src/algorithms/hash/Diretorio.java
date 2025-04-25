@@ -1,10 +1,6 @@
 package algorithms.hash;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 public class Diretorio {
@@ -15,7 +11,7 @@ public class Diretorio {
         this.profundidadeGlobal = profundidadeGlobal;
         int tamanho = 1 << profundidadeGlobal;
         this.enderecosBuckets = new long[tamanho];
-        Arrays.fill(enderecosBuckets, -1); // -1 significa sem bucket atribuído ainda
+        Arrays.fill(enderecosBuckets, -1);
     }
 
     public int hash(int chave) {
@@ -52,18 +48,17 @@ public class Diretorio {
     public void duplicar() {
         int novoTamanho = enderecosBuckets.length * 2;
         long[] novoEnderecos = new long[novoTamanho];
-    
+
         for (int i = 0; i < enderecosBuckets.length; i++) {
             novoEnderecos[i] = enderecosBuckets[i];
             novoEnderecos[i + enderecosBuckets.length] = enderecosBuckets[i];
         }
-    
+
         enderecosBuckets = novoEnderecos;
         profundidadeGlobal++;
     }
-    
+
     public int hashComBits(int chave, int bits) {
         return chave & ((1 << bits) - 1);
     }
-    
 }

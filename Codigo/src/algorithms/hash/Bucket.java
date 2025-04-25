@@ -1,7 +1,6 @@
 package algorithms.hash;
 
 import model.Registro;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,19 @@ public class Bucket {
     }
 
     public Registro buscar(int id) {
-        for (Registro r : registros) {
-            if (r.id == id) return r;
+        if (registros == null) {
+            System.err.println("Lista de registros não inicializada");
+            return null;
         }
+    
+        for (Registro r : registros) {
+            if (r != null && r.id == id) {
+                System.out.println("Registro encontrado no bucket - ID: " + r.id + ", End: " + r.end);
+                return r;
+            }
+        }
+        
+        System.err.println("Registro com ID " + id + " não encontrado neste bucket");
         return null;
     }
 
@@ -54,25 +63,30 @@ public class Bucket {
 
     public void fromByteArray(byte[] array) throws IOException {
         if (array == null || array.length < 12) {
-            throw new IOException("Dados inválidos para o bucket.");
+            throw new IOException("Dados inválidos para o bucket");
         }
+    
         ByteArrayInputStream bais = new ByteArrayInputStream(array);
         DataInputStream dis = new DataInputStream(bais);
-
-        profundidadeLocal = dis.readInt();
-        maxRegistros = dis.readInt();
-        int size = dis.readInt();
-
-        if (size < 0 || size > maxRegistros * 2) {
-            throw new IOException("Número inválido de registros no bucket: " + size);
-        }
-
-        registros = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Registro r = new Registro();
-            r.id = dis.readInt();
-            r.end = dis.readLong();
-            registros.add(r);
+    
+        try {
+            profundidadeLocal = dis.readInt();
+            maxRegistros = dis.readInt();
+            int size = dis.readInt();
+    
+            if (size < 0 || size > maxRegistros) {
+                throw new IOException("Número inválido de registros: " + size);
+            }
+    
+            registros = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                Registro r = new Registro();
+                r.id = dis.readInt();
+                r.end = dis.readLong();
+                registros.add(r);
+            }
+        } catch (EOFException e) {
+            throw new IOException("Dados do bucket incompletos", e);
         }
     }
 }

@@ -1,237 +1,205 @@
 package algorithms.hash;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Registro;
 
-@SuppressWarnings("unused")
 public class HashExtensivel {
-    private static final String ARQUIVO = "data/indexes/Hash.db";
-    private RandomAccessFile file;
+    private static final String ARQUIVO_DIRETORIO = "data/indexes/HashDirectory.db";
+    private static final String ARQUIVO_BUCKETS = "data/indexes/HashBuckets.db";
+    private RandomAccessFile dirFile;
+    private RandomAccessFile bucketsFile;
     private Diretorio diretorio;
     private int bucketSize;
 
-    public HashExtensivel(int bucketSize) {
+    public HashExtensivel(int bucketSize) throws IOException {
         this.bucketSize = bucketSize;
-        try {
-            file = new RandomAccessFile(ARQUIVO, "rw");
-    
-            if (file.length() <= 4) {
-                inicializarArquivo();
-            } else {
-                try {
-                    file.seek(0);
-                    this.bucketSize = file.readInt();
-                    carregarDiretorio();
-                } catch (IOException e) {
-                    System.err.println("Arquivo corrompido. Recriando...");
-                    file.setLength(0); // Limpa o arquivo
-                    inicializarArquivo();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        
+        // Garante que o diretório existe
+        new File("data/indexes").mkdirs();
+        
+        // Abre os arquivos
+        dirFile = new RandomAccessFile(ARQUIVO_DIRETORIO, "rw");
+        bucketsFile = new RandomAccessFile(ARQUIVO_BUCKETS, "rw");
+
+        if (dirFile.length() == 0) {
+            // Inicialização nova
+            inicializarNovoHash();
+        } else {
+            carregarEstruturaExistente();
         }
     }
 
-    private void inicializarArquivo() throws IOException {
-        file.seek(0);
-        file.writeInt(bucketSize);  // 4 bytes
+    private void inicializarNovoHash() throws IOException {
+        diretorio = new Diretorio(1); // Profundidade global inicial = 1
         
-        // Escreve cabeçalho do diretório (8 bytes)
-        file.writeInt(1); // profundidadeGlobal
-        file.writeInt(2); // quantidade de buckets
-        
-        // Escreve os endereços dos buckets (2 * 8 bytes = 16 bytes)
-        long posBucket1 = 28; // 4 (bucketSize) + 8 (header) + 16 (endereços) = 28
-        long posBucket2 = posBucket1 + calculateBucketSize();
-        
-        file.writeLong(posBucket1);
-        file.writeLong(posBucket2);
-        
-        // Agora escreve os buckets
+        // Cria dois buckets iniciais
         Bucket b1 = new Bucket(bucketSize);
         Bucket b2 = new Bucket(bucketSize);
         
-        escreverBucketNaPosicao(b1, posBucket1);
-        escreverBucketNaPosicao(b2, posBucket2);
-    }
-    private int calculateBucketSize() {
-        // Tamanho fixo estimado para um bucket vazio
-        return 12; // 4 (profundidadeLocal) + 4 (maxRegistros) + 4 (size=0)
-    }
-    private void escreverBucketNaPosicao(Bucket bucket, long pos) throws IOException {
-        byte[] bytes = bucket.toByteArray();
-        file.seek(pos);
-        file.write(bytes);
-    }
-
-    private void salvarDiretorio() throws IOException {
-        file.seek(4); // Pula o tamanho do bucket (4 bytes)
-
-        file.writeInt(diretorio.profundidadeGlobal);
-    
-        int tamanho = (int) Math.pow(2, diretorio.profundidadeGlobal);
-        for (int i = 0; i < tamanho; i++) {
-            file.writeLong(diretorio.enderecosBuckets[i]);
-        }
-    }
-
-    private void carregarDiretorio() throws IOException {
-        file.seek(4); // Pula o bucketSize
+        // Escreve os buckets no arquivo
+        long pos1 = escreverBucket(b1);
+        long pos2 = escreverBucket(b2);
         
-        diretorio = new Diretorio(file.readInt());
-        int numBuckets = file.readInt();
+        // Configura o diretório
+        diretorio.enderecosBuckets[0] = pos1;
+        diretorio.enderecosBuckets[1] = pos2;
         
-        for (int i = 0; i < numBuckets; i++) {
-            diretorio.enderecosBuckets[i] = file.readLong();
-        }
+        salvarDiretorio();
+    }
+
+    private void carregarEstruturaExistente() throws IOException {
+        // Carrega o diretório
+        byte[] dirBytes = new byte[(int) dirFile.length()];
+        dirFile.seek(0);
+        dirFile.readFully(dirBytes);
+        
+        diretorio = new Diretorio(1); // Valor temporário
+        diretorio.fromByteArray(dirBytes);
     }
 
     private long escreverBucket(Bucket bucket) throws IOException {
-        byte[] bytes = bucket.toByteArray();
-        long pos = file.length(); // Aponta para o final do arquivo
-    
-        file.seek(pos); // Vai para o fim do arquivo
-        file.writeInt(bytes.length); // Grava o tamanho
-        file.write(bytes);           // Grava os dados reais
-    
-        return pos; // Retorna o endereço do bucket
+        long pos = bucketsFile.length();
+        bucketsFile.seek(pos);
+        
+        byte[] bucketBytes = bucket.toByteArray();
+        bucketsFile.writeInt(bucketBytes.length); // Tamanho do bucket
+        bucketsFile.write(bucketBytes);           // Dados do bucket
+        
+        return pos;
     }
 
-    private void escreverBucketComEndereco(Bucket b, long endereco) throws IOException {
-        byte[] bytes = b.toByteArray();
-        
-        file.seek(endereco);
-        file.writeInt(bytes.length);
-        file.write(bytes);
-    }
-
-    private Bucket lerBucket(long endereco) throws IOException {
-    if (endereco < 28) { // Os primeiros 28 bytes são do cabeçalho
-        throw new IOException("Endereço inválido para bucket: " + endereco);
-    }
-    
-    file.seek(endereco);
-    
-    Bucket bucket = new Bucket(bucketSize);
-    
-    try {
-        bucket.profundidadeLocal = file.readInt();
-        bucket.maxRegistros = file.readInt();
-        int size = file.readInt();
-        
-        // Validação mais flexível para o número de registros
-        if (size < 0 || size > bucket.maxRegistros * 2) {
-            throw new IOException("Número inválido de registros: " + size);
+    private Bucket lerBucket(long pos) throws IOException {
+        if (pos <= 0 || pos >= bucketsFile.length()) {
+            throw new IOException("Posição inválida para bucket: " + pos);
         }
         
-        bucket.registros = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Registro r = new Registro();
-            r.id = file.readInt();
-            r.end = file.readLong();
-            bucket.registros.add(r);
-        }
-    } catch (EOFException e) {
-        throw new IOException("Bucket incompleto no endereço " + endereco, e);
+        bucketsFile.seek(pos);
+        int tamanho = bucketsFile.readInt();
+        byte[] bucketBytes = new byte[tamanho];
+        bucketsFile.readFully(bucketBytes);
+        
+        Bucket bucket = new Bucket(bucketSize);
+        bucket.fromByteArray(bucketBytes);
+        return bucket;
     }
-    
-    return bucket;
-}
-    
 
+    public synchronized void inserir(Registro registro) throws IOException {
+        if (registro == null || registro.id < 0) {
+            return;
+        }
 
-    public synchronized void inserir(Registro r) {
-        try {
-            int hash = diretorio.hash(r.id);
-            long endereco = diretorio.enderecosBuckets[hash];
-            if (endereco < 0) {
-                // Criar novo bucket se o endereço for inválido
-                Bucket novoBucket = new Bucket(bucketSize);
-                novoBucket.inserir(r);
-                endereco = escreverBucket(novoBucket);
-                diretorio.enderecosBuckets[hash] = endereco;
-                salvarDiretorio();
-                return;
-            }
-            Bucket b = lerBucket(endereco);
+        int hash = diretorio.hash(registro.id);
+        long enderecoBucket = diretorio.enderecosBuckets[hash];
+        
+        Bucket bucket = lerBucket(enderecoBucket);
+        
+        if (!bucket.inserir(registro)) {
+            // Bucket cheio - precisa dividir
+            dividirBucket(bucket, enderecoBucket, registro);
+        } else {
+            // Atualiza o bucket no arquivo
+            escreverBucket(bucket);
+        }
+    }
 
-
-                if (!b.inserir(r)) {
-              
-                    b.profundidadeLocal++;
-
-                    // Se a profundidade local agora é maior que a global, duplicar diretório
-                    if (b.profundidadeLocal > diretorio.profundidadeGlobal) {
-                        diretorio.duplicar();
-                        salvarDiretorio();
-                    }
-
-                    // Criar novo bucket
-                    Bucket novoBucket = new Bucket(bucketSize);
-                    novoBucket.profundidadeLocal = b.profundidadeLocal;
-
-                    // Redistribuir registros
-                    List<Registro> todos = new ArrayList<>(b.registros);
-                    todos.add(r);  // adicionar o registro novo que causou o split
-                    b.registros.clear();
-
-                    for (Registro reg : todos) {
-                        int novoHash = diretorio.hashComBits(reg.id, b.profundidadeLocal);
-                        if ((novoHash & 1) == 0) {
-                            b.registros.add(reg);
-                        } else {
-                            novoBucket.registros.add(reg);
-                        }
-                    }
-
-                    long enderecoAntigo = endereco; // salve antes de reescrever
-                    long enderecoNovo = escreverBucket(novoBucket);
-                    enderecoAntigo = escreverBucket(b);
-
-                    // Atualizar ponteiros do diretório
-                    for (int i = 0; i < diretorio.enderecosBuckets.length; i++) {
-                        int prefix = i >> (diretorio.profundidadeGlobal - b.profundidadeLocal);
-                        if ((prefix & 1) == 0 && diretorio.enderecosBuckets[i] == endereco) {
-                            diretorio.enderecosBuckets[i] = enderecoAntigo;
-                        } else if ((prefix & 1) == 1 && diretorio.enderecosBuckets[i] == endereco) {
-                            diretorio.enderecosBuckets[i] = enderecoNovo;
-                        }
-                    }
-
-                    salvarDiretorio();
-    
+    private void dividirBucket(Bucket bucketAntigo, long enderecoAntigo, Registro novoRegistro) 
+            throws IOException {
+        // Aumenta a profundidade local
+        bucketAntigo.profundidadeLocal++;
+        
+        // Verifica se precisa expandir o diretório
+        if (bucketAntigo.profundidadeLocal > diretorio.profundidadeGlobal) {
+            expandirDiretorio();
+        }
+        
+        // Cria novo bucket
+        Bucket novoBucket = new Bucket(bucketSize);
+        novoBucket.profundidadeLocal = bucketAntigo.profundidadeLocal;
+        
+        // Redistribui os registros
+        List<Registro> registrosParaRedistribuir = new ArrayList<>(bucketAntigo.registros);
+        registrosParaRedistribuir.add(novoRegistro);
+        bucketAntigo.registros.clear();
+        
+        int mascara = 1 << (bucketAntigo.profundidadeLocal - 1);
+        
+        for (Registro r : registrosParaRedistribuir) {
+            if ((diretorio.hashComBits(r.id, bucketAntigo.profundidadeLocal) & mascara) == 0) {
+                bucketAntigo.registros.add(r);
             } else {
-                escreverBucketComEndereco(b, endereco);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                Bucket novoBucket = new Bucket(bucketSize);
-                novoBucket.inserir(r);
-                long endereco = escreverBucket(novoBucket);
-                // Atualizar diretório se necessário
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                novoBucket.registros.add(r);
             }
         }
+        
+        // Escreve os buckets atualizados
+        long novoEndereco = escreverBucket(novoBucket);
+        escreverBucket(bucketAntigo);
+        
+        // Atualiza o diretório
+        atualizarDiretorio(bucketAntigo, enderecoAntigo, novoEndereco);
     }
 
-    public Registro buscar(int id) {
-        try {
-            int hash = diretorio.hash(id);
-            long endereco = diretorio.enderecosBuckets[hash];
-            Bucket b = lerBucket(endereco);
-            return b.buscar(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    private void expandirDiretorio() throws IOException {
+        diretorio.duplicar();
+        salvarDiretorio();
+    }
+
+    private void atualizarDiretorio(Bucket bucket, long enderecoOriginal, long enderecoNovo) 
+            throws IOException {
+        int bitsIgnorados = diretorio.profundidadeGlobal - bucket.profundidadeLocal;
+        int passo = 1 << bitsIgnorados;
+        
+        for (int i = 0; i < diretorio.enderecosBuckets.length; i++) {
+            if (diretorio.enderecosBuckets[i] == enderecoOriginal) {
+                if (((i >> bitsIgnorados) & 1) == 1) {
+                    diretorio.enderecosBuckets[i] = enderecoNovo;
+                }
+            }
         }
+        
+        salvarDiretorio();
+    }
+
+    public Registro buscar(int id) throws IOException {
+        int hash = diretorio.hash(id);
+        long endereco = diretorio.enderecosBuckets[hash];
+        
+        Bucket bucket = lerBucket(endereco);
+        return bucket.buscar(id);
+    }
+
+    private void salvarDiretorio() throws IOException {
+        dirFile.seek(0);
+        dirFile.write(diretorio.toByteArray());
+        dirFile.getFD().sync();
+    }
+
+    public void debugPrint() throws IOException {
+        System.out.println("\n=== DEBUG HASH EXTENSÍVEL ===");
+        System.out.println("Profundidade Global: " + diretorio.profundidadeGlobal);
+        System.out.println("Número de Entradas: " + diretorio.enderecosBuckets.length);
+        
+        for (int i = 0; i < diretorio.enderecosBuckets.length; i++) {
+            long endereco = diretorio.enderecosBuckets[i];
+            System.out.printf("\n[%02d] Endereço: %d | ", i, endereco);
+            
+            if (endereco > 0) {
+                Bucket b = lerBucket(endereco);
+                System.out.printf("Profundidade Local: %d | Registros: %d", 
+                        b.profundidadeLocal, b.registros.size());
+                
+                for (Registro r : b.registros) {
+                    System.out.printf("\n   ID: %d, Endereço: %d", r.id, r.end);
+                }
+            }
+        }
+        System.out.println("\n=============================\n");
+    }
+
+    public void close() throws IOException {
+        dirFile.close();
+        bucketsFile.close();
     }
 }
