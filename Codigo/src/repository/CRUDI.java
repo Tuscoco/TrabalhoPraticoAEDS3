@@ -255,7 +255,6 @@ public final class CRUDI {
                 
                 HashExtensivel hash = new HashExtensivel();
                 registro = hash.buscar(id);
-                // Implementar atualização no hash 
                 hash.close();
 
             }
@@ -310,6 +309,9 @@ public final class CRUDI {
                         }else if(indice == 2){
     
                             HashExtensivel hash = new HashExtensivel();
+                            hash.atualizar(id, enderecoNovo);
+
+
     
                         }
 

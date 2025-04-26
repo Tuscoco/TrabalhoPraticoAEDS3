@@ -26,6 +26,9 @@ public class Bucket {
         return null;
     }
 
+    /*
+     * Método para converter o bucket em um array de bytes.  
+     */
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
@@ -40,6 +43,9 @@ public class Bucket {
         return baos.toByteArray();
     }
 
+    /*
+     * Método para converter o array de bytes em um bucket. 
+     */
     public void fromByteArray(byte[] array) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(array);
         DataInputStream dis = new DataInputStream(bais);

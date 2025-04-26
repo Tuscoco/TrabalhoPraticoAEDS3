@@ -1,10 +1,13 @@
 package algorithms.hash;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import model.Registro;
 
+/*
+ * Classe HashExtensivel
+ * Implementa um hash extensível com registros são armazenados em arquivos binários.
+*/
+    
 public class HashExtensivel {
     private static final String ARQUIVO_DIRETORIO = "data/indexes/HashDirectory.db";
     private static final String ARQUIVO_BUCKETS = "data/indexes/HashBuckets.db";
@@ -13,6 +16,12 @@ public class HashExtensivel {
     private Diretorio diretorio;
     private static final int BUCKET_SIZE = 5500;
 
+    /*
+     * Construtor da classe HashExtensivel.
+     * Inicializa os arquivos de diretório e buckets.
+     * Se o arquivo de diretório estiver vazio, inicializa um novo hash.
+     * Caso contrário, carrega a estrutura existente.
+    */  
     public HashExtensivel() throws IOException {
         new File("data/indexes").mkdirs();
         
@@ -29,7 +38,6 @@ public class HashExtensivel {
     private void inicializarNovoHash() throws IOException {
         diretorio = new Diretorio(1);
         
-        // Todos os ponteiros apontam para a posição 0
         for (int i = 0; i < diretorio.enderecosBuckets.length; i++) {
             diretorio.enderecosBuckets[i] = -1;
         }
@@ -64,24 +72,23 @@ public class HashExtensivel {
         bucket.fromByteArray(bucketBytes);
         return bucket;
     }
-
+    /*
+     * * Método para inserir um registro no hash extensível.
+     */
     public synchronized void inserir(Registro registro) throws IOException {
         if (registro == null || registro.id < 0) {
             return;
         }
     
         
-        // Sempre usa o primeiro endereço do diretório
         long enderecoBucket = diretorio.enderecosBuckets[0];
         Bucket bucket;
         
         if (enderecoBucket == -1) {
-            // Primeira inserção - cria novo bucket
             bucket = new Bucket(BUCKET_SIZE);
             enderecoBucket = escreverBucket(bucket);
             diretorio.enderecosBuckets[0] = enderecoBucket;
         } else {
-            // Lê o bucket existente
             bucket = lerBucket(enderecoBucket);
         }
         
@@ -116,4 +123,37 @@ public class HashExtensivel {
         dirFile.close();
         bucketsFile.close();
     }
+    /*
+     * Método para atualizar o endereço de um registro no hash extensível.
+    */
+    public void atualizar(int id, long novoEndereco) throws IOException {
+        System.out.println("[HASH] Atualizando registro ID: " + id);
+    
+        long enderecoBucket = diretorio.enderecosBuckets[0];
+        Bucket bucket = lerBucket(enderecoBucket);
+    
+        boolean atualizado = false;
+    
+        for (Registro r : bucket.registros) {
+            if (r != null && r.id == id) {
+                System.out.println("[HASH] Atualizando endereço do registro ID: " + id + " para novo endereço: " + novoEndereco);
+                r.end = novoEndereco;
+                atualizado = true;
+                break;
+            }
+        }
+    
+        if (atualizado) {
+            bucketsFile.seek(enderecoBucket);
+            byte[] bucketBytes = bucket.toByteArray();
+            bucketsFile.writeInt(bucketBytes.length);
+            bucketsFile.write(bucketBytes);
+    
+            salvarDiretorio();
+            System.out.println("[HASH] Atualização concluída");
+        } else {
+            System.out.println("[HASH] Registro ID " + id + " não encontrado para atualização");
+        }
+    }
+    
 }
