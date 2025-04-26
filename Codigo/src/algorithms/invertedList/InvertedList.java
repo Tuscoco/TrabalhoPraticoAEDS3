@@ -78,7 +78,7 @@ public class InvertedList {
                 boolean adicionou = false;
                 while(file.getFilePointer() < file.length() && (banda = file.readUTF()) != null && !adicionou){
 
-                    if(banda.equals(musica.getArtist())){
+                    if(banda.trim().toLowerCase().equals(musica.getArtist().trim().toLowerCase())){
 
                         file.readInt();
                         long end1 = file.getFilePointer();
