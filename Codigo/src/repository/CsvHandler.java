@@ -113,7 +113,7 @@ public class CsvHandler {
 
             }else if (indice == 2) {
            
-                HashExtensivel hash = new HashExtensivel(ordem);
+                HashExtensivel hash = new HashExtensivel();
                 
             }else if(indice == 3){
 
