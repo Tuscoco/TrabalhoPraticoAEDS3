@@ -369,6 +369,8 @@ public final class CRUDI {
             }else if(indice == 2){
                 
                 HashExtensivel hash = new HashExtensivel();
+                registro = hash.buscar(id);
+                hash.close();
 
             }
 
@@ -392,6 +394,7 @@ public final class CRUDI {
                     }else if(indice == 2){
 
                         HashExtensivel hash = new HashExtensivel();
+                        hash.deletar(id);
 
                     }
 

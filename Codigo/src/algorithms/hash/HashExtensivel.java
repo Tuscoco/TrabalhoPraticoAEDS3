@@ -1,6 +1,9 @@
 package algorithms.hash;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 import model.Registro;
 
 /*
@@ -14,7 +17,7 @@ public class HashExtensivel {
     private RandomAccessFile dirFile;
     private RandomAccessFile bucketsFile;
     private Diretorio diretorio;
-    private static final int BUCKET_SIZE = 5500;
+    private static final int FILE_SIZE = 5500;
 
     /*
      * Construtor da classe HashExtensivel.
@@ -68,7 +71,7 @@ public class HashExtensivel {
         byte[] bucketBytes = new byte[tamanho];
         bucketsFile.readFully(bucketBytes);
         
-        Bucket bucket = new Bucket(BUCKET_SIZE);
+        Bucket bucket = new Bucket(FILE_SIZE);
         bucket.fromByteArray(bucketBytes);
         return bucket;
     }
@@ -85,7 +88,7 @@ public class HashExtensivel {
         Bucket bucket;
         
         if (enderecoBucket == -1) {
-            bucket = new Bucket(BUCKET_SIZE);
+            bucket = new Bucket(FILE_SIZE);
             enderecoBucket = escreverBucket(bucket);
             diretorio.enderecosBuckets[0] = enderecoBucket;
         } else {
@@ -127,7 +130,6 @@ public class HashExtensivel {
      * Método para atualizar o endereço de um registro no hash extensível.
     */
     public void atualizar(int id, long novoEndereco) throws IOException {
-        System.out.println("[HASH] Atualizando registro ID: " + id);
     
         long enderecoBucket = diretorio.enderecosBuckets[0];
         Bucket bucket = lerBucket(enderecoBucket);
@@ -136,7 +138,6 @@ public class HashExtensivel {
     
         for (Registro r : bucket.registros) {
             if (r != null && r.id == id) {
-                System.out.println("[HASH] Atualizando endereço do registro ID: " + id + " para novo endereço: " + novoEndereco);
                 r.end = novoEndereco;
                 atualizado = true;
                 break;
@@ -150,10 +151,39 @@ public class HashExtensivel {
             bucketsFile.write(bucketBytes);
     
             salvarDiretorio();
-            System.out.println("[HASH] Atualização concluída");
         } else {
-            System.out.println("[HASH] Registro ID " + id + " não encontrado para atualização");
         }
+    }
+    
+    /*
+     * Método para deletar um registro do hash extensível.
+    */
+    public boolean deletar(int id) throws IOException {
+    
+        long enderecoBucket = diretorio.enderecosBuckets[0];
+        Bucket bucket = lerBucket(enderecoBucket);
+    
+        boolean deletado = false;
+    
+        for (Registro r : bucket.registros) {
+            if (r != null && r.id == id) {
+                r.end = -1;
+                deletado = true;
+                break;
+            }
+        }
+
+        if (deletado) {
+            bucketsFile.seek(enderecoBucket);
+            byte[] bucketBytes = bucket.toByteArray();
+            bucketsFile.writeInt(bucketBytes.length);
+            bucketsFile.write(bucketBytes);
+    
+            salvarDiretorio();
+            return true;
+        }
+        return false;
+
     }
     
 }
