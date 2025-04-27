@@ -1,4 +1,4 @@
-package algorithms.hash;
+package algorithms.indexing.hash;
 
 import model.Registro;
 import java.io.*;

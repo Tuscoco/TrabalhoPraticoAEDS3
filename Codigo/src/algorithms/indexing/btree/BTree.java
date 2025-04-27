@@ -1,4 +1,4 @@
-package algorithms.btree;
+package algorithms.indexing.btree;
 
 import model.Registro;
 

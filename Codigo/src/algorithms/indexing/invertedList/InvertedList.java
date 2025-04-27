@@ -1,4 +1,4 @@
-package algorithms.invertedList;
+package algorithms.indexing.invertedList;
 
 import java.io.RandomAccessFile;
 import java.util.ArrayList;

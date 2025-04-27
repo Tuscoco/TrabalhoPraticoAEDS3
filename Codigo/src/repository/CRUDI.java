@@ -6,9 +6,9 @@ import java.util.List;
 
 import util.*;
 import model.*;
-import algorithms.btree.BTree;
-import algorithms.hash.*;
-import algorithms.invertedList.InvertedList;
+import algorithms.indexing.btree.*;
+import algorithms.indexing.hash.*;
+import algorithms.indexing.invertedList.*;
 
 @SuppressWarnings("unused")
 public final class CRUDI {

@@ -6,9 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import algorithms.btree.BTree;
-import algorithms.hash.HashExtensivel;
-import algorithms.invertedList.InvertedList;
+import algorithms.indexing.btree.*;
+import algorithms.indexing.hash.*;
+import algorithms.indexing.invertedList.*;
 import model.Musica;
 
 @SuppressWarnings("unused")
