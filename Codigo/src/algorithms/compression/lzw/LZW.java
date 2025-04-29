@@ -25,6 +25,6 @@ public class LZW {
 
     public void comprimir(){}
 
-    public void descomprimir(){}
+    public void extrair(){}
 
 }
