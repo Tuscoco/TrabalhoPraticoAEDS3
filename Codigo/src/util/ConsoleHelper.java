@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import model.Musica;
 import repository.*;
+import algorithms.compression.huffman.Huffman;
 import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
@@ -25,9 +26,10 @@ public class ConsoleHelper {
     private static void tipoMenu(){
 
         System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
-        System.out.println("Escolha o tipo de CRUD que será utilizado:");
-        System.out.println("1 -> Sequencial");
-        System.out.println("2 -> Indexado");
+        System.out.println("Escolha o tipo de método que será utilizado:");
+        System.out.println("1 -> CRUD Sequencial");
+        System.out.println("2 -> CRUD Indexado");
+        System.out.println("3 -> Compressão de Huffman");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -147,8 +149,15 @@ public class ConsoleHelper {
                     clear();
                     runIndexado();
     
-                }else{
-    
+                }else if (tipoDeCRUD == 3) {
+                    scan.nextLine(); 
+                    System.out.println("Digite o texto a ser compactado:");
+                    String inputText = scan.nextLine();
+
+                    Huffman huffman = new Huffman();
+                    huffman.compress(inputText);
+                } else {
+                    
                     clear();
                     System.out.println("Opção inválida!");
     
