@@ -156,6 +156,17 @@ public class ConsoleHelper {
 
                     Huffman huffman = new Huffman();
                     huffman.compress(inputText);
+                    
+                    System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
+                    String resposta = scan.nextLine().trim().toLowerCase();
+
+                    if (resposta.equals("s")) {
+                        System.out.println("Digite o texto compactado (em binário):");
+                        String encoded = scan.nextLine();
+                        huffman.decompress(encoded);
+                        System.out.println("\nPressione ENTER para voltar ao menu.");
+                        scan.nextLine();
+                    }
                 } else {
                     
                     clear();
