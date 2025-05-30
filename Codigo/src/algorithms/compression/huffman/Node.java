@@ -1,5 +1,8 @@
 package algorithms.compression.huffman;
 
+/*
+ * Classe Node representa um nó na árvore de Huffman.
+ */
 public class Node implements Comparable<Node> {
     char character;
     int frequency;
@@ -10,9 +13,9 @@ public class Node implements Comparable<Node> {
         this.frequency = frequency;
         this.left = this.right = null;
     }
-
+    
     public Node(int frequency, Node left, Node right) {
-        this.character = '\0'; // marcador para nó interno
+        this.character = '\0'; 
         this.frequency = frequency;
         this.left = left;
         this.right = right;
