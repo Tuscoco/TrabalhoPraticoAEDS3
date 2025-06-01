@@ -133,32 +133,42 @@ public class ConsoleHelper {
 
         }
 
-       public static void executarCompressao() {
-    Scanner scan = new Scanner(System.in);
+    /*
+        * Método para executar a compressão de Huffman
+        * 
+        * Funcionamento:
+        * -Lê as músicas do arquivo rockI.db
+        * -Se não houver músicas, informa ao usuário
+        * -Se houver, chama o método de compressão da classe Huffman
+        * -Pergunta se o usuário deseja descomprimir o texto agora
+        * -Se sim, lê o texto compactado e chama o método de descompressão da classe Huffman
+        */
+    public static void executarCompressao() {
+        Scanner scan = new Scanner(System.in);
 
-    System.out.println("Lendo músicas do arquivo rockI.db...");
+        System.out.println("Lendo músicas do arquivo rockI.db...");
 
-    String texto = CRUDI.lerTudoComoTexto();
+        String texto = CRUDI.lerTudoComoTexto();
 
-    if (texto.isEmpty()) {
-        System.out.println("Nenhuma música foi encontrada no banco.");
-        return;
+        if (texto.isEmpty()) {
+            System.out.println("Nenhuma música foi encontrada no banco.");
+            return;
+        }
+
+        Huffman huffman = new Huffman();
+        huffman.compress(texto);
+
+        System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
+        String resposta = scan.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("s")) {
+            System.out.println("Digite o texto compactado (em binário):");
+            String encoded = scan.nextLine();
+            huffman.decompress(encoded);
+            System.out.println("\nPressione ENTER para voltar ao menu.");
+            scan.nextLine();
+        }
     }
-
-    Huffman huffman = new Huffman();
-    huffman.compress(texto);
-
-    System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
-    String resposta = scan.nextLine().trim().toLowerCase();
-
-    if (resposta.equals("s")) {
-        System.out.println("Digite o texto compactado (em binário):");
-        String encoded = scan.nextLine();
-        huffman.decompress(encoded);
-        System.out.println("\nPressione ENTER para voltar ao menu.");
-        scan.nextLine();
-    }
-}
 
     /*
      * Método para a execução do programa

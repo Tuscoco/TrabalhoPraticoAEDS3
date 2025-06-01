@@ -470,6 +470,9 @@ public final class CRUDI {
 
     }
 
+    /*
+     * Método para ler todo o conteúdo do arquivo como texto
+     */
     public static String lerTudoComoTexto() {
     StringBuilder sb = new StringBuilder();
 
