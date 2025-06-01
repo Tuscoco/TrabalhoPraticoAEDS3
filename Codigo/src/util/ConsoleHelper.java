@@ -1,174 +1,24 @@
 package util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 
 import model.Musica;
 import repository.*;
-import algorithms.compression.huffman.Huffman;
+import algorithms.compression.Compression;
 import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
     
     private static Scanner scan;
-    private static String tipoIndice;
 
     private ConsoleHelper(){}
-
-    /*
-     * Método para imprimir o menu de escolhas do usuário
-     */
-    private static void tipoMenu(){
-
-        System.out.println("=========================BEM=VINDO=AO=DB=DO=ROCK=N=ROLL=========================");
-        System.out.println("Escolha o tipo de método que será utilizado:");
-        System.out.println("1 -> CRUD Sequencial");
-        System.out.println("2 -> CRUD Indexado");
-        System.out.println("3 -> Compressão de Huffman");
-        System.out.println("0 -> Encerrar");
-        System.out.println("================================================================================");
-
-    }
-
-    /*
-     * Método para imprimir o menu de escolhas do usuário
-     */
-    private static void menu(int tipo, int indice){
-
-        if(tipo == 1){
-
-            System.out.println("===================================SEQUENCIAL===================================");
-            System.out.println("Escolha uma opção: ");
-            System.out.println("1 -> Carregar base de dados no arquivo");
-            System.out.println("2 -> Criar um registro");
-            System.out.println("3 -> Ler um registro");
-            System.out.println("4 -> Atualizar registro");
-            System.out.println("5 -> Deletar registro");
-            System.out.println("6 -> Ler todos os registros");
-            System.out.println("7 -> Ordenar arquivo");
-            System.out.println("8 -> Ler arquivo ordenado");
-            System.out.println("0 -> Voltar");
-            System.out.println("================================================================================");
-
-        }else if(tipo == 2){
-
-            if(indice == 1){
-                        
-                tipoIndice = "====================================ArvoreB=====================================";
-
-            }else if(indice == 2){
-
-                tipoIndice = "===================================TabelaHash===================================";
-
-            }
-
-            System.out.println("====================================INDEXADO====================================");
-            System.out.println(tipoIndice);
-            System.out.println("Escolha uma opção: ");
-            System.out.println("1 -> Carregar base de dados no arquivo");
-            System.out.println("2 -> Criar um registro");
-            System.out.println("3 -> Ler um registro");
-            System.out.println("4 -> Atualizar registro");
-            System.out.println("5 -> Deletar registro");
-            System.out.println("0 -> Voltar");
-            System.out.println("================================================================================");
-
-        }else if(tipo == 3){
-
-            System.out.println("====================================INDEXADO====================================");
-            System.out.println("=================================ListaInvertida=================================");
-            System.out.println("Escolha uma opção: ");
-            System.out.println("1 -> Carregar base de dados no arquivo");
-            System.out.println("2 -> Criar um registro");
-            System.out.println("3 -> Ler um conjunto de registros");
-            System.out.println("0 -> Voltar");
-            System.out.println("================================================================================");
-
-        }
-
-    }
-
-    /*
-     * Método para imprimir o menu de escolhas do usuário
-     */
-    private static void menuDeIndices(){
-
-        System.out.println("================================================================================");
-        System.out.println("Escolha o tipo de índice que será utilizado:");
-        System.out.println("1 -> Árvore B");
-        System.out.println("2 -> Tabela Hash Extensível");
-        System.out.println("3 -> Lista Invertida");
-        System.out.println("0 -> Voltar");
-        System.out.println("================================================================================");
-
-    }
-
-    /*
-     * Método "limpar" o terminal
-     * 
-     * Funcionamento: 
-     * -Imprime várias linhas em branco em sequencia para "limpar" o terminal
-     */
-    private static void clear(){
-
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-
-        }
-
-    /*
-        * Método para executar a compressão de Huffman
-        * 
-        * Funcionamento:
-        * -Lê as músicas do arquivo rockI.db
-        * -Se não houver músicas, informa ao usuário
-        * -Se houver, chama o método de compressão da classe Huffman
-        * -Pergunta se o usuário deseja descomprimir o texto agora
-        * -Se sim, lê o texto compactado e chama o método de descompressão da classe Huffman
-        */
-    public static void executarCompressao() {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Lendo músicas do arquivo rockI.db...");
-
-        String texto = CRUDI.lerTudoComoTexto();
-
-        if (texto.isEmpty()) {
-            System.out.println("Nenhuma música foi encontrada no banco.");
-            return;
-        }
-
-        Huffman huffman = new Huffman();
-        huffman.compress(texto);
-
-        System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
-        String resposta = scan.nextLine().trim().toLowerCase();
-
-        if (resposta.equals("s")) {
-            System.out.println("Digite o texto compactado (em binário):");
-            String encoded = scan.nextLine();
-            huffman.decompress(encoded);
-            System.out.println("\nPressione ENTER para voltar ao menu.");
-            scan.nextLine();
-        }
-    }
 
     /*
      * Método para a execução do programa
@@ -181,8 +31,8 @@ public class ConsoleHelper {
 
         do{
 
-            clear();
-            tipoMenu();
+            Menus.clear();
+            Menus.tipoMenu();
 
             tipoDeCRUD = scan.nextInt();
 
@@ -190,20 +40,22 @@ public class ConsoleHelper {
 
                 if(tipoDeCRUD == 1){
 
-                    clear();
+                    Menus.clear();
                     runSequencial();
     
                 }else if(tipoDeCRUD == 2){
     
-                    clear();
+                    Menus.clear();
                     runIndexado();
     
                 }else if (tipoDeCRUD == 3) {
-                    ConsoleHelper.executarCompressao();
+
+                    Menus.clear();
+                    runCompressao();
                 
                 } else {
                     
-                    clear();
+                    Menus.clear();
                     System.out.println("Opção inválida!");
     
                 }
@@ -232,7 +84,7 @@ public class ConsoleHelper {
     
         do{
     
-            menu(1, 0);
+            Menus.menu(1, 0);
     
             op = scan.nextInt();
     
@@ -244,14 +96,14 @@ public class ConsoleHelper {
                 
                 case 1:
     
-                    clear();
+                    Menus.clear();
                     CsvHandler.preencherCatalogo();
                     break;
 
                 case 2:
                 
                     scan.nextLine();
-                    clear();
+                    Menus.clear();
     
                     System.out.print("Nome: ");
                     String nome = scan.nextLine();
@@ -286,13 +138,13 @@ public class ConsoleHelper {
                 
                 case 3:
     
-                    clear();
+                    Menus.clear();
                     System.out.print("Informe o index da música procurada: ");
                     id = scan.nextInt();
 
                     Musica musica = CRUD.read(id);
     
-                    clear();
+                    Menus.clear();
 
     
                     if(musica == null){
@@ -311,7 +163,7 @@ public class ConsoleHelper {
     
                 case 4:
     
-                    clear();
+                    Menus.clear();
                     System.out.print("Informe o index da música a ser atualizada: ");
                     id = scan.nextInt();
                     scan.nextLine();
@@ -362,11 +214,11 @@ public class ConsoleHelper {
     
                 case 5:
     
-                    clear();
+                    Menus.clear();
                     System.out.print("Informe o index da música que deseja remover: ");
                     id = scan.nextInt();
 
-                    clear();
+                    Menus.clear();
                     
                     if(CRUD.delete(id)){
 
@@ -388,13 +240,13 @@ public class ConsoleHelper {
 
                 case 6:
 
-                    clear();
+                    Menus.clear();
                     CRUD.read('D');
                     break;
 
                 case 7:
 
-                    clear();
+                    Menus.clear();
                     System.out.print("Informe o número de caminhos: ");
                     int numCaminhos = scan.nextInt();
 
@@ -410,7 +262,7 @@ public class ConsoleHelper {
                 
                 default:
                     
-                    clear();
+                    Menus.clear();
                     System.out.println("Opção inválida!");
                     break;
     
@@ -437,10 +289,10 @@ public class ConsoleHelper {
 
         do{
 
-            clear();
-            menuDeIndices();
+            Menus.clear();
+            Menus.menuDeIndices();
             indice = scan.nextInt();
-            clear();
+            Menus.clear();
 
             if(indice != 0){
 
@@ -448,7 +300,7 @@ public class ConsoleHelper {
 
                     do{
         
-                        menu(2, indice);
+                        Menus.menu(2, indice);
                 
                         op = scan.nextInt();
                 
@@ -460,7 +312,7 @@ public class ConsoleHelper {
                             
                             case 1:
                 
-                                clear();
+                                Menus.clear();
 
                                 int ordem = 0;
 
@@ -490,14 +342,14 @@ public class ConsoleHelper {
                                 
                                 }
 
-                                clear();
+                                Menus.clear();
                                 CsvHandler.preencherCatalogoIndexado(indice, ordem);
                                 break;
             
                             case 2:
                             
                                 scan.nextLine();
-                                clear();
+                                Menus.clear();
                 
                                 System.out.print("Nome: ");
                                 String nome = scan.nextLine();
@@ -532,13 +384,13 @@ public class ConsoleHelper {
                             
                             case 3:
                 
-                                clear();
+                                Menus.clear();
                                 System.out.print("Informe o index da música procurada: ");
                                 id = scan.nextInt();
             
                                 Musica musica = CRUDI.read(id, indice);
                 
-                                clear();
+                                Menus.clear();
             
                 
                                 if(musica == null){
@@ -557,7 +409,7 @@ public class ConsoleHelper {
                 
                             case 4:
                 
-                                clear();
+                                Menus.clear();
                                 System.out.print("Informe o index da música a ser atualizada: ");
                                 id = scan.nextInt();
                                 scan.nextLine();
@@ -608,11 +460,11 @@ public class ConsoleHelper {
                 
                             case 5:
                 
-                                clear();
+                                Menus.clear();
                                 System.out.print("Informe o index da música que deseja remover: ");
                                 id = scan.nextInt();
             
-                                clear();
+                                Menus.clear();
                                 
                                 if(CRUDI.delete(id, indice)){
             
@@ -634,7 +486,7 @@ public class ConsoleHelper {
                             
                             default:
                                 
-                                clear();
+                                Menus.clear();
                                 System.out.println("Opção inválida!");
                                 break;
                 
@@ -646,7 +498,7 @@ public class ConsoleHelper {
 
                     do{
 
-                        menu(3, indice);
+                        Menus.menu(3, indice);
                 
                         op = scan.nextInt();
 
@@ -658,14 +510,14 @@ public class ConsoleHelper {
 
                             case 1:
 
-                                clear();
+                                Menus.clear();
                                 CsvHandler.preencherCatalogoIndexado(indice, 0);
                                 break;
 
                             case 2:
 
                                 scan.nextLine();
-                                clear();
+                                Menus.clear();
             
                                 System.out.print("Nome: ");
                                 String nome = scan.nextLine();
@@ -701,7 +553,7 @@ public class ConsoleHelper {
                             case 3:
 
                                 scan.nextLine();
-                                clear();
+                                Menus.clear();
 
                                 System.out.print("Informe o nome do artista: ");
                                 String banda = scan.nextLine();
@@ -726,7 +578,7 @@ public class ConsoleHelper {
 
                             default:
 
-                                clear();
+                                Menus.clear();
                                 System.out.println("Opção inválida!");
                                 break;
 
@@ -743,6 +595,175 @@ public class ConsoleHelper {
             }
 
         }while(indice != 0);
+
+    }
+
+    private static void runCompressao(){
+
+        int tipoCompressao = -1;
+        int op = -1;
+
+        do{
+
+            Menus.menuDeCompressao();
+            tipoCompressao = scan.nextInt();
+
+            if(tipoCompressao == 1){
+
+                //Huffman
+                Compression compression = new Compression(tipoCompressao);
+
+                do{
+
+                    Menus.clear();
+                    Menus.menuTipoCompressao(tipoCompressao);
+
+                    op = scan.nextInt();
+                    File[] arquivos;
+
+                    switch(op){
+
+                        case 0:
+                            break;
+
+                        case 1:
+
+                            arquivos = compression.listarArquivos(true);
+                            Menus.menuDeArquivos(op, arquivos, null);
+
+                            int escolhidoParaComprimir = scan.nextInt();
+                            String arquivoParaComprimir = "";
+
+                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.length){
+
+                                arquivoParaComprimir += arquivos[escolhidoParaComprimir - 1].getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            compression.comprimir(arquivoParaComprimir);
+
+                            break;
+                        
+                        case 2:
+
+                            arquivos = compression.listarArquivos(false);
+                            Menus.menuDeArquivos(op, arquivos, "Huffman");
+
+                            int escolhidoParaDescomprimir = scan.nextInt();
+                            String arquivoParaDescomprimir = "";
+
+                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.length){
+
+                                arquivoParaDescomprimir += arquivos[escolhidoParaDescomprimir - 1].getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            compression.comprimir(arquivoParaDescomprimir);
+
+                            break;
+                            
+                        case 3:
+                            break;
+                        
+                        default:
+                            System.out.println("Opção inválida!");
+
+                    }
+
+                }while(op != 0);
+
+            }else if(tipoCompressao == 2){
+
+                //LZW
+                Compression compression = new Compression(tipoCompressao);
+
+                do{
+
+                    Menus.clear();
+                    Menus.menuTipoCompressao(tipoCompressao);
+
+                    op = scan.nextInt();
+                    File[] arquivos;
+
+                    switch(op){
+
+                        case 0:
+                            break;
+
+                        case 1:
+
+                            arquivos = compression.listarArquivos(true);
+                            Menus.menuDeArquivos(op, arquivos, null);
+
+                            int escolhidoParaComprimir = scan.nextInt();
+                            String arquivoParaComprimir = "";
+
+                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.length){
+
+                                arquivoParaComprimir += arquivos[escolhidoParaComprimir - 1].getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            compression.comprimir(arquivoParaComprimir);
+
+                            break;
+                        
+                        case 2:
+
+                            arquivos = compression.listarArquivos(false);
+                            Menus.menuDeArquivos(op, arquivos, "LZW");
+
+                            int escolhidoParaDescomprimir = scan.nextInt();
+                            String arquivoParaDescomprimir = "";
+
+                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.length){
+
+                                arquivoParaDescomprimir += arquivos[escolhidoParaDescomprimir - 1].getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            compression.comprimir(arquivoParaDescomprimir);
+
+                            break;
+                            
+                        case 3:
+                            break;
+                        
+                        default:
+                            System.out.println("Opção inválida!");
+
+                    }
+
+                }while(op != 0);
+
+            }else if(tipoCompressao != 0 && (tipoCompressao < 1 || tipoCompressao > 2)){
+
+                Menus.clear();
+                System.out.println("Opção inválida!");
+
+            }
+
+        }while(tipoCompressao != 0);
 
     }
 

@@ -1,29 +1,35 @@
 package algorithms.compression.lzw;
 
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 @SuppressWarnings("unused")
 public class LZW {
     
     private Dicionario dicionario;
-    private String diretorioDataBase = "data/database/";
-    private String diretorioComprimidos = "data/compressed/";
+    private String diretorio;
 
-    public LZW(String arquivo, boolean compOuDes){
+    public LZW(String diretorio){
 
         dicionario = new Dicionario();
-
-        if(compOuDes){
-
-            this.diretorioDataBase += arquivo;
-
-        }else{
-
-            this.diretorioComprimidos += arquivo;
-
-        }
+        this.diretorio = diretorio;
 
     }
 
-    public void comprimir(){}
+    public void comprimir(){
+
+        try{
+
+            FileInputStream fis = new FileInputStream(diretorio);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+            
+        }
+
+    }
 
     public void extrair(){}
 

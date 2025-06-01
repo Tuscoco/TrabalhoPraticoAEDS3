@@ -1,18 +1,17 @@
 package algorithms.compression.lzw;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Dicionario {
 
-    private String[] unitarios;
-    private int contU;
-    private String[] sequencias;
-    private int contS;
+    private Map<String, Integer> dicionarioLZW;
+    private int cont;
 
     public Dicionario(){
 
-        unitarios = new String[95];
-        contU = 0;
-        sequencias = new String[4001];
-        contS = 0;
+        dicionarioLZW = new HashMap<>();
+        cont = 1;
 
         inicializarDicionario();
 
@@ -23,69 +22,27 @@ public class Dicionario {
         for(int i = 32;i < 127;i++){
 
             char c = (char) i;
+            String str = "" + c;
 
-            unitarios[contU] = "";
-            unitarios[contU] += c;
+            dicionarioLZW.put(str, cont);
 
-            contU++;
+            cont++;
 
         }
 
     }
 
-    public void adicionarSequencia(String seq){
+    public void adicionar(String seq){
 
-        if(contS >= 4001){
+        dicionarioLZW.put(seq, cont);
 
-            return;
-
-        }
-
-        sequencias[contS] = seq;
+        cont++;
 
     }
 
     public int procurar(String s){
 
-        if(s.length() == 1){
-
-            return procurarUnitario(s);
-
-        }
-
-        return procurarSequencia(s);
-
-    }
-
-    private int procurarUnitario(String c){
-
-        for(int i = 0;i < contU;i++){
-
-            if(unitarios[i].equals(c)){
-
-                return i + 1;
-
-            }
-
-        }
-
-        return -1;
-
-    }
-
-    private int procurarSequencia(String seq){
-
-        for(int i = 0;i < contS;i++){
-
-            if(sequencias[i].equals(seq)){
-
-                return i + 1;
-
-            }
-
-        }
-
-        return -1;
+        return dicionarioLZW.getOrDefault(s, -1);
 
     }
     
