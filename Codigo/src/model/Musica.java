@@ -148,4 +148,11 @@ public class Musica {
     public Musica(byte[] array) throws IOException {
         fromByteArray(array);
     }
+
+
+    public String getName() {
+        return name;
+    }
+
+    
 }

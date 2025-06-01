@@ -470,4 +470,38 @@ public final class CRUDI {
 
     }
 
+    public static String lerTudoComoTexto() {
+    StringBuilder sb = new StringBuilder();
+
+    try (RandomAccessFile file = new RandomAccessFile("data/database/rocki.db", "r")) {
+        if (file.length() == 0) return "";
+
+        file.seek(4); // Pular o cabeçalho de 4 bytes com o último ID
+
+        while (file.getFilePointer() < file.length()) {
+            try {
+                boolean lapide = file.readBoolean();
+                int tamanho = file.readInt();
+                byte[] array = new byte[tamanho];
+                file.readFully(array);
+
+                if (!lapide) {
+                    Musica m = new Musica();
+                    m.fromByteArray(array);
+                    sb.append(m.getName()).append(" - ").append(m.getArtist().trim()).append("\n");
+                }
+
+            } catch (EOFException e) {
+                break;
+            }
+        }
+
+    } catch (IOException e) {
+        System.out.println("Erro ao ler músicas para compressão: " + e.getMessage());
+    }
+
+    return sb.toString();
+}
+
+
 }

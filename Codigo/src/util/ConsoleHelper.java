@@ -2,11 +2,23 @@ package util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 import model.Musica;
 import repository.*;
@@ -119,7 +131,34 @@ public class ConsoleHelper {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
+        }
+
+       public static void executarCompressao() {
+    Scanner scan = new Scanner(System.in);
+
+    System.out.println("Lendo músicas do arquivo rocki.db...");
+
+    String texto = CRUDI.lerTudoComoTexto();
+
+    if (texto.isEmpty()) {
+        System.out.println("Nenhuma música foi encontrada no banco.");
+        return;
     }
+
+    Huffman huffman = new Huffman();
+    huffman.compress(texto);
+
+    System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
+    String resposta = scan.nextLine().trim().toLowerCase();
+
+    if (resposta.equals("s")) {
+        System.out.println("Digite o texto compactado (em binário):");
+        String encoded = scan.nextLine();
+        huffman.decompress(encoded);
+        System.out.println("\nPressione ENTER para voltar ao menu.");
+        scan.nextLine();
+    }
+}
 
     /*
      * Método para a execução do programa
@@ -150,23 +189,8 @@ public class ConsoleHelper {
                     runIndexado();
     
                 }else if (tipoDeCRUD == 3) {
-                    scan.nextLine(); 
-                    System.out.println("Digite o texto a ser compactado:");
-                    String inputText = scan.nextLine();
-
-                    Huffman huffman = new Huffman();
-                    huffman.compress(inputText);
-                    
-                    System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
-                    String resposta = scan.nextLine().trim().toLowerCase();
-
-                    if (resposta.equals("s")) {
-                        System.out.println("Digite o texto compactado (em binário):");
-                        String encoded = scan.nextLine();
-                        huffman.decompress(encoded);
-                        System.out.println("\nPressione ENTER para voltar ao menu.");
-                        scan.nextLine();
-                    }
+                    ConsoleHelper.executarCompressao();
+                
                 } else {
                     
                     clear();
