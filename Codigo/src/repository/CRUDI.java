@@ -473,7 +473,7 @@ public final class CRUDI {
     public static String lerTudoComoTexto() {
     StringBuilder sb = new StringBuilder();
 
-    try (RandomAccessFile file = new RandomAccessFile("data/database/rocki.db", "r")) {
+    try (RandomAccessFile file = new RandomAccessFile("data/database/rockI.db", "r")) {
         if (file.length() == 0) return "";
 
         file.seek(4); // Pular o cabeçalho de 4 bytes com o último ID

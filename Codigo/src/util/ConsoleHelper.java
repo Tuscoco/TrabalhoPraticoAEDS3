@@ -136,7 +136,7 @@ public class ConsoleHelper {
        public static void executarCompressao() {
     Scanner scan = new Scanner(System.in);
 
-    System.out.println("Lendo músicas do arquivo rocki.db...");
+    System.out.println("Lendo músicas do arquivo rockI.db...");
 
     String texto = CRUDI.lerTudoComoTexto();
 
