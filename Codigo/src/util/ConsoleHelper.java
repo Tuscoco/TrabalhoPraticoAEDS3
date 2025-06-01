@@ -668,7 +668,7 @@ public class ConsoleHelper {
 
                             }
 
-                            compression.comprimir(arquivoParaDescomprimir);
+                            compression.descomprimir(arquivoParaDescomprimir);
 
                             break;
                             
@@ -742,7 +742,7 @@ public class ConsoleHelper {
 
                             }
 
-                            compression.comprimir(arquivoParaDescomprimir);
+                            compression.descomprimir(arquivoParaDescomprimir);
 
                             break;
                             

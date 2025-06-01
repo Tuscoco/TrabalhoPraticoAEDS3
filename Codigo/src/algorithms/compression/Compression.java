@@ -21,17 +21,36 @@ public class Compression {
     public void comprimir(String arquivo){
 
         String diretorioArquivoOrigem = diretorioDataBase + "/" + arquivo;
-        String texto = CRUDI.lerTudoComoTexto();
+        System.out.println(diretorioArquivoOrigem);
 
         if(tipo == 1){
 
             Huffman huffman = new Huffman();
+            String texto = CRUDI.lerTudoComoTexto(diretorioArquivoOrigem);
             huffman.compress(texto);
 
         }else if(tipo == 2){
 
             LZW lzw = new LZW(diretorioArquivoOrigem);
             lzw.comprimir();
+
+        }
+
+    }
+
+    public void descomprimir(String arquivo){
+
+        String diretorioArquivoOrigem = diretorioComprimidos + "/" + arquivo;
+
+        if(tipo == 1){
+
+            Huffman huffman = new Huffman();
+            huffman.decompress(diretorioArquivoOrigem);
+
+        }else if(tipo == 2){
+
+            LZW lzw = new LZW(diretorioArquivoOrigem);
+            lzw.descomprimir();
 
         }
 
