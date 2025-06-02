@@ -4,7 +4,6 @@ import java.io.File;
 
 import algorithms.compression.huffman.Huffman;
 import algorithms.compression.lzw.LZW;
-import repository.CRUDI;
 
 public class Compression {
 
@@ -21,13 +20,11 @@ public class Compression {
     public void comprimir(String arquivo){
 
         String diretorioArquivoOrigem = diretorioDataBase + "/" + arquivo;
-        System.out.println(diretorioArquivoOrigem);
 
         if(tipo == 1){
 
-            Huffman huffman = new Huffman();
-            String texto = CRUDI.lerTudoComoTexto(diretorioArquivoOrigem);
-            huffman.compress(texto);
+            Huffman huffman = new Huffman(diretorioArquivoOrigem);
+            huffman.compress();
 
         }else if(tipo == 2){
 
@@ -44,8 +41,8 @@ public class Compression {
 
         if(tipo == 1){
 
-            Huffman huffman = new Huffman();
-            huffman.decompress(diretorioArquivoOrigem);
+            Huffman huffman = new Huffman(diretorioArquivoOrigem);
+            huffman.decompress();
 
         }else if(tipo == 2){
 
@@ -55,48 +52,6 @@ public class Compression {
         }
 
     }
-    
-    /*
-    * Método para executar a compressão de Huffman
-    * 
-    * Funcionamento:
-    * -Lê as músicas do arquivo rockI.db
-    * -Se não houver músicas, informa ao usuário
-    * -Se houver, chama o método de compressão da classe Huffman
-    * -Pergunta se o usuário deseja descomprimir o texto agora
-    * -Se sim, lê o texto compactado e chama o método de descompressão da classe Huffman
-    */
-    /* 
-    public static void executarCompressao() {
-
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Lendo músicas do arquivo rockI.db...");
-
-        String texto = CRUDI.lerTudoComoTexto();
-
-        if (texto.isEmpty()) {
-            System.out.println("Nenhuma música foi encontrada no banco.");
-            return;
-        }
-
-        Huffman huffman = new Huffman();
-        huffman.compress(texto);
-
-        System.out.println("\nDeseja descomprimir o texto agora? (s/n)");
-        String resposta = scan.nextLine().trim().toLowerCase();
-
-        if (resposta.equals("s")) {
-            System.out.println("Digite o texto compactado (em binário):");
-            String encoded = scan.nextLine();
-            huffman.decompress(encoded);
-            System.out.println("\nPressione ENTER para voltar ao menu.");
-            scan.nextLine();
-        }
-
-        scan.close();
-    }
-    */
 
     public File[] listarArquivos(boolean comprimirOuDescomprimir){
 
