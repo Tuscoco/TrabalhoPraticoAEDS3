@@ -3,18 +3,18 @@ package algorithms.compression.lzw;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 import repository.CRUDI;
 
 @SuppressWarnings("unused")
 public class LZW {
     
-    private Dicionario dicionario;
+    private static final int BITS_POR_INDICE = 12;
     private String diretorio;
 
     public LZW(String diretorio){
 
-        dicionario = new Dicionario();
         this.diretorio = diretorio;
 
     }
@@ -23,108 +23,201 @@ public class LZW {
 
         try{
 
-            char[] texto = CRUDI.lerTudoComoTexto(diretorio).toCharArray();
-
-            int contDeCaracteres = 0;
-
-            RandomAccessFile file = new RandomAccessFile("data/compressed/arquivoComprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
-
-            do{
-
-                boolean achouSequencia = true;
-                String sequencia = "" + texto[contDeCaracteres];
-                int ultimoIndiceCerto = 0;
-
-                while(achouSequencia){
-
-                    int indice = dicionario.procurarIndice(sequencia);
-
-                    if(indice == -1){
-                        
-                        dicionario.adicionar(sequencia);
-                        file.writeInt(ultimoIndiceCerto);
-                        achouSequencia = false;
-
-                    }else{
-
-                        ultimoIndiceCerto = indice;
-                        ++contDeCaracteres;
-
-                        if(contDeCaracteres < texto.length){
-
-                            sequencia += texto[contDeCaracteres];
-                            achouSequencia = true;
-
-                        }else{
-
-                            achouSequencia = false;
-
-                        }
-
-                    }
-
+            String str = CRUDI.lerTudoComoTexto(diretorio);
+            byte[] msgBytes = str.getBytes();
+    
+            ArrayList<ArrayList<Byte>> dicionario = new ArrayList<>();
+            ArrayList<Byte> vetorBytes;
+            int i, j;
+            byte b;
+    
+            for(j = -128; j < 128; j++){
+    
+                b = (byte) j;
+                vetorBytes = new ArrayList<>();
+                vetorBytes.add(b);
+                dicionario.add(vetorBytes);
+    
+            }
+    
+            ArrayList<Integer> saida = new ArrayList<>();
+    
+            i = 0;
+            int indice;
+            int ultimoIndice;
+            while (i < msgBytes.length) {
+    
+                vetorBytes = new ArrayList<>();
+                b = msgBytes[i];
+                vetorBytes.add(b);
+                indice = dicionario.indexOf(vetorBytes);
+                ultimoIndice = indice;
+    
+                while (indice != -1 && i < msgBytes.length - 1) {
+    
+                    i++;
+                    b = msgBytes[i];
+                    vetorBytes.add(b);
+                    indice = dicionario.indexOf(vetorBytes);
+    
+                    if (indice != -1)
+                        ultimoIndice = indice;
                 }
-
-            }while(contDeCaracteres < texto.length);
-
-            file.close();
+    
+                saida.add(ultimoIndice);
+    
+                if(dicionario.size() < (Math.pow(2, BITS_POR_INDICE) - 1)){
+    
+                    dicionario.add(vetorBytes);
+    
+                }
+    
+                if (indice != -1 && i == msgBytes.length - 1){
+    
+                    break;
+    
+                }
+    
+            }
+    
+            VetorDeBits bits = new VetorDeBits(saida.size()*BITS_POR_INDICE);
+            int l = saida.size()*BITS_POR_INDICE-1;
+    
+            for(i=saida.size()-1; i>=0; i--){
+    
+                int n = saida.get(i);
+                for(int m=0; m<BITS_POR_INDICE; m++){
+    
+                    if(n%2==0){
+    
+                        bits.clear(l);
+    
+                    }else{
+    
+                        bits.set(l);
+    
+                    }
+    
+                    l--;
+                    n /= 2;
+    
+                }
+    
+            }
+    
+            RandomAccessFile arquivoDestino = new RandomAccessFile("data/compressed/arquivoComprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
+    
+            arquivoDestino.write(bits.toByteArray());
+    
+            arquivoDestino.close();
 
         }catch(Exception e){
 
             e.printStackTrace();
-            
+
         }
 
     }
 
+    @SuppressWarnings("unchecked")
     public void descomprimir(){
 
         try{
-            
+
             RandomAccessFile arquivoOrigem = new RandomAccessFile(diretorio, "r");
-            RandomAccessFile arquivoDestino = new RandomAccessFile("data/database/arquivoDescomprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
-            String texto = "";
+            byte[] msgCodificada = new byte[(int) arquivoOrigem.length()];
 
-            while(arquivoOrigem.getFilePointer() < arquivoOrigem.length()){
+            for(int i = 0;i < arquivoOrigem.length();i++){
 
-                int indice = arquivoOrigem.readInt();
-                boolean achouSequencia = true;
-                String ultimoCerto = "";
-
-                while(achouSequencia){
-
-                    String sequencia = ""; 
-                    sequencia += ultimoCerto;
-                    sequencia += dicionario.procurarSequencia(indice);
-
-                    if(sequencia == null){
-                        
-                        dicionario.adicionar(sequencia);
-                        file.write(ultimoIndiceCerto);
-                        achouSequencia = false;
-
-                    }else{
-
-                        arquivoDestino.writeBytes(sequencia);
-                        ultimoCerto += sequencia;
-                        indice = arquivoOrigem.readInt();
-                        achouSequencia = true;
-
-                    }
-
-                }
+                msgCodificada[i] = arquivoOrigem.readByte();
 
             }
 
-            arquivoDestino.close();
             arquivoOrigem.close();
+
+            VetorDeBits bits = new VetorDeBits(msgCodificada);
+    
+            int i, j, k;
+            ArrayList<Integer> indices = new ArrayList<>();
+            k=0;
+            for(i=0; i < bits.length()/BITS_POR_INDICE; i++){
+    
+                int n = 0;
+    
+                for(j=0; j<BITS_POR_INDICE; j++){
+    
+                    n = n*2 + (bits.get(k++)?1:0);
+    
+                }
+    
+                indices.add(n);
+    
+            }
+    
+            ArrayList<Byte> vetorBytes;
+    
+            ArrayList<Byte> msgBytes = new ArrayList<>();
+    
+            ArrayList<ArrayList<Byte>> dicionario = new ArrayList<>();
+            byte b;
+            for(j = -128, i = 0; j < 128; j++, i++){
+    
+                b = (byte) j;
+                vetorBytes = new ArrayList<>();
+                vetorBytes.add(b);
+                dicionario.add(vetorBytes);
+    
+            }
+    
+            ArrayList<Byte> proximoVetorBytes;
+    
+            i = 0;
+            while(i < indices.size()){
+    
+                vetorBytes = (ArrayList<Byte>) (dicionario.get(indices.get(i))).clone();
+    
+                for(j = 0; j < vetorBytes.size(); j++){
+    
+                    msgBytes.add(vetorBytes.get(j));
+    
+                }
+    
+                if(dicionario.size() < (Math.pow(2, BITS_POR_INDICE) - 1)){
+    
+                    dicionario.add(vetorBytes);
+    
+                }
+    
+                i++;
+                if(i < indices.size()){
+    
+                    proximoVetorBytes = (ArrayList<Byte>) dicionario.get(indices.get(i));
+                    vetorBytes.add(proximoVetorBytes.get(0));
+    
+                }
+    
+            }
+    
+            byte[] msgVetorBytes = new byte[msgBytes.size()];
+    
+            for(i = 0; i < msgBytes.size(); i++){
+    
+                msgVetorBytes[i] = msgBytes.get(i);
+    
+            }
+
+            RandomAccessFile arquivoDestino = new RandomAccessFile("data/database/arquivoDescomprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
+
+            arquivoDestino.write(msgVetorBytes);
+
+            arquivoDestino.close();
 
         }catch(Exception e){
 
             e.printStackTrace();
-
+    
         }
-
+        
     }
 
 }
