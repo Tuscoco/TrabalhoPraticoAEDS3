@@ -119,7 +119,7 @@ public class Huffman {
             }
 
             // Escreve resultado
-            String saida = "data/database/arquivoDescomprimidoHuffman" + System.currentTimeMillis() + ".db";
+            String saida = "data/descompressed/arquivoDescomprimidoHuffman" + System.currentTimeMillis() + ".db";
             RandomAccessFile arquivoDestino = new RandomAccessFile(saida, "rw");
             arquivoDestino.write(decoded.toString().getBytes());
             arquivoDestino.close();

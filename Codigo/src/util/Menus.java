@@ -1,6 +1,7 @@
 package util;
 
 import java.io.File;
+import java.util.List;
 
 public class Menus {
     
@@ -144,11 +145,11 @@ public class Menus {
 
     }
 
-    public static void menuDeArquivos(int op, File[] arquivos, String tipoCompressao){
+    public static void menuDeArquivos(int op, List<File> arquivos){
 
         System.out.println("================================================================================");
 
-        if(arquivos == null || arquivos.length == 0){
+        if(arquivos == null || arquivos.size() == 0){
 
             System.out.println("Nenhum arquivo encontrado!");
             return;
@@ -157,29 +158,10 @@ public class Menus {
 
         System.out.println("Informe uma opção:");
 
-        if(op == 1){
+        for(int i = 0;i < arquivos.size();i++){
 
-            for(int i = 0;i < arquivos.length;i++){
-
-                System.out.println((i + 1) + " - " + arquivos[i].getName());
+            System.out.println((i + 1) + " - " + arquivos.get(i).getName());
     
-            }
-
-        }else{
-
-            int j = 1;
-
-            for(int i = 0;i < arquivos.length;i++){
-
-                if(arquivos[i].getName().contains(tipoCompressao)){
-
-                    System.out.println(j + " - " + arquivos[i].getName());
-                    j++;
-
-                }
-    
-            }
-
         }
 
         System.out.println("0 - Voltar");

@@ -206,7 +206,7 @@ public class LZW {
     
             }
 
-            RandomAccessFile arquivoDestino = new RandomAccessFile("data/database/arquivoDescomprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
+            RandomAccessFile arquivoDestino = new RandomAccessFile("data/descompressed/arquivoDescomprimidoLZW" + System.currentTimeMillis() + ".db", "rw");
 
             arquivoDestino.write(msgVetorBytes);
 

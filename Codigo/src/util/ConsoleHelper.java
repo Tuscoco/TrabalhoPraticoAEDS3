@@ -619,7 +619,7 @@ public class ConsoleHelper {
                     Menus.menuTipoCompressao(tipoCompressao);
 
                     op = scan.nextInt();
-                    File[] arquivos;
+                    List<File> arquivos;
 
                     switch(op){
 
@@ -628,15 +628,15 @@ public class ConsoleHelper {
 
                         case 1:
 
-                            arquivos = compression.listarArquivos(true);
-                            Menus.menuDeArquivos(op, arquivos, null);
+                            arquivos = compression.listarArquivos(true, null);
+                            Menus.menuDeArquivos(op, arquivos);
 
                             int escolhidoParaComprimir = scan.nextInt();
                             String arquivoParaComprimir = "";
 
-                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.length){
+                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.size()){
 
-                                arquivoParaComprimir += arquivos[escolhidoParaComprimir - 1].getName();
+                                arquivoParaComprimir += arquivos.get(escolhidoParaComprimir - 1).getName();
 
                             }else{
 
@@ -651,15 +651,15 @@ public class ConsoleHelper {
                         
                         case 2:
 
-                            arquivos = compression.listarArquivos(false);
-                            Menus.menuDeArquivos(op, arquivos, "Huffman");
+                            arquivos = compression.listarArquivos(false, "Huffman");
+                            Menus.menuDeArquivos(op, arquivos);
 
                             int escolhidoParaDescomprimir = scan.nextInt();
                             String arquivoParaDescomprimir = "";
 
-                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.length){
+                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.size()){
 
-                                arquivoParaDescomprimir += arquivos[escolhidoParaDescomprimir - 1].getName();
+                                arquivoParaDescomprimir += arquivos.get(escolhidoParaDescomprimir - 1).getName();
 
                             }else{
 
@@ -693,7 +693,7 @@ public class ConsoleHelper {
                     Menus.menuTipoCompressao(tipoCompressao);
 
                     op = scan.nextInt();
-                    File[] arquivos;
+                    List<File> arquivos;
 
                     switch(op){
 
@@ -702,15 +702,15 @@ public class ConsoleHelper {
 
                         case 1:
 
-                            arquivos = compression.listarArquivos(true);
-                            Menus.menuDeArquivos(op, arquivos, null);
+                            arquivos = compression.listarArquivos(true, null);
+                            Menus.menuDeArquivos(op, arquivos);
 
                             int escolhidoParaComprimir = scan.nextInt();
                             String arquivoParaComprimir = "";
 
-                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.length){
+                            if(escolhidoParaComprimir >= 1 && escolhidoParaComprimir <= arquivos.size()){
 
-                                arquivoParaComprimir += arquivos[escolhidoParaComprimir - 1].getName();
+                                arquivoParaComprimir += arquivos.get(escolhidoParaComprimir - 1).getName();
 
                             }else{
 
@@ -725,15 +725,15 @@ public class ConsoleHelper {
                         
                         case 2:
 
-                            arquivos = compression.listarArquivos(false);
-                            Menus.menuDeArquivos(op, arquivos, "LZW");
+                            arquivos = compression.listarArquivos(false, "LZW");
+                            Menus.menuDeArquivos(op, arquivos);
 
                             int escolhidoParaDescomprimir = scan.nextInt();
                             String arquivoParaDescomprimir = "";
 
-                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.length){
+                            if(escolhidoParaDescomprimir >= 1 && escolhidoParaDescomprimir <= arquivos.size()){
 
-                                arquivoParaDescomprimir += arquivos[escolhidoParaDescomprimir - 1].getName();
+                                arquivoParaDescomprimir += arquivos.get(escolhidoParaDescomprimir - 1).getName();
 
                             }else{
 
