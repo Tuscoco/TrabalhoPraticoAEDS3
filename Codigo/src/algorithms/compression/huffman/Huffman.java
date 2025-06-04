@@ -82,7 +82,6 @@ public class Huffman {
      */
     public void decompress() {
         try {
-            String nomeBase = new File(diretorio).getName().replace(".db", "");
 
             // Lê texto binário
             RandomAccessFile arquivoOrigem = new RandomAccessFile(diretorio, "r");
@@ -93,7 +92,7 @@ public class Huffman {
 
             // Lê os códigos da árvore
             Map<Character, String> codigos = new HashMap<>();
-            Scanner leitor = new Scanner(new File("data/compressed/" + nomeBase + ".txt"));
+            Scanner leitor = new Scanner(new File(diretorio));
             while (leitor.hasNextLine()) {
                 String linha = leitor.nextLine();
                 String[] partes = linha.split(":");
