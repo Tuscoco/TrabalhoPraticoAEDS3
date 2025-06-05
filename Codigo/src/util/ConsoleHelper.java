@@ -12,6 +12,7 @@ import java.util.Scanner;
 import model.Musica;
 import repository.*;
 import algorithms.compression.Compression;
+import algorithms.patternMatching.PatternMatching;
 import algorithms.sorting.IntercalacaoBalanceada;
 
 public class ConsoleHelper {
@@ -48,12 +49,17 @@ public class ConsoleHelper {
                     Menus.clear();
                     runIndexado();
     
-                }else if (tipoDeCRUD == 3) {
+                }else if(tipoDeCRUD == 3){
 
                     Menus.clear();
                     runCompressao();
                 
-                } else {
+                }else if(tipoDeCRUD == 4){
+
+                    Menus.clear();
+                    runCasamentoDePadroes();
+
+                }else{
                     
                     Menus.clear();
                     System.out.println("Opção inválida!");
@@ -764,6 +770,90 @@ public class ConsoleHelper {
             }
 
         }while(tipoCompressao != 0);
+
+    }
+
+    private static void runCasamentoDePadroes() throws IOException{
+
+        int tipoCasamento = -1;
+        int op = -1;
+
+        do{
+
+            Menus.menuCasamentoDePadroes();
+            tipoCasamento = scan.nextInt();
+
+            if(tipoCasamento == 1 || tipoCasamento == 2){
+
+                //KMP
+                PatternMatching casamento = new PatternMatching(tipoCasamento);
+                Menus.clear();
+
+                do{
+
+                    Menus.menuTipoCasamento(tipoCasamento);
+
+                    op = scan.nextInt();
+                    List<File> arquivos;
+
+                    switch(op){
+
+                        case 0:
+                            break;
+
+                        case 1:
+
+                            Compression compression = new Compression(0);
+                            arquivos = compression.listarArquivos(true, null);
+                            Menus.menuDeArquivos(op, arquivos);
+
+                            int escolhidoParaPesquisar = scan.nextInt();
+                            scan.nextLine();
+                            String arquivoParaPesquisar = "";
+
+                            if(escolhidoParaPesquisar >= 1 && escolhidoParaPesquisar <= arquivos.size()){
+
+                                arquivoParaPesquisar += arquivos.get(escolhidoParaPesquisar - 1).getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            System.out.println("Informe o padrão para ser pesquisado:");
+                            System.out.println("ATENÇÃO: Serão retornados todas as musicas que contém esse padrão!");
+                            String padrao = scan.nextLine();
+
+                            List<Musica> lista = casamento.search(padrao, arquivoParaPesquisar);
+
+                            Menus.clear();
+
+                            for(Musica x : lista){
+
+                                System.out.println(x.toString());
+
+                            }
+
+                            break;
+                        
+                        default:
+
+                            System.out.println("Opção inválida!");
+
+                    }
+
+                }while(op != 0);
+
+            }else{
+
+                Menus.clear();
+                System.out.println("Opção inválida!");
+
+            }
+
+        }while(tipoCasamento != 0);
 
     }
 

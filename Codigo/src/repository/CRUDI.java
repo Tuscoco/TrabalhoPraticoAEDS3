@@ -227,6 +227,44 @@ public final class CRUDI {
 
     }
 
+    public static List<Musica> readAll(String arquivo) throws IOException{
+
+        List<Musica> lista = new ArrayList<>();
+
+        try(RandomAccessFile file = new RandomAccessFile(arquivo, "r")){
+
+            file.readInt();
+
+            while(file.getFilePointer() < file.length()){
+
+                boolean lapide = file.readBoolean();
+                int tamanho = file.readInt();
+                byte[] array = new byte[tamanho];
+                file.readFully(array);
+
+                Musica nova = new Musica();
+                nova.fromByteArray(array);
+
+                if(!lapide){
+
+                    lista.add(nova);
+
+                }
+
+            }
+
+            file.close();
+
+        }catch(Exception e){
+
+            Logger.log(LogLevel.ERROR, "Erro CRUD.readAll: " + e.getMessage());
+
+        }
+
+        return lista;
+
+    }
+
 /////////////////////////////////////////////////UPDATE//////////////////////////////////////////////////////
 
     /*

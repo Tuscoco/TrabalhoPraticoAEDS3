@@ -15,6 +15,7 @@ public class Menus {
         System.out.println("1 -> CRUD Sequencial");
         System.out.println("2 -> CRUD Indexado");
         System.out.println("3 -> Compressão");
+        System.out.println("4 -> Casamento de Padrões");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -127,6 +128,41 @@ public class Menus {
         System.out.println("1 - Comprimir");
         System.out.println("2 - Descomprimir");
         System.out.println("3 - Ler arquivo descomprimido");
+        System.out.println("0 - Voltar");
+        System.out.println("================================================================================");
+
+    }
+
+    public static void menuCasamentoDePadroes(){
+
+        System.out.println("================================================================================");
+        System.out.println("Escolha um dos algoritmos de casamento de padrões:");
+        System.out.println("1 - KMP");
+        System.out.println("2 - Boyer Moore");
+        System.out.println("0 - Voltar");
+        System.out.println("================================================================================");
+
+    }
+
+    public static void menuTipoCasamento(int tipo){
+
+        String tipoCompressao = "";
+
+        if(tipo == 1){
+                        
+            tipoCompressao = "======================================KMP=======================================";
+
+        }else if(tipo == 2){
+
+            tipoCompressao = "==================================Boyer-Moore===================================";
+            
+
+        }
+
+        System.out.println("================================================================================");
+        System.out.println(tipoCompressao);
+        System.out.println("Informe o que deseja fazer:");
+        System.out.println("1 - Procurar um padrão por todo o arquivo");
         System.out.println("0 - Voltar");
         System.out.println("================================================================================");
 
