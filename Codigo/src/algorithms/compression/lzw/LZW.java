@@ -24,6 +24,11 @@ public class LZW {
         try{
 
             String str = CRUDI.lerTudoComoTexto(diretorio);
+
+            RandomAccessFile file = new RandomAccessFile("data/database/bancoEmTexto.db", "rw");
+            file.write(str.getBytes());
+            file.close();
+
             byte[] msgBytes = str.getBytes();
     
             ArrayList<ArrayList<Byte>> dicionario = new ArrayList<>();
@@ -45,7 +50,7 @@ public class LZW {
             i = 0;
             int indice;
             int ultimoIndice;
-            while (i < msgBytes.length) {
+            while(i < msgBytes.length){
     
                 vetorBytes = new ArrayList<>();
                 b = msgBytes[i];
@@ -53,15 +58,19 @@ public class LZW {
                 indice = dicionario.indexOf(vetorBytes);
                 ultimoIndice = indice;
     
-                while (indice != -1 && i < msgBytes.length - 1) {
+                while(indice != -1 && i < msgBytes.length - 1){
     
                     i++;
                     b = msgBytes[i];
                     vetorBytes.add(b);
                     indice = dicionario.indexOf(vetorBytes);
     
-                    if (indice != -1)
+                    if(indice != -1){
+
                         ultimoIndice = indice;
+
+                    }
+
                 }
     
                 saida.add(ultimoIndice);

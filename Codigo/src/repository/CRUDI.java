@@ -483,21 +483,28 @@ public final class CRUDI {
             file.seek(4); // Pular o cabeçalho de 4 bytes com o último ID
 
             while (file.getFilePointer() < file.length()) {
-                try {
+                try{
+
                     boolean lapide = file.readBoolean();
                     int tamanho = file.readInt();
                     byte[] array = new byte[tamanho];
                     file.readFully(array);
 
-                    if (!lapide) {
+                    if(!lapide){
+
                         Musica m = new Musica();
                         m.fromByteArray(array);
-                        sb.append(m.getName()).append(" - ").append(m.getArtist().trim()).append("\n");
+                        //sb.append(m.getName()).append(" - ").append(m.getArtist().trim()).append("\n");
+                        sb.append(lapide + "" + tamanho + m.toString());
+
                     }
 
-                } catch (EOFException e) {
+                }catch(EOFException e){
+
                     break;
+
                 }
+
             }
 
         } catch (IOException e) {

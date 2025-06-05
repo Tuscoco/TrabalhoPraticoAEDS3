@@ -65,7 +65,7 @@ public class Musica {
     @Override
     public String toString(){
 
-        return "\n|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + dateFormat.format(new Date(date)) + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
+        return "|Index: " + index + "||Name: " + name + "||Artist: " + artist + "||Date: " + dateFormat.format(new Date(date)) + "||Length: " + length + "||Featured_Artists: " + String.join(", ", fArtists) + "|\n";
 
     }
 
