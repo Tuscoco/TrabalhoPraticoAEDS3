@@ -21,7 +21,6 @@ public class Musica {
 
     public Musica(){}
 
-
     public Musica(int index, String name, String artist, long date, double length, String[] fArtists){
 
         this.index = index;
@@ -111,6 +110,7 @@ public class Musica {
             dos.writeInt(artistBytes.length); 
 
             dos.write(artistBytes);
+
         }
 
         return baos.toByteArray();
@@ -145,14 +145,16 @@ public class Musica {
 
     }
 
-    public Musica(byte[] array) throws IOException {
+    public Musica(byte[] array)throws IOException{
+
         fromByteArray(array);
+
     }
 
+    public String getName(){
 
-    public String getName() {
         return name;
+        
     }
-
     
 }

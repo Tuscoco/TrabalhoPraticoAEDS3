@@ -59,7 +59,7 @@ public class CsvHandler {
                 double length = Double.parseDouble(dados[3]);
                 String[] fArtist = new String[0];
 
-                if(dados.length > 5){
+                if(dados.length > 4){
 
                     String featuredArtists = dados[4];
                     if(featuredArtists.startsWith("\"")){
@@ -149,7 +149,7 @@ public class CsvHandler {
                 double length = Double.parseDouble(dados[3]);
                 String[] fArtist = new String[0];
 
-                if(dados.length > 5){
+                if(dados.length > 4){
 
                     String featuredArtists = dados[4];
                     if(featuredArtists.startsWith("\"")){
