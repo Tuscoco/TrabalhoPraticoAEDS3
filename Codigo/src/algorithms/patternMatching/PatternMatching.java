@@ -10,6 +10,9 @@ import algorithms.patternMatching.BruteForce.BruteForce;
 import model.Musica;
 import repository.CRUDI;
 
+/*
+ * Chamada dos algoritmos de casamento de padrões: KMP e Força Bruta.
+ */
 public class PatternMatching {
     
     private int tipo;

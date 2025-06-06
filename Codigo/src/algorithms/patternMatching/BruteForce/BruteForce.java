@@ -1,5 +1,8 @@
 package algorithms.patternMatching.BruteForce;
 
+/*
+ * Classe que implementa o algoritmo de força bruta para busca de padrões em strings.
+ */
 public class BruteForce {
 
     public static boolean search(String text, String pattern) {

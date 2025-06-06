@@ -1,7 +1,14 @@
 package algorithms.patternMatching.KMP;
 
+
+/*
+ * Classe que implementa o algoritmo KMP (Knuth-Morris-Pratt) para busca de padrões em strings.
+ */
 public class KMP {
 
+    /*
+     * Montagem da tabela de prefixos
+     */
     private static int[] computePrefixTable(String pattern){
 
         int m = pattern.length();
@@ -37,6 +44,9 @@ public class KMP {
 
     }
 
+    /*
+     * Método que conta quantas vezes o padrão aparece no texto
+     */
     public static int matchPatternAt(String text, String pattern){
 
         int count = 0;
@@ -81,6 +91,9 @@ public class KMP {
 
     }
 
+    /*
+     * Método que verifica se o padrão existe no texto
+     */
     public static boolean search(String text, String pattern){
 
         int n = text.length();
