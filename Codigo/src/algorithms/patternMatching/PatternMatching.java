@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import algorithms.patternMatching.KMP.KMP;
+import algorithms.patternMatching.BruteForce.BruteForce;
+
 import model.Musica;
 import repository.CRUDI;
 
@@ -45,8 +47,8 @@ public class PatternMatching {
 
             for(Musica x : lista){
 
-                //Boyer Moore
-                if(KMP.search(x.toString(), padrao)){
+                //Força Bruta
+                if(BruteForce.search(x.toString(), padrao)){
 
                     listaPesquisa.add(x);
 

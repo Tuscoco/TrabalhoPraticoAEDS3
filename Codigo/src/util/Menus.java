@@ -138,7 +138,7 @@ public class Menus {
         System.out.println("================================================================================");
         System.out.println("Escolha um dos algoritmos de casamento de padrões:");
         System.out.println("1 - KMP");
-        System.out.println("2 - Boyer Moore");
+        System.out.println("2 - Força Bruta");
         System.out.println("0 - Voltar");
         System.out.println("================================================================================");
 
@@ -154,7 +154,7 @@ public class Menus {
 
         }else if(tipo == 2){
 
-            tipoCompressao = "==================================Boyer-Moore===================================";
+            tipoCompressao = "==================================Força-Bruta===================================";
             
 
         }
