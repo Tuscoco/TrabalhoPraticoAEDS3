@@ -60,24 +60,5 @@ public class VetorDeBits {
                 sb.append('0');
         return sb.toString();
     }
-
-    // public static void main(String[] args) {
-    //     VetorDeBits vb = new VetorDeBits(25);
-    //     System.out.println(vb);
-    //     vb.set(2);
-    //     vb.set(20);
-    //     System.out.println(vb);
-    //     vb.clear(70);
-    //     System.out.println(vb);
-    //     System.out.println(vb.length());
-    //     System.out.println(vb.size());
-
-    //     System.out.println(vb.toByteArray().length);
-
-    //     VetorDeBits vb2 = new VetorDeBits(vb.toByteArray());
-    //     System.out.println(vb2);
-    //     System.out.println(vb2.length());
-    //     System.out.println(vb2.size());
-    // }
     
 }
