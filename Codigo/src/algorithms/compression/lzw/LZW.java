@@ -1,5 +1,9 @@
 package algorithms.compression.lzw;
 
+/*
+ * Modificação do código do professor Kutova
+ */
+
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
@@ -7,6 +11,9 @@ import java.util.ArrayList;
 
 import repository.CRUDI;
 
+/*
+ * Classe que implementa o algoritmo de compressão LZW
+ */
 @SuppressWarnings("unused")
 public class LZW {
     
@@ -19,15 +26,19 @@ public class LZW {
 
     }
 
+    /*
+     * Método de comprimir
+     * 
+     * Funcionamento:
+     * -Monta um dicionário inicial com os caracteres ASCII
+     * -Percorre o arquivo substituindo cada símbolo pelo seu índice no dicionário
+     * -Quando faz uma leitura, adiciona no dicionário a sequência que foi lida
+     */
     public void comprimir(){
 
         try{
 
             String str = CRUDI.lerTudoComoTexto(diretorio);
-
-            RandomAccessFile file = new RandomAccessFile("data/database/bancoEmTexto.db", "rw");
-            file.write(str.getBytes());
-            file.close();
 
             byte[] msgBytes = str.getBytes();
     
@@ -128,6 +139,15 @@ public class LZW {
 
     }
 
+    /*
+     * Método de comprimir
+     * 
+     * Funcionamento:
+     * -Monta um dicionário inicial com os caracteres ASCII
+     * -Percorre o arquivo substituindo cada índice pela sua sequência no dicionário
+     * -Quando faz uma leitura, adiciona no dicionário a sequência que foi lida
+     * -Vai montando o dicionário durante a leitura
+     */
     @SuppressWarnings("unchecked")
     public void descomprimir(){
 

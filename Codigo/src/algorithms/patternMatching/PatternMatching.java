@@ -23,6 +23,9 @@ public class PatternMatching {
 
     }
 
+    /*
+     * Chama cada algoritmo de acordo com o "tipo" e monta uma lista de Músicas
+     */
     public List<Musica> search(String padrao, String arquivo) throws IOException{
 
         if(tipo == 1){

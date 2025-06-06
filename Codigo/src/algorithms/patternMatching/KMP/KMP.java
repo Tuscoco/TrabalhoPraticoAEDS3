@@ -7,7 +7,7 @@ package algorithms.patternMatching.KMP;
 public class KMP {
 
     /*
-     * Montagem da tabela de prefixos
+     * Montagem da tabela de prefixos para determinar o salto de caracteres
      */
     private static int[] computePrefixTable(String pattern){
 
@@ -93,6 +93,8 @@ public class KMP {
 
     /*
      * Método que verifica se o padrão existe no texto
+     * Se existir pelo menos uma vez, retorna true
+     * Se não estiver em nenhum local do texto, retorna false
      */
     public static boolean search(String text, String pattern){
 

@@ -604,6 +604,13 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para a interação com o usuário para Compressão
+     * 
+     * Funcionamento: 
+     * -Chama o método de menu e recebe a opção do usuário
+     * -Recebe informações do usuário e chama o método necessário pra cada caso
+     */
     private static void runCompressao(){
 
         int tipoCompressao = -1;
@@ -773,6 +780,13 @@ public class ConsoleHelper {
 
     }
 
+    /*
+     * Método para a interação com o usuário para Casamento de Padrões
+     * 
+     * Funcionamento: 
+     * -Chama o método de menu e recebe a opção do usuário
+     * -Recebe informações do usuário e chama o método necessário pra cada caso
+     */
     private static void runCasamentoDePadroes() throws IOException{
 
         int tipoCasamento = -1;
