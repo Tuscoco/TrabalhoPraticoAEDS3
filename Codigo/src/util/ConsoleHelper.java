@@ -12,6 +12,7 @@ import java.util.Scanner;
 import model.Musica;
 import repository.*;
 import algorithms.compression.Compression;
+import algorithms.encryption.Encryption;
 import algorithms.patternMatching.PatternMatching;
 import algorithms.sorting.IntercalacaoBalanceada;
 
@@ -58,6 +59,11 @@ public class ConsoleHelper {
 
                     Menus.clear();
                     runCasamentoDePadroes();
+
+                }else if(tipoDeCRUD == 5){
+
+                    Menus.clear();
+                    runCriptografia();
 
                 }else{
                     
@@ -868,6 +874,103 @@ public class ConsoleHelper {
             }
 
         }while(tipoCasamento != 0);
+
+    }
+
+    private static void runCriptografia() throws IOException{
+
+        int tipoCriptografia = -1;
+        int op = -1;
+
+        do{
+
+            Menus.menuCriptografia();
+            tipoCriptografia = scan.nextInt();
+
+            if(tipoCriptografia == 1 || tipoCriptografia == 2){
+
+                //KMP
+                Encryption encryption = new Encryption(tipoCriptografia);
+                Menus.clear();
+
+                do{
+
+                    Menus.menuTipoCriptografia(tipoCriptografia);
+                    op = scan.nextInt();
+                    List<File> arquivos;
+
+                    switch(op){
+
+                        case 0:
+                            break;
+
+                        case 1:
+
+                            arquivos = encryption.listarArquivos(true);
+                            Menus.menuDeArquivos(op, arquivos);
+
+                            int escolhidoParaCriptografar = scan.nextInt();
+                            scan.nextLine();
+                            String arquivoParaCriptografar = "";
+
+                            if(escolhidoParaCriptografar >= 1 && escolhidoParaCriptografar <= arquivos.size()){
+
+                                arquivoParaCriptografar += arquivos.get(escolhidoParaCriptografar - 1).getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            encryption.criptografar(arquivoParaCriptografar);
+
+                            Menus.clear();
+
+                            System.out.println("Arquivo " + arquivoParaCriptografar + " Criptografado com sucesso!");
+
+                            break;
+
+                        case 2:
+
+                            arquivos = encryption.listarArquivos(false);
+                            Menus.menuDeArquivos(op, arquivos);
+
+                            int escolhidoParaDescriptografar = scan.nextInt();
+                            String arquivoParaDescriptografar = "";
+
+                            if(escolhidoParaDescriptografar >= 1 && escolhidoParaDescriptografar <= arquivos.size()){
+
+                                arquivoParaDescriptografar += arquivos.get(escolhidoParaDescriptografar - 1).getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            encryption.descriptografar(arquivoParaDescriptografar);
+
+                            break;
+                        
+                        default:
+
+                            System.out.println("Opção inválida!");
+
+                    }
+
+                }while(op != 0);
+
+            }else{
+
+                Menus.clear();
+                System.out.println("Opção inválida!");
+
+            }
+
+        }while(tipoCriptografia != 0);
 
     }
 

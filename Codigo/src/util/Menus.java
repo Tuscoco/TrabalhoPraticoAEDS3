@@ -16,6 +16,7 @@ public class Menus {
         System.out.println("2 -> CRUD Indexado");
         System.out.println("3 -> Compressão");
         System.out.println("4 -> Casamento de Padrões");
+        System.out.println("5 -> Criptografia");
         System.out.println("0 -> Encerrar");
         System.out.println("================================================================================");
 
@@ -163,6 +164,41 @@ public class Menus {
         System.out.println(tipoCompressao);
         System.out.println("Informe o que deseja fazer:");
         System.out.println("1 - Procurar um padrão por todo o arquivo");
+        System.out.println("0 - Voltar");
+        System.out.println("================================================================================");
+
+    }
+
+    public static void menuCriptografia(){
+
+        System.out.println("================================================================================");
+        System.out.println("Escolha um dos algoritmos de criptografia:");
+        System.out.println("1 - RSA");
+        System.out.println("2 - Morse");
+        System.out.println("0 - Voltar");
+        System.out.println("================================================================================");
+
+    }
+
+    public static void menuTipoCriptografia(int tipo){
+
+        String tipoCriptografia = "";
+
+        if(tipo == 1){
+                        
+            tipoCriptografia = "======================================RSA=======================================";
+
+        }else if(tipo == 2){
+
+            tipoCriptografia = "=====================================Morse======================================";
+
+        }
+
+        System.out.println("================================================================================");
+        System.out.println(tipoCriptografia);
+        System.out.println("Informe o que deseja fazer:");
+        System.out.println("1 - Criptografar um arquivo");
+        System.out.println("2 - Descriptografar um arquivo");
         System.out.println("0 - Voltar");
         System.out.println("================================================================================");
 
