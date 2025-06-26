@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import algorithms.encryption.caesar.CaesarCipher;
 import algorithms.encryption.morse.Morse;
 
 public class Encryption {
@@ -18,7 +19,7 @@ public class Encryption {
 
     }
 
-    public void criptografar(String arquivo){
+    public void criptografar(String arquivo, int chave){
 
         String diretorioArquivoOrigem = diretorioDataBase + arquivo;
 
@@ -32,11 +33,17 @@ public class Encryption {
 
             morse.criptografar();
 
+        }else if(tipo == 3){
+
+            CaesarCipher cifraDeCesar = new CaesarCipher(diretorioArquivoOrigem, chave);
+
+            cifraDeCesar.criptografar();
+
         }
 
     }
 
-    public void descriptografar(String arquivo){
+    public void descriptografar(String arquivo, int chave){
 
         String diretorioArquivoOrigem = diretorioCriptografados + arquivo;
 
@@ -49,6 +56,12 @@ public class Encryption {
             Morse morse = new Morse(diretorioArquivoOrigem);
 
             morse.descriptografar();
+
+        }else if(tipo == 3){
+
+            CaesarCipher cifraDeCesar = new CaesarCipher(diretorioArquivoOrigem, chave);
+
+            cifraDeCesar.descriptografar();
 
         }
 
@@ -96,9 +109,13 @@ public class Encryption {
 
             tipoC = "RSA";
 
-        }else{
+        }else if(tipo == 2){
 
             tipoC = "MORSE";
+
+        }else if(tipo == 3){
+
+            tipoC = "CaesarCipher";
 
         }
 

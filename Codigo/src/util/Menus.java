@@ -175,6 +175,7 @@ public class Menus {
         System.out.println("Escolha um dos algoritmos de criptografia:");
         System.out.println("1 - RSA");
         System.out.println("2 - Morse");
+        System.out.println("3 - Cifra de César");
         System.out.println("0 - Voltar");
         System.out.println("================================================================================");
 
@@ -191,6 +192,10 @@ public class Menus {
         }else if(tipo == 2){
 
             tipoCriptografia = "=====================================Morse======================================";
+
+        }else if(tipo == 3){
+
+            tipoCriptografia = "=====================================Cesar======================================";
 
         }
 

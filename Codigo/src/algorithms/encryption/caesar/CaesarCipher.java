@@ -1,0 +1,125 @@
+package algorithms.encryption.caesar;
+
+import java.io.RandomAccessFile;
+
+import repository.CRUDI;
+
+public class CaesarCipher {
+
+    private String diretorio;
+    private int chave;
+
+    public CaesarCipher(String diretorio, int chave){
+
+        this.diretorio = diretorio;
+        this.chave = chave;
+
+    }
+
+    public void criptografar(){
+
+        try{
+
+            RandomAccessFile file = new RandomAccessFile("data/encrypted/arquivoCriptografadoCaesarCipher" + System.currentTimeMillis() + ".db", "rw");
+
+            String str = CRUDI.lerTudoComoTexto(diretorio);
+            int tam = str.length();
+
+            for(int i = 0;i < tam;i++){
+
+                int caractere = str.charAt(i);
+                String cripto = "";
+
+                if(caractere + chave > 126){
+
+                    if(caractere >= 32 && caractere <= 126){
+
+                        int temp = caractere + chave;
+                        temp -= 94;
+                        cripto += (char) temp;
+
+                    }else{
+
+                        cripto += caractere;
+
+                    }
+
+                }else if(caractere >= 32 && caractere <=126){
+
+                    cripto += (char) (caractere + chave);
+
+                }else{
+
+                    cripto += caractere;
+
+                }
+
+                file.writeBytes(cripto);
+
+            }
+
+            file.close();
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public void descriptografar(){
+
+        try{
+
+            RandomAccessFile file = new RandomAccessFile(diretorio, "r");
+            String[] mensagem = file.readLine().split(",+");
+            String descriptografada = "";
+
+            file.close();
+
+            for(int i = 0;i < mensagem.length;i++){
+
+                String str = mensagem[i];
+
+                for(int j = 0;j < str.length();j++){
+
+                    int caractere = str.charAt(j);
+
+                    if(caractere - chave < 32){
+
+                        if(caractere >= 32 && caractere <= 126){
+
+                            int temp = caractere - chave;
+                            temp += 94;
+                            descriptografada += (char) temp;
+
+                        }
+
+                    }else if(caractere >= 32 && caractere <=126){
+
+                        descriptografada += (char) (caractere - chave);
+
+                    }else{
+
+                        descriptografada += caractere;
+
+                    }
+
+                }
+
+            }
+
+            RandomAccessFile fileD = new RandomAccessFile("data/decrypted/arquivoDescriptografadoCaesarCipher" + System.currentTimeMillis() + ".db", "rw");
+            fileD.write(descriptografada.getBytes());
+            fileD.close();
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }
+
+    }
+    
+}

@@ -889,7 +889,6 @@ public class ConsoleHelper {
 
             if(tipoCriptografia == 1 || tipoCriptografia == 2){
 
-                //KMP
                 Encryption encryption = new Encryption(tipoCriptografia);
                 Menus.clear();
 
@@ -924,7 +923,7 @@ public class ConsoleHelper {
 
                             }
 
-                            encryption.criptografar(arquivoParaCriptografar);
+                            encryption.criptografar(arquivoParaCriptografar, 0);
 
                             Menus.clear();
 
@@ -951,7 +950,88 @@ public class ConsoleHelper {
 
                             }
 
-                            encryption.descriptografar(arquivoParaDescriptografar);
+                            encryption.descriptografar(arquivoParaDescriptografar, 0);
+
+                            break;
+                        
+                        default:
+
+                            System.out.println("Opção inválida!");
+
+                    }
+
+                }while(op != 0);
+
+            }else if(tipoCriptografia == 3){
+
+                Encryption encryption = new Encryption(tipoCriptografia);
+                Menus.clear();
+
+                do{
+
+                    Menus.menuTipoCriptografia(tipoCriptografia);
+                    op = scan.nextInt();
+                    List<File> arquivos;
+
+                    switch(op){
+
+                        case 0:
+                            break;
+
+                        case 1:
+
+                            arquivos = encryption.listarArquivos(true);
+                            Menus.menuDeArquivos(op, arquivos);
+
+                            int escolhidoParaCriptografar = scan.nextInt();
+                            scan.nextLine();
+                            String arquivoParaCriptografar = "";
+
+                            if(escolhidoParaCriptografar >= 1 && escolhidoParaCriptografar <= arquivos.size()){
+
+                                arquivoParaCriptografar += arquivos.get(escolhidoParaCriptografar - 1).getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            System.out.print("Informe a chave de criptografia: ");
+                            int chaveC = scan.nextInt();
+
+                            encryption.criptografar(arquivoParaCriptografar, chaveC);
+
+                            Menus.clear();
+
+                            System.out.println("Arquivo " + arquivoParaCriptografar + " Criptografado com sucesso!");
+
+                            break;
+
+                        case 2:
+
+                            arquivos = encryption.listarArquivos(false);
+                            Menus.menuDeArquivos(op, arquivos);
+
+                            int escolhidoParaDescriptografar = scan.nextInt();
+                            String arquivoParaDescriptografar = "";
+
+                            if(escolhidoParaDescriptografar >= 1 && escolhidoParaDescriptografar <= arquivos.size()){
+
+                                arquivoParaDescriptografar += arquivos.get(escolhidoParaDescriptografar - 1).getName();
+
+                            }else{
+
+                                System.out.println("Opção inválida!");
+                                break;
+
+                            }
+
+                            System.out.print("Informe a chave: ");
+                            int chaveD = scan.nextInt();
+
+                            encryption.descriptografar(arquivoParaDescriptografar, chaveD);
 
                             break;
                         
