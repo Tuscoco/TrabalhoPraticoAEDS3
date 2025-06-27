@@ -3,6 +3,7 @@ package algorithms.encryption.RSA;
 import java.io.RandomAccessFile;
 import repository.CRUDI;
 
+@SuppressWarnings("unused")
 public class RSA {
 
     private String diretorio;

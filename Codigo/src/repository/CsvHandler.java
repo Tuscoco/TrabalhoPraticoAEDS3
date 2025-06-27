@@ -43,38 +43,42 @@ public class CsvHandler {
 
                 String[] dados = linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-                String name = dados[0];
-                String artist = String.format("%-" + 15 + "s", dados[1]);
-                long date = 0;
+                if(dados.length >= 2){
 
-                try{
-                    Date parsedDate = dateFormat.parse(dados[2]);
-                    date = parsedDate.getTime();
+                    String name = dados[0];
+                    String artist = String.format("%-" + 15 + "s", dados[1]);
+                    long date = 0;
 
-                } catch (ParseException e){
+                    try{
+                        Date parsedDate = dateFormat.parse(dados[2]);
+                        date = parsedDate.getTime();
 
-                    System.out.println("Erro: " + e.getMessage());
-                }
+                    } catch (ParseException e){
 
-                double length = Double.parseDouble(dados[3]);
-                String[] fArtist = new String[0];
-
-                if(dados.length > 4){
-
-                    String featuredArtists = dados[4];
-                    if(featuredArtists.startsWith("\"")){
-
-                        featuredArtists = featuredArtists.substring(1, featuredArtists.length() - 1);
-
+                        System.out.println("Erro: " + e.getMessage());
                     }
 
-                   fArtist = featuredArtists.split(",\\s*"); 
+                    double length = Double.parseDouble(dados[3]);
+                    String[] fArtist = new String[0];
 
-                }             
+                    if(dados.length > 4){
 
-                Musica musica = new Musica(name, artist, date, length, fArtist);
+                        String featuredArtists = dados[4];
+                        if(featuredArtists.startsWith("\"")){
 
-                CRUD.create(musica, false);
+                            featuredArtists = featuredArtists.substring(1, featuredArtists.length() - 1);
+
+                        }
+
+                    fArtist = featuredArtists.split(",\\s*"); 
+
+                    }             
+
+                    Musica musica = new Musica(name, artist, date, length, fArtist);
+
+                    CRUD.create(musica, false);
+
+                }
 
             }
 

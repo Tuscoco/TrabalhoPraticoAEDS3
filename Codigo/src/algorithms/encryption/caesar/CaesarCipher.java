@@ -73,45 +73,41 @@ public class CaesarCipher {
         try{
 
             RandomAccessFile file = new RandomAccessFile(diretorio, "r");
-            String[] mensagem = file.readLine().split(",+");
+            byte[] bytes = new byte[(int) file.length()];
+            file.readFully(bytes);
+            String mensagem = new String(bytes);
             String descriptografada = "";
 
             file.close();
 
-            for(int i = 0;i < mensagem.length;i++){
+            for(int i = 0;i < mensagem.length();i++){
 
-                String str = mensagem[i];
+                int caractere = mensagem.charAt(i);
 
-                for(int j = 0;j < str.length();j++){
+                if(caractere - chave < 32){
 
-                    int caractere = str.charAt(j);
+                    if(caractere >= 32 && caractere <= 126){
 
-                    if(caractere - chave < 32){
-
-                        if(caractere >= 32 && caractere <= 126){
-
-                            int temp = caractere - chave;
-                            temp += 94;
-                            descriptografada += (char) temp;
-
-                        }
-
-                    }else if(caractere >= 32 && caractere <=126){
-
-                        descriptografada += (char) (caractere - chave);
-
-                    }else{
-
-                        descriptografada += caractere;
+                        int temp = caractere - chave;
+                        temp += 94;
+                        descriptografada += (char) temp;
 
                     }
+
+                }else if(caractere >= 32 && caractere <=126){
+
+                    descriptografada += (char) (caractere - chave);
+
+                }else{
+
+                    descriptografada += caractere;
 
                 }
 
             }
 
             RandomAccessFile fileD = new RandomAccessFile("data/decrypted/arquivoDescriptografadoCaesarCipher" + System.currentTimeMillis() + ".db", "rw");
-            fileD.write(descriptografada.getBytes());
+            fileD.write(descriptografada.replace(",+", "\n").getBytes());
             fileD.close();
 
         }catch(Exception e){
