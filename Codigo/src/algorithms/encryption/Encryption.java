@@ -6,6 +6,7 @@ import java.util.List;
 
 import algorithms.encryption.caesar.CaesarCipher;
 import algorithms.encryption.morse.Morse;
+import algorithms.encryption.RSA.RSA; 
 
 public class Encryption {
 
@@ -25,7 +26,9 @@ public class Encryption {
 
         if(tipo == 1){
 
-            //RSA
+            RSA rsa = new RSA(diretorioArquivoOrigem);
+
+            rsa.criptografar();
 
         }else if(tipo == 2){
 
@@ -49,7 +52,9 @@ public class Encryption {
 
         if(tipo == 1){
 
-            //RSA
+            RSA rsa = new RSA(diretorioArquivoOrigem);
+
+            rsa.descriptografar();
 
         }else if(tipo == 2){
 
