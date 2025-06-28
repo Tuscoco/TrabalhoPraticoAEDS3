@@ -8,6 +8,9 @@ import algorithms.encryption.caesar.CaesarCipher;
 import algorithms.encryption.morse.Morse;
 import algorithms.encryption.RSA.RSA; 
 
+/**
+ * Classe que gerencia a criptografia e descriptografia de arquivos usando RSA, Morse e Cifra de César.
+ */
 public class Encryption {
 
     private int tipo;
