@@ -3,11 +3,16 @@ package algorithms.encryption.RSA;
 import java.io.RandomAccessFile;
 import repository.CRUDI;
 
-@SuppressWarnings("unused")
+/**
+ * Classe que implementa a criptografia e descriptografia usando o algoritmo RSA.
+ */
 public class RSA {
 
     private String diretorio;
 
+    /*
+     * Inicialização das chaves RSA.
+     */
     private final int p = 61;
     private final int q = 53;
     private final int n = p * q; // 3233
@@ -19,6 +24,10 @@ public class RSA {
         this.diretorio = diretorio;
     }
 
+    /**
+     * Criptografa o arquivo utilizando o algoritmo RSA e salva o resultado em um novo arquivo.
+     * Para cada caractere do arquivo original, converte para o código ASCII, cifra usando a chave pública e salva como números separados por vírgula.
+     */
     public void criptografar() {
         try {
             String str = CRUDI.lerTudoComoTexto(diretorio);
@@ -29,10 +38,8 @@ public class RSA {
                 "rw"
             );
 
-            // Para cada caractere, cifrar e salvar (armazenado como números separados por vírgula)
             for (int i = 0; i < tam; i++) {
                 int P = (int) str.charAt(i);
-                // Método "int" transforma o caractere em seu valor ASCII e o atribui a P
                 // C = P^e mod n
                 int C = modPow(P, e, n);
                 file.writeBytes(String.valueOf(C));
@@ -47,6 +54,10 @@ public class RSA {
         }
     }
 
+    /**
+     * Descriptografa o arquivo criptografado e salva o resultado em um novo arquivo.
+     * Para cada número cifrado, decifra usando a chave privada e converte de volta para caractere.
+     */
     public void descriptografar() {
         try {
             RandomAccessFile file = new RandomAccessFile(diretorio, "r");
@@ -55,7 +66,6 @@ public class RSA {
 
             StringBuilder descriptografada = new StringBuilder();
 
-            // Para cada número cifrado, decifrar e converter em caractere
             for (String numStr : mensagem) {
                 int C = Integer.parseInt(numStr.trim());
                 // P = C^d mod n
@@ -74,7 +84,9 @@ public class RSA {
         }
     }
 
-    // Método de exponenciação modular (evita overflow)
+    /**
+     * Método auxiliar para calcular a exponenciação modular.
+     */
     private int modPow(int base, int exp, int mod) {
         long result = 1;
         long b = base;

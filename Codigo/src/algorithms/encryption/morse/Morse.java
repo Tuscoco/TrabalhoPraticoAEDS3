@@ -4,6 +4,9 @@ import java.io.RandomAccessFile;
 
 import repository.CRUDI;
 
+/**
+ * Classe que implementa a criptografia e descriptografia usando o código Morse.
+ */
 public class Morse {
     
     private Dicionario dicionario;
@@ -16,6 +19,10 @@ public class Morse {
 
     }
 
+    /**
+     * Criptografa o arquivo utilizando o código Morse e salva o resultado em um novo arquivo.
+     * Para cada caractere do arquivo original, converte para o código ASCII, e para cada dígito do código ASCII, converte para o código Morse correspondente, separando-os por vírgulas e finalizando com uma barra.
+     */
     public void criptografar(){
 
         try{
@@ -54,6 +61,9 @@ public class Morse {
 
     }
 
+    /**
+     * Descriptografa o arquivo criptografado e salva o resultado em um novo arquivo.
+     */
     public void descriptografar(){
 
         try{

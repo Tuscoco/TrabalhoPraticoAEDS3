@@ -4,6 +4,9 @@ import java.io.RandomAccessFile;
 
 import repository.CRUDI;
 
+/**
+ * Classe que implementa a cifra de César para criptografia e descriptografia de arquivos.
+ */
 public class CaesarCipher {
 
     private String diretorio;
@@ -16,6 +19,9 @@ public class CaesarCipher {
 
     }
 
+    /*
+     * Criptografa o arquivo utilizando a chave fornecida pelo usuário no terminal e salva o resultado em um novo arquivo.
+     */
     public void criptografar(){
 
         try{
@@ -68,6 +74,9 @@ public class CaesarCipher {
 
     }
 
+    /*
+     * Descriptografa o arquivo criptografado utilizando a chave original e salva o resultado em um novo arquivo.
+     */
     public void descriptografar(){
 
         try{

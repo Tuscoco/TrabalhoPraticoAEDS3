@@ -3,6 +3,9 @@ package algorithms.encryption.morse;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe que implementa o dicionário para conversão entre números e código Morse.
+ */
 public class Dicionario {
     
     private Map<Integer, String> dicionario;
@@ -18,6 +21,9 @@ public class Dicionario {
     private final String a8 = "---..";
     private final String a9 = "----.";
 
+    /*
+     * Construtor que mapeia o dicionário com os códigos Morse correspondentes aos dígitos de 0 a 9.
+     */
     public Dicionario(){
 
         dicionario = new HashMap<>();
