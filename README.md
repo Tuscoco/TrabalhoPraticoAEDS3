@@ -1,4 +1,4 @@
-# Trabalho Prático de AEDs III: Implementação de Estruturas de Dados e Algoritmos
+# Trabalho Prático de AEDs III
 
 ## Visão Geral
 
